@@ -10,7 +10,10 @@
     "express-session": "^1.15.3",
     "mongoose": "^4.10.3",
     "morgan": "^1.8.2",
-    "passport": "^0.3.2"
+    "passport": "^0.3.2",
+    "react": "^15.5.4",
+    "react-bootstrap": "^0.31.0",
+    "react-dom": "^15.5.4"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -25,7 +28,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec babel-node server.js --ignore public/",
-    "build" : "webpack -wd",
+    "build": "webpack -wd",
     "dev": "NODE_ENV=development babel-node server.js",
     "prod": "NODE_ENV=production webpack -p node server.js"
   },
