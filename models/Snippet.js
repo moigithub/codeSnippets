@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 
 var SnippetSchema = new mongoose.Schema({
-	Language : String,
-	Description: String,
-	Code: String,
-	Tags : [String],
-	Links: [String],
-	PostedBy : {
+	language : String,
+	description: String,
+	title: String,
+	code: String,
+	tags : [String],
+	links: [String],
+	postedBy : {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	},
-	Date : {
+	date : {
 		type: Date,
 		default: Date.now
 	}

@@ -1,11 +1,16 @@
 import React from 'react';
+import {connect} from 'react-redux';
+
 import SnippetDetail from './snippetDetail';
 import SnippetList from './SnippetList';
 import FilterForm from './FilterForm';
 
+import * as snippetsActions from '../actions/snippetsActions';
+
 const sl = [
 	{id:1, 
-		language: 'js', title: 'some title', 
+		language: 'js', 
+		title: 'some title', 
 		description: 'some desc', 
 		postedBy: 'jojolete', 
 		code:'1',
@@ -45,8 +50,12 @@ const sl = [
 
 const detail = sl[0];
 
-export default class Main extends React.Component {
+ class Main extends React.Component {
 	render(){
+		console.log("main render props",this.props);
+		console.log("actions",snippetsActions);
+		this.props.getSnippetsFromServer(); //test
+
 		return (
 		<div className="container">
 			<div className="row">
@@ -63,3 +72,11 @@ export default class Main extends React.Component {
 	}
 }
 
+function mapStateToProps(state){
+	console.log("mapStateToProps",arguments);
+	return {
+		snippets:state.snippet
+	}
+}
+
+export default connect(mapStateToProps,snippetsActions)(Main)

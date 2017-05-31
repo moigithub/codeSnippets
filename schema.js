@@ -1,5 +1,5 @@
 const expressGraphQL = require('express-graphql');
-import {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLID} from 'graphql';
+import {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLID, GraphQLNonNull} from 'graphql';
 
 import mongoose from 'mongoose';
 import User from './models/User.js';
@@ -11,7 +11,7 @@ const CodeSnippetType= new GraphQLObjectType({
 	description: 'Code Snippet',
 	fields:()=>( {
 		_id: {
-			type: GraphQLID
+			type: GraphQLString
 		},
 		language: {
 			type: GraphQLString,	
@@ -29,18 +29,15 @@ const CodeSnippetType= new GraphQLObjectType({
 		postedBy: {
 			type: UserType,
 			resolve: function(parentValue, args){
-				console.log(parentValue, args);
-				return "nuu";
-				/*
+				//console.log("snippet params ",parentValue, args);
 				return new Promise((resolve, reject)=>{
-					User.findById(parentValue.PostedBy, function(err, user){
+					User.findById(parentValue.postedBy, function(err, user){
 						if(err) {
 							return reject(err);
 						}
 						return resolve(user);
 					});
 				});
-				*/
 			}
 		},
 		tags: {
@@ -55,9 +52,9 @@ const CodeSnippetType= new GraphQLObjectType({
 const UserType = new GraphQLObjectType({
 	name: 'User',
 	description: 'User info',
-	fields: {
+	fields: ()=>({
 		_id: {
-			type: GraphQLID
+			type: GraphQLString
 		},
 		email:{
 			type: GraphQLString
@@ -66,19 +63,22 @@ const UserType = new GraphQLObjectType({
 			type: GraphQLString
 		},
 		snippets:{
-			type: CodeSnippetType,
+			type:  new GraphQLList(CodeSnippetType),
 			resolve: function(parentValue, args){
+				//console.log("user params",parentValue, args);
 				return new Promise((resolve, reject)=>{
-					Snippet.find({PostedBy: parentValue._Id}, function(err, user){
+					Snippet.find({postedBy: parentValue._id}, function(err, snippet){
+						//console.log("snipets", err, snippet);
 						if(err) {
 							return reject(err);
 						}
-						return resolve(user);
+						return resolve(snippet);
 					});
 				});
+
 			}
 		}
-	}
+	})
 });
 
 /////
@@ -88,12 +88,14 @@ const QueryType = new GraphQLObjectType({
 		User: {
 			type: UserType,
 			args: {
-				userId: {type: GraphQLString}
+				userId: {type:  new GraphQLNonNull(GraphQLString)}
 			},
 			resolve: function(parentValue, args){
-				return {displayName:1,_id:2,email:"hello"}
+				console.log(parentValue, args);
 				return new Promise((resolve, reject)=>{
-					User.findById(args.userId, function(err, user){
+					User.findById(args.userId , function(err, user){
+//					User.find({_id: args.userId} , function(err, user){
+						//console.log(err, user);
 						if(err) {
 							return reject(err);
 						}
@@ -102,10 +104,24 @@ const QueryType = new GraphQLObjectType({
 				});
 			}
 		},
+		Users: {
+			type: new GraphQLList(UserType),
+			resolve: function(parentValue, args){
+				return new Promise((resolve, reject)=>{
+					User.find( function(err, users){
+				//		console.log(err, users);
+						if(err) {
+							return reject(err);
+						}
+						return resolve(users);
+					});
+				});
+			}
+		},
 		CodeSnippet:{
 			type: CodeSnippetType,
 			args:{
-				snippetId: {type: GraphQLString}
+				snippetId: {type: new GraphQLNonNull(GraphQLString)}
 			},
 			resolve: function(parentValue, args){
 				return new Promise((resolve, reject)=>{
