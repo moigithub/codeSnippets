@@ -6,6 +6,8 @@ import session from 'express-session';
 import express from 'express';
 import path from 'path';
 
+import schema from './schema';
+
 import apiSnippets from './api/apiSnippets';
 
 var mongoStore = require('connect-mongo')(session);
@@ -42,10 +44,38 @@ app.use(session({
 
 app.use('/api', apiSnippets);
 
+
+
+app.use('/graphql', schema);
+
+//create some data on db
+User.find({}).remove(function() {
+  User.create(
+  {
+  	email: 'test@test.com',
+    password: 'test',
+    displayName: 'test',
+    isAdmin: false
+  },
+  {
+  	email: 'Moi@test.com',
+    password: 'test',
+    displayName: 'Moi',
+    isAdmin: false
+  },
+  {
+  	email: 'booo@test.com',
+    password: 'test',
+    displayName: 'Boo',
+    isAdmin: false
+  }
+  )
+  });
+
+
+
 app.listen(process.env.PORT || 3000, function(){
 	console.log("listening on 3000");
 });
-
-
 
 
