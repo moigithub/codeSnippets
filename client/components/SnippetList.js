@@ -1,9 +1,10 @@
 import React from 'react';
 
 const SnippetList = (props) => {
+	console.log("snipets list ",props);
 	const snippets = props.snippetsList.map(snippet => {
 		return (
-		    <a href="#"  className="list-group-item" key={snippet.id}>
+		    <a href="#"  className="list-group-item" key={snippet._id}>
 		     	{snippet.title}
 		    	<span className="badge">{snippet.language}</span>
 		     </a>
