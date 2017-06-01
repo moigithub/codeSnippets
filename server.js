@@ -62,7 +62,7 @@ User.find({}).remove(function() {
     displayName: 'test',
     isAdmin: false
   },function(err,u){
-    console.log(err, u);
+    //console.log(err, u);
 
     Snippet.create({
       language : 'javascript',

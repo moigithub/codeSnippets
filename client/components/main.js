@@ -51,8 +51,29 @@ const sl = [
 const detail = sl[0];
 
  class Main extends React.Component {
+ 	constructor(){
+ 		super();
+
+ 		this.setSelected = this.setSelected.bind(this);
+ 		this.state={
+ 			currentSelected : null,
+ 			filterTags:[]
+ 		}
+ 	}
+
+ 	componentDidMount(){
+
+ 		console.log("didmount", this.props);
+ 		this.setState({currentSelected: this.props.snippets});
+ 	}
+
+ 	setSelected(snippet){
+ 		//console.log("setselected", snippet);
+ 		this.setState({currentSelected: snippet});
+ 	}
+
 	render(){
-		console.log("main render props",this.props);
+		//console.log("main render props",this.props);
 		//console.log("actions",snippetsActions);
 		//this.props.getSnippetsFromServer(); //test
 
@@ -61,19 +82,19 @@ const detail = sl[0];
 			<div className="row">
 				<div className="col-xs-12 col-sm-4 leftbar">
 					<FilterForm />
-					<SnippetList snippetsList = {this.props.snippets}/>
+					<SnippetList snippetsList = {this.props.snippets} setSelected={this.setSelected}/>
 
 				</div>
 
 
-				<SnippetDetail {...detail}/>
+				<SnippetDetail {...this.state.currentSelected}/>
 			</div>
 		</div>		);
 	}
 }
 
 function mapStateToProps(state){
-	console.log("mapStateToProps",state);
+	//console.log("mapStateToProps",state);
 	return {
 		snippets:state.snippets
 	}

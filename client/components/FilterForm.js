@@ -12,9 +12,22 @@ const tl = [
 const FilterForm = ()=>{
 	return (
 		<div className="filter">
-			<div className="form-group">
-			    <input type="text" className="form-control" id="searchInput" placeholder="Search text"/>
-		    </div>
+			<form className="form-inline">
+			  <div className="form-group row">
+				  <div className="col-xs-12">
+				    <div className="input-group">
+				      <input type="text" className="form-control" id="searchInput" placeholder="Search tag"/>
+					  <span	 className="input-group-btn">
+					  	<button type="submit" className="btn btn-primary">
+					  		<span className="glyphicon glyphicon-search"></span>
+					  	</button>
+					  </span>
+				    </div>
+				  </div>
+			  </div>
+			</form>
+
+
 			<div className="form-group">
 				<select name="" id="" value="All"  className="form-control">
 					<option value="">No filter</option>
@@ -22,6 +35,7 @@ const FilterForm = ()=>{
 					<option value="Ruby">Ruby</option>
 				</select>
 			</div>
+
 			<TagList tags={tl}/>
 		</div>
 	);
