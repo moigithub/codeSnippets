@@ -26,12 +26,13 @@ const CodeSnippetType= new GraphQLObjectType({
 		code: {
 			type: GraphQLString
 		},
-		postedBy: {
+		author: {
 			type: UserType,
 			resolve: function(parentValue, args){
-				//console.log("snippet params ",parentValue, args);
+				console.log("snippet params ",parentValue, args);
 				return new Promise((resolve, reject)=>{
 					User.findById(parentValue.postedBy, function(err, user){
+						console.log("snippet author",err,user)
 						if(err) {
 							return reject(err);
 						}
@@ -43,7 +44,7 @@ const CodeSnippetType= new GraphQLObjectType({
 		tags: {
 			type: new GraphQLList(GraphQLString) 
 		},
-		refLinks: {
+		links: {
 			type: new GraphQLList(GraphQLString) 
 		},
 	})
@@ -125,11 +126,24 @@ const QueryType = new GraphQLObjectType({
 			},
 			resolve: function(parentValue, args){
 				return new Promise((resolve, reject)=>{
-					Snippet.findById(args.snippetId, function(err, user){
+					Snippet.findById(args.snippetId, function(err, snippet){
 						if(err) {
 							return reject(err);
 						}
-						return resolve(user);
+						return resolve(snippet);
+					});
+				});
+			}
+		},
+		CodeSnippets:{
+			type: new GraphQLList(CodeSnippetType),
+			resolve: function(parentValue, args){
+				return new Promise((resolve, reject)=>{
+					Snippet.find( function(err, snippets){
+						if(err) {
+							return reject(err);
+						}
+						return resolve(snippets);
 					});
 				});
 			}

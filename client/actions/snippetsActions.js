@@ -1,16 +1,23 @@
-import {SNIPPETDATA} from '../reducers/const'
+import {GETSNIPPETDATA, SETSNIPPETDATA} from '../reducers/const'
 
 import axios from 'axios';
 
 
 export const getAllSnippets = (data)=>(
 {
-	type: SNIPPETDATA,
+	type: GETSNIPPETDATA,
 	data : data
 }
 
 );
 
+export const setAllSnippets = (data)=>(
+{
+	type: SETSNIPPETDATA,
+	data : data
+}
+
+);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,17 +27,20 @@ export const getAllSnippets = (data)=>(
 // to request data to server from client
 // send a POST request with application/json as content-type
 // {"query":"{Users{_id,email,displayName}}"}
+//{"query":"{CodeSnippets{_id,language,title,description,code,tags,links,author{email,displayName}}}","variables":null,"operationName":null}
+//using axios response on response.data.data.Users
 
 
 const API_URL = '/graphql';
 const options = { headers: {'Content-Type': 'application/json'}};
 
 export const getSnippetsFromServer=()=> {
-    //console.log("getImagesFromServer");
+    console.log("getSnippetsFromServer");
     return function(dispatch){
-    	axios.post(API_URL, {"query":"{Users{_id,email,displayName}}"})
+    	axios.post(API_URL, {"query":"{CodeSnippets{_id,language,title,description,code,tags,links,author{email,displayName}}}","variables":null,"operationName":null})
     	  .then(function (response) {
-		    console.log(response);
+		    console.log(response.data.data.CodeSnippets);
+		    dispatch(setAllSnippets(response.data.data.CodeSnippets));
 		  })
 		  .catch(function (error) {
 		    console.log(error);

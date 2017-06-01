@@ -53,15 +53,15 @@ const detail = sl[0];
  class Main extends React.Component {
 	render(){
 		console.log("main render props",this.props);
-		console.log("actions",snippetsActions);
-		this.props.getSnippetsFromServer(); //test
+		//console.log("actions",snippetsActions);
+		//this.props.getSnippetsFromServer(); //test
 
 		return (
 		<div className="container">
 			<div className="row">
 				<div className="col-xs-12 col-sm-4 leftbar">
 					<FilterForm />
-					<SnippetList snippetsList = {sl}/>
+					<SnippetList snippetsList = {this.props.snippets}/>
 
 				</div>
 
@@ -73,9 +73,9 @@ const detail = sl[0];
 }
 
 function mapStateToProps(state){
-	console.log("mapStateToProps",arguments);
+	console.log("mapStateToProps",state);
 	return {
-		snippets:state.snippet
+		snippets:state.snippets
 	}
 }
 
