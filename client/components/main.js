@@ -55,6 +55,9 @@ const detail = sl[0];
  		super();
 
  		this.setSelected = this.setSelected.bind(this);
+ 		this.addTag = this.addTag.bind(this);
+ 		this.removeTag = this.removeTag.bind(this);
+
  		this.state={
  			currentSelected : null,
  			filterTags:[]
@@ -63,13 +66,25 @@ const detail = sl[0];
 
  	componentDidMount(){
 
- 		console.log("didmount", this.props);
+ 		//console.log("didmount", this.props);
  		this.setState({currentSelected: this.props.snippets});
  	}
 
  	setSelected(snippet){
  		//console.log("setselected", snippet);
  		this.setState({currentSelected: snippet});
+ 	}
+
+ 	addTag(tag){
+ 		var allTags = this.state.filterTags.slice();
+ 		allTags.push(tag);
+ 		this.setState({filterTags: allTags});
+ 		console.log(allTags)
+ 	}
+
+ 	removeTag(tag){
+ 		var allTags = this.state.filterTags.filter(t=>t!==tag);
+ 		this.setState({filterTags: allTags});
  	}
 
 	render(){
@@ -81,8 +96,8 @@ const detail = sl[0];
 		<div className="container">
 			<div className="row">
 				<div className="col-xs-12 col-sm-4 leftbar">
-					<FilterForm />
-					<SnippetList snippetsList = {this.props.snippets} setSelected={this.setSelected}/>
+					<FilterForm addTag = {this.addTag} removeTag = {this.removeTag} tagList = {this.state.filterTags} />
+					<SnippetList snippetsList = {this.props.snippets} setSelected={this.setSelected} />
 
 				</div>
 

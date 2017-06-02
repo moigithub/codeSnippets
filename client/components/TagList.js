@@ -1,11 +1,13 @@
 import React from 'react';
 
-const TagList = (props)=>{
-	const tags = props.tags.map((t,i)=>{
+const TagList = ({tagList, removeTag})=>{
+	const tags = tagList.map((tag,i)=>{
 		return (
 			<span className="tag label label-info" key={'tag'+i}>
-				<span>{t.title}</span>
-				<a><i className="remove glyphicon glyphicon-remove-sign glyphicon-white"></i></a> 
+				<span>{tag}</span>
+				<a onClick={()=>removeTag(tag)}>
+					<i className="remove glyphicon glyphicon-remove-sign glyphicon-white"></i>
+				</a> 
 			</span>
 		);
 	});
