@@ -80,17 +80,18 @@ const detail = sl[0];
  		allTags.push(tag);
  		this.setState({filterTags: allTags});
  		console.log(allTags)
+ 		this.props.getSnippets(allTags, false)
  	}
 
  	removeTag(tag){
  		var allTags = this.state.filterTags.filter(t=>t!==tag);
  		this.setState({filterTags: allTags});
+ 		this.props.getSnippets(allTags, false)
  	}
 
 	render(){
-		//console.log("main render props",this.props);
+		console.log("main render props",this.props);
 		//console.log("actions",snippetsActions);
-		//this.props.getSnippetsFromServer(); //test
 
 		return (
 		<div className="container">
@@ -115,4 +116,10 @@ function mapStateToProps(state){
 	}
 }
 
-export default connect(mapStateToProps,snippetsActions)(Main)
+function mapDispatchToProps(dispatch, oo){
+	return {
+		getSnippets: (tags,all)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all))
+	}
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Main)

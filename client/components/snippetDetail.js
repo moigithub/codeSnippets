@@ -14,12 +14,13 @@ const SnippetDetail = (props) => {
 			) 
 	}): null;
 
+	let author = props.author.displayName || props.author.email || "";
 	return (
 		<div className="col-xs-12 col-sm-8">
 			<h1>{props.title}</h1>
 			<h3>{props.description}</h3>
 			<p>Language: <span>{props.language}</span></p>
-			<p>Posted By:<span>{props.author.displayName || props.author.email}</span></p>
+			<p>Posted By:<span>{author}</span></p>
 			<textarea 
 				name="" 
 				id="" 

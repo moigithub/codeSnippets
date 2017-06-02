@@ -1,5 +1,5 @@
 const expressGraphQL = require('express-graphql');
-import {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLID, GraphQLNonNull} from 'graphql';
+import {GraphQLSchema, GraphQLObjectType, GraphQLString,GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLID, GraphQLNonNull} from 'graphql';
 
 import mongoose from 'mongoose';
 import User from './models/User.js';
@@ -29,10 +29,10 @@ const CodeSnippetType= new GraphQLObjectType({
 		author: {
 			type: UserType,
 			resolve: function(parentValue, args){
-				console.log("snippet params ",parentValue, args);
+		//		console.log("snippet params ",parentValue, args);
 				return new Promise((resolve, reject)=>{
 					User.findById(parentValue.postedBy, function(err, user){
-						console.log("snippet author",err,user)
+		//				console.log("snippet author",err,user)
 						if(err) {
 							return reject(err);
 						}
@@ -92,7 +92,7 @@ const QueryType = new GraphQLObjectType({
 				userId: {type:  new GraphQLNonNull(GraphQLString)}
 			},
 			resolve: function(parentValue, args){
-				console.log(parentValue, args);
+			//	console.log(parentValue, args);
 				return new Promise((resolve, reject)=>{
 					User.findById(args.userId , function(err, user){
 //					User.find({_id: args.userId} , function(err, user){
@@ -137,14 +137,41 @@ const QueryType = new GraphQLObjectType({
 		},
 		CodeSnippets:{
 			type: new GraphQLList(CodeSnippetType),
+			args:{
+				tags: {
+					type: new GraphQLList(GraphQLString)
+				},
+				all:{
+					type: GraphQLBoolean
+				}
+			},
 			resolve: function(parentValue, args){
 				return new Promise((resolve, reject)=>{
-					Snippet.find( function(err, snippets){
-						if(err) {
-							return reject(err);
+					console.log("codesnippetSSS", parentValue, args);
+					if(args.tags && args.tags.length>0){
+						if(args.all){
+							Snippet.find({tags:{$all: args.tags}}, function(err, snippets){
+								if(err) {
+									return reject(err);
+								}
+								return resolve(snippets);
+							});
+						} else {
+							Snippet.find({tags:{$in: args.tags}}, function(err, snippets){
+								if(err) {
+									return reject(err);
+								}
+								return resolve(snippets);
+							});
 						}
-						return resolve(snippets);
-					});
+					} else {
+						Snippet.find( function(err, snippets){
+							if(err) {
+								return reject(err);
+							}
+							return resolve(snippets);
+						});
+					}
 				});
 			}
 		}

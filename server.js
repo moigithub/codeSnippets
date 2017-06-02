@@ -53,80 +53,81 @@ app.use('/graphql', schema);
 //create some data on db
 const seed=true;
 if (seed) {
-  Snippet.find({}).remove({});
-User.find({}).remove(function() {
-  User.create(
-  {
-  	email: 'test@test.com',
-    password: 'test',
-    displayName: 'test',
-    isAdmin: false
-  },function(err,u){
-    //console.log(err, u);
+  Snippet.find({}).remove(function(){
+    User.find({}).remove(function() {
+      User.create(
+      {
+      	email: 'test@test.com',
+        password: 'test',
+        displayName: 'test',
+        isAdmin: false
+      },function(err,u){
+        //console.log(err, u);
 
-    Snippet.create({
-      language : 'javascript',
-      title: 'react router 4',
-      description: 'asdf asf salfjjkhfkljhfkljwfwef wefd wef',
-      code: 'console.log("hello world")',
-      tags : ['react','react router 4', 'redux'],
-      links: ['google.com','mdn.io','devdocs.io'],
-      postedBy : u._id
-    });
+        Snippet.create({
+          language : 'javascript',
+          title: 'react router 4',
+          description: 'asdf asf salfjjkhfkljhfkljwfwef wefd wef',
+          code: 'console.log("hello world")',
+          tags : ['react','react router 4', 'redux'],
+          links: ['google.com','mdn.io','devdocs.io'],
+          postedBy : u._id
+        });
 
-    Snippet.create({
-      language : 'javascript',
-      title: 'redux saga',
-      description: 'salfjjkhfkljhfkljwfwef wefd wef sdfs 435345 657kjrfg ',
-      code: 'alert("hello world")',
-      tags : ['apollo','react router 4', 'redux', 'relay', 'recompose', 'redux-observable'],
-      links: ['google.com','mdn.io','devdocs.io'],
-      postedBy : u._id
-    });
-
-
-  });
-
-  User.create({
-  	email: 'Moi@test.com',
-    password: 'test',
-    displayName: 'Moi',
-    isAdmin: false
-  },function(err,u){
-    Snippet.create({
-      language : 'javascript',
-      title: 'mongoose connect & err handler',
-      description: ' tgh4 5g 5t 54t 45gdfg  asdf asf salfjjkhfkljhfkljwfwef wefd wef',
-      code: 'console.log("hello world")',
-      tags : ['react','react router 4', 'flux'],
-      links: ['stackoverflow.com','google.com','mdn.io','devdocs.io'],
-      postedBy : u._id
-    });
+        Snippet.create({
+          language : 'javascript',
+          title: 'redux saga',
+          description: 'salfjjkhfkljhfkljwfwef wefd wef sdfs 435345 657kjrfg ',
+          code: 'alert("hello world")',
+          tags : ['apollo','react router 4', 'redux', 'relay', 'recompose', 'redux-observable'],
+          links: ['google.com','mdn.io','devdocs.io'],
+          postedBy : u._id
+        });
 
 
-  });
+      });
 
-  User.create({
-  	email: 'booo@test.com',
-    password: 'test',
-    displayName: 'Boo',
-    isAdmin: false
-  },function(err,u){
-    Snippet.create({
-      language : 'javascript',
-      title: 'redux thunk createStore & middleware',
-      description: 'salfjjkhfkljhfkljwfwef wefd wef',
-      code: 'console.log("hello world")',
-      tags : ['react', 'flux'],
-      links: ['stackoverflow.com','google.com','mdn.io','devdocs.io'],
-      postedBy : u._id
-    });
+      User.create({
+      	email: 'Moi@test.com',
+        password: 'test',
+        displayName: 'Moi',
+        isAdmin: false
+      },function(err,u){
+        Snippet.create({
+          language : 'javascript',
+          title: 'mongoose connect & err handler',
+          description: ' tgh4 5g 5t 54t 45gdfg  asdf asf salfjjkhfkljhfkljwfwef wefd wef',
+          code: 'console.log("hello world")',
+          tags : ['react','react router 4', 'flux'],
+          links: ['stackoverflow.com','google.com','mdn.io','devdocs.io'],
+          postedBy : u._id
+        });
 
 
-  });
+      });
 
-  
-  });
+      User.create({
+      	email: 'booo@test.com',
+        password: 'test',
+        displayName: 'Boo',
+        isAdmin: false
+      },function(err,u){
+        Snippet.create({
+          language : 'javascript',
+          title: 'redux thunk createStore & middleware',
+          description: 'salfjjkhfkljhfkljwfwef wefd wef',
+          code: 'console.log("hello world")',
+          tags : ['react', 'flux'],
+          links: ['stackoverflow.com','google.com','mdn.io','devdocs.io'],
+          postedBy : u._id
+        });
+
+
+      });
+
+      
+      });
+});
 }
 
 

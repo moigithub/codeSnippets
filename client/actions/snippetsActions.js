@@ -31,13 +31,31 @@ export const setAllSnippets = (data)=>(
 //using axios response on response.data.data.Users
 
 
+//{"query":"query findSnippets($tags:[String], $all:Boolean){CodeSnippets(tags:$tags,all:$all){_id,language,title,description,code,tags,links,author{email,displayName}}}",
+//"variables":{"tags":["react","react router 4"],"all":true},"operationName":"findSnippets"}
+
 const API_URL = '/graphql';
 const options = { headers: {'Content-Type': 'application/json'}};
 
-export const getSnippetsFromServer=()=> {
-    console.log("getSnippetsFromServer");
+export const getSnippetsFromServer=(tags=[],all=false)=> {
+    console.log("getSnippetsFromServer", tags, all);
+    const query = `query findSnippets($tags:[String], $all:Boolean){
+			CodeSnippets(tags:$tags,all:$all){
+				_id,language,title,description,code,tags,links,author{email,displayName}
+			}
+		}`;
+	let queryJSON = 
+	{
+		"query":query,
+		"variables":{
+			"tags":tags,
+			"all": all
+		},
+		"operationName":"findSnippets"
+	};
+
     return function(dispatch){
-    	axios.post(API_URL, {"query":"{CodeSnippets{_id,language,title,description,code,tags,links,author{email,displayName}}}","variables":null,"operationName":null})
+    	axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 		    console.log(response.data.data.CodeSnippets);
 		    dispatch(setAllSnippets(response.data.data.CodeSnippets));
