@@ -18,10 +18,8 @@ const SnippetDetail = (props) => {
 		<div className="col-xs-12 col-sm-8">
 			<h1>{props.title}</h1>
 			<h3>{props.description}</h3>
-			<p>
-				<p>Language: <span>{props.language}</span></p>
-				<p>Posted By:<span>{props.author.displayName || props.author.email}</span></p>
-			</p>	
+			<p>Language: <span>{props.language}</span></p>
+			<p>Posted By:<span>{props.author.displayName || props.author.email}</span></p>
 			<textarea 
 				name="" 
 				id="" 
@@ -30,7 +28,7 @@ const SnippetDetail = (props) => {
 				value={props.code}>
 			</textarea>
 			<ul className="list-group">
-				
+				{links}
 			</ul>
 			<button className="btn btn-primary">Edit</button>
 			<button className="btn btn-danger">Delete</button>

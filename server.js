@@ -51,9 +51,9 @@ app.use(session({
 app.use('/graphql', schema);
 
 //create some data on db
-const seed=false;
+const seed=true;
 if (seed) {
-  Snippet.find().remove();
+  Snippet.find({}).remove({});
 User.find({}).remove(function() {
   User.create(
   {
@@ -66,7 +66,7 @@ User.find({}).remove(function() {
 
     Snippet.create({
       language : 'javascript',
-      title: 'some title x',
+      title: 'react router 4',
       description: 'asdf asf salfjjkhfkljhfkljwfwef wefd wef',
       code: 'console.log("hello world")',
       tags : ['react','react router 4', 'redux'],
@@ -76,7 +76,7 @@ User.find({}).remove(function() {
 
     Snippet.create({
       language : 'javascript',
-      title: 'some title x',
+      title: 'redux saga',
       description: 'salfjjkhfkljhfkljwfwef wefd wef sdfs 435345 657kjrfg ',
       code: 'alert("hello world")',
       tags : ['apollo','react router 4', 'redux', 'relay', 'recompose', 'redux-observable'],
@@ -95,7 +95,7 @@ User.find({}).remove(function() {
   },function(err,u){
     Snippet.create({
       language : 'javascript',
-      title: 'some title x',
+      title: 'mongoose connect & err handler',
       description: ' tgh4 5g 5t 54t 45gdfg  asdf asf salfjjkhfkljhfkljwfwef wefd wef',
       code: 'console.log("hello world")',
       tags : ['react','react router 4', 'flux'],
@@ -114,7 +114,7 @@ User.find({}).remove(function() {
   },function(err,u){
     Snippet.create({
       language : 'javascript',
-      title: 'some title x',
+      title: 'redux thunk createStore & middleware',
       description: 'salfjjkhfkljhfkljwfwef wefd wef',
       code: 'console.log("hello world")',
       tags : ['react', 'flux'],
