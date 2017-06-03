@@ -25,26 +25,23 @@ class FilterForm extends React.Component {
 		const {addTag, removeTag, tagList} = this.props;
 		return (
 			<div className="filter">
-				<form className="form-inline" onSubmit={this.handleSubmit}>
-				  <div className="form-group row">
-					  <div className="col-xs-12">
+				<form onSubmit={this.handleSubmit} id="searchForm">
+  				    <div className="form-group">
 					    <div className="input-group">
 					      <input 
 					      		type="text" 
 					      		className="form-control" 
-					      		id="searchInput" 
 					      		onChange={()=>this.setState({search:this.textSearch.value})}
 					      		placeholder="Search tag"
 					      		ref={(input) => { this.textSearch = input; }} 
 					      		/>
-						  <span	 className="input-group-btn">
-						  	<button type="submit" className="btn btn-primary">
-						  		<span className="glyphicon glyphicon-search"></span>
-						  	</button>
-						  </span>
+							<span className="input-group-btn">
+							  	<button type="submit" className="btn btn-primary">
+							  		<span className="glyphicon glyphicon-search"></span>
+							  	</button>
+							</span>
 					    </div>
-					  </div>
-				  </div>
+				    </div>
 				</form>
 
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import Highlight from 'highlight';
+import Highlight from 'react-highlight';
 
 const SnippetDetail = (props) => {
-	//console.log("details",props);
+	console.log("details",props);
 	if (Object.keys(props).length<1){
 		return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
 	}
@@ -15,13 +15,30 @@ const SnippetDetail = (props) => {
 			) 
 	}): null;
 
+	const tags = props.tags.length>0?props.tags.map((tag,i)=>{
+		return (
+				<span className="label label-info" key={'tag'+i}>
+					<span>{tag}</span>
+				</span>
+			) 
+	}): [];
+
 	let author = props.author.displayName || props.author.email || "";
 	return (
 		<div className="col-xs-12 col-sm-8">
 			<h1>{props.title}</h1>
 			<h3>{props.description}</h3>
-			<p>Language: <span>{props.language}</span></p>
-			<p>Posted By:<span>{author}</span></p>
+			<div className="row">
+				<div className="col-xs-6">
+					<p>Language: <span>{props.language}</span></p>
+				</div>
+				<div className="col-xs-6">
+					<p className=" pull-right">Posted By:<span>{author}</span></p>
+				</div>
+			</div>
+			<div className="filterTags form-group">
+				{tags}
+			</div>
 			<Highlight language={props.language}>
 			  {props.code}
 			</Highlight>

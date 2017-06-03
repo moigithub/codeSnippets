@@ -44,3 +44,13 @@
   vertical-align: bottom;
   top: 0;
 }
+
+
+.filterTags .label {
+  margin-left: 0.1em;
+}
+
+//fix search button size
+ #searchForm .glyphicon{
+  line-height: inherit !important;
+}
