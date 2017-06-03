@@ -7,7 +7,7 @@ const SnippetDetail = (props) => {
 		return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
 	}
 
-	const links = props.links.length>0?props.links.map((l,i)=>{
+	const links = props.links && props.links.length>0?props.links.map((l,i)=>{
 		return (
 				<li className="list-group-item" key={'link'+i}>
 					<a href="#">{l}</a>
@@ -15,7 +15,7 @@ const SnippetDetail = (props) => {
 			) 
 	}): null;
 
-	const tags = props.tags.length>0?props.tags.map((tag,i)=>{
+	const tags = props.tags && props.tags.length>0?props.tags.map((tag,i)=>{
 		return (
 				<span className="label label-info" key={'tag'+i}>
 					<span>{tag}</span>

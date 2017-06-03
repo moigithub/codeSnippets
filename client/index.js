@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Main from './components/main';
+
+
+import App from './components/App';
 
 
 import { createStore, applyMiddleware, combineReducers } from "redux";
@@ -23,7 +25,7 @@ store.dispatch(snippetsActions.getSnippetsFromServer());
 console.log("store",store.getState());
 
 ReactDOM.render(<Provider store={store}>
-					<Main />
+					<App />
 				</Provider>
 				, document.getElementById("app"));
 

@@ -69,8 +69,8 @@ const detail = sl[0];
 
  	componentDidMount(){
 
- 		//console.log("didmount", this.props);
- 		this.setState({currentSelected: this.props.snippets});
+ 		console.log("didmount", this.props);
+ 		this.setState({currentSelected: this.props.snippets[0]});
  	}
 
  	setSnippetSelected(snippet){
