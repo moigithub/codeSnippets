@@ -1,4 +1,5 @@
 import React from 'react';
+import Highlight from 'highlight';
 
 const SnippetDetail = (props) => {
 	//console.log("details",props);
@@ -21,13 +22,10 @@ const SnippetDetail = (props) => {
 			<h3>{props.description}</h3>
 			<p>Language: <span>{props.language}</span></p>
 			<p>Posted By:<span>{author}</span></p>
-			<textarea 
-				name="" 
-				id="" 
-				rows="10"  
-				className="form-control"
-				value={props.code}>
-			</textarea>
+			<Highlight language={props.language}>
+			  {props.code}
+			</Highlight>
+			
 			<ul className="list-group">
 				{links}
 			</ul>
