@@ -2,7 +2,7 @@ import React from 'react';
 import Highlight from 'react-highlight';
 
 const SnippetDetail = (props) => {
-	console.log("details",props);
+//	console.log("details",props);
 	if (Object.keys(props).length<1){
 		return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
 	}

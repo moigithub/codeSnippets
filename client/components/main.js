@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import SnippetDetail from './snippetDetail';
 import SnippetList from './SnippetList';
 import FilterForm from './FilterForm';
+import FilterLanguage from './FilterLanguage';
 
 import * as snippetsActions from '../actions/snippetsActions';
 
@@ -54,13 +55,15 @@ const detail = sl[0];
  	constructor(){
  		super();
 
- 		this.setSelected = this.setSelected.bind(this);
+ 		this.setSnippetSelected = this.setSnippetSelected.bind(this);
  		this.addTag = this.addTag.bind(this);
  		this.removeTag = this.removeTag.bind(this);
+ 		this.setLanguage = this.setLanguage.bind(this);
 
  		this.state={
  			currentSelected : null,
- 			filterTags:[]
+ 			filterTags:[],
+ 			language:""
  		}
  	}
 
@@ -70,8 +73,8 @@ const detail = sl[0];
  		this.setState({currentSelected: this.props.snippets});
  	}
 
- 	setSelected(snippet){
- 		//console.log("setselected", snippet);
+ 	setSnippetSelected(snippet){
+ 		//console.log("setSnippetSelected", snippet);
  		this.setState({currentSelected: snippet});
  	}
 
@@ -79,7 +82,7 @@ const detail = sl[0];
  		var allTags = this.state.filterTags.slice();
  		allTags.push(tag);
  		this.setState({filterTags: allTags});
- 		console.log(allTags)
+ 	//	console.log(allTags)
  		this.props.getSnippets(allTags, false)
  	}
 
@@ -89,16 +92,22 @@ const detail = sl[0];
  		this.props.getSnippets(allTags, false)
  	}
 
-	render(){
-		console.log("main render props",this.props);
-		//console.log("actions",snippetsActions);
+ 	setLanguage(language){
+ 		this.setState({language: language});
+ 		this.props.getSnippets(this.state.filterTags, false, language);
+ 	}
 
+	render(){
+	//	console.log("main render props",this.props);
+		//console.log("actions",snippetsActions);
+console.log("main state", this.state);
 		return (
 		<div className="container">
 			<div className="row">
 				<div className="col-xs-12 col-sm-4 leftbar">
 					<FilterForm addTag = {this.addTag} removeTag = {this.removeTag} tagList = {this.state.filterTags} />
-					<SnippetList snippetsList = {this.props.snippets} setSelected={this.setSelected} />
+					<FilterLanguage value={this.state.language} setLanguage={this.setLanguage} />
+					<SnippetList snippetsList = {this.props.snippets} setSnippetSelected={this.setSnippetSelected} />
 
 				</div>
 
@@ -118,7 +127,7 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch, oo){
 	return {
-		getSnippets: (tags,all)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all))
+		getSnippets: (tags,all,language)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language))
 	}
 }
 

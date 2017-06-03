@@ -84,6 +84,16 @@ if (seed) {
           postedBy : u._id
         });
 
+        Snippet.create({
+          language : 'Ruby',
+          title: 'lambda',
+          description: 'salfjjkhfkljhfkljwfwef wefd wef sdfs 435345 657kjrfg ',
+          code: 'alert("hello world")',
+          tags : ['lambda','router 4', 'meta code'],
+          links: ['google.com','mdn.io','devdocs.io'],
+          postedBy : u._id
+        });
+
 
       });
 
@@ -122,6 +132,16 @@ if (seed) {
           postedBy : u._id
         });
 
+
+        Snippet.create({
+          language : 'Ruby',
+          title: 'bomba',
+          description: ' wefd wef sdfs 435345 657kjrfg ',
+          code: 'alert("hello world")',
+          tags : ['tesla','scoobydoo', 'meta code'],
+          links: ['google.com','devdocs.io'],
+          postedBy : u._id
+        });
 
       });
 

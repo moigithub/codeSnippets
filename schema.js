@@ -143,35 +143,37 @@ const QueryType = new GraphQLObjectType({
 				},
 				all:{
 					type: GraphQLBoolean
+				},
+				language:{
+					type: GraphQLString
 				}
 			},
 			resolve: function(parentValue, args){
 				return new Promise((resolve, reject)=>{
 					console.log("codesnippetSSS", parentValue, args);
+
+					let query={};
+
+
 					if(args.tags && args.tags.length>0){
 						if(args.all){
-							Snippet.find({tags:{$all: args.tags}}, function(err, snippets){
-								if(err) {
-									return reject(err);
-								}
-								return resolve(snippets);
-							});
+							query.tags={$all: args.tags};
 						} else {
-							Snippet.find({tags:{$in: args.tags}}, function(err, snippets){
-								if(err) {
-									return reject(err);
-								}
-								return resolve(snippets);
-							});
+							query.tags={$in: args.tags};
 						}
-					} else {
-						Snippet.find( function(err, snippets){
-							if(err) {
-								return reject(err);
-							}
-							return resolve(snippets);
-						});
 					}
+
+					if(args.language && args.language.trim()!==""){
+						query.language=new RegExp(args.language,"gi");
+					}
+console.log("schema snippet query",query)
+					Snippet.find(query, function(err, snippets){
+						if(err) {
+							return reject(err);
+						}
+						return resolve(snippets);
+					});
+
 				});
 			}
 		}

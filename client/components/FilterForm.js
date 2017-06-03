@@ -16,10 +16,11 @@ class FilterForm extends React.Component {
 
 	handleSubmit(e){
 		e.preventDefault();
-		console.log(this.textSearch);
+	//	console.log(this.textSearch);
 		this.props.addTag(this.textSearch.value);
 		this.textSearch.value="";
 	};
+
 
 	render(){
 		const {addTag, removeTag, tagList} = this.props;
@@ -43,15 +44,6 @@ class FilterForm extends React.Component {
 					    </div>
 				    </div>
 				</form>
-
-
-				<div className="form-group">
-					<select name="" id=""  className="form-control">
-						<option value="">No filter</option>
-						<option value="Javascript">Javascript</option>
-						<option value="Ruby">Ruby</option>
-					</select>
-				</div>
 
 				<TagList tagList={tagList} removeTag = {removeTag}/>
 			</div>

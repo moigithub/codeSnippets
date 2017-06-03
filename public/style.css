@@ -50,7 +50,6 @@
   margin-left: 0.1em;
 }
 
-//fix search button size
- #searchForm .glyphicon{
-  line-height: inherit !important;
+#searchForm span.glyphicon{
+  line-height: inherit;
 }
