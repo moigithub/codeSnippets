@@ -52,33 +52,35 @@ const sl = [
 const detail = sl[0];
 
  class Main extends React.Component {
+ 	/*
  	constructor(){
  		super();
 
- 		this.setSnippetSelected = this.setSnippetSelected.bind(this);
- 		this.addTag = this.addTag.bind(this);
- 		this.removeTag = this.removeTag.bind(this);
- 		this.setLanguage = this.setLanguage.bind(this);
+ 	//	this.setSnippetSelected = this.setSnippetSelected.bind(this);
+ 	//	this.addTag = this.addTag.bind(this);
+ 	//	this.removeTag = this.removeTag.bind(this);
+ 	//	this.setLanguage = this.setLanguage.bind(this);
 
- 		this.state={
+ 	}
+*/
+ 		state={
  			currentSelected : null,
  			filterTags:[],
  			language:""
  		}
- 	}
 
  	componentDidMount(){
 
- 		console.log("didmount", this.props);
+ 		//console.log("didmount", this.props);
  		this.setState({currentSelected: this.props.snippets[0]});
  	}
 
- 	setSnippetSelected(snippet){
+ 	setSnippetSelected=(snippet)=>{
  		//console.log("setSnippetSelected", snippet);
  		this.setState({currentSelected: snippet});
  	}
 
- 	addTag(tag){
+ 	addTag=(tag)=>{
  		var allTags = this.state.filterTags.slice();
  		allTags.push(tag);
  		this.setState({filterTags: allTags});
@@ -86,13 +88,13 @@ const detail = sl[0];
  		this.props.getSnippets(allTags, false)
  	}
 
- 	removeTag(tag){
+ 	removeTag=(tag)=>{
  		var allTags = this.state.filterTags.filter(t=>t!==tag);
  		this.setState({filterTags: allTags});
  		this.props.getSnippets(allTags, false)
  	}
 
- 	setLanguage(language){
+ 	setLanguage=(language)=>{
  		this.setState({language: language});
  		this.props.getSnippets(this.state.filterTags, false, language);
  	}
@@ -100,7 +102,7 @@ const detail = sl[0];
 	render(){
 	//	console.log("main render props",this.props);
 		//console.log("actions",snippetsActions);
-console.log("main state", this.state);
+//console.log("main state", this.state);
 		return (
 		<div className="container">
 			<div className="row">
@@ -119,7 +121,7 @@ console.log("main state", this.state);
 }
 
 function mapStateToProps(state){
-	//console.log("mapStateToProps",state);
+	console.log("mapStateToProps",state);
 	return {
 		snippets:state.snippets
 	}

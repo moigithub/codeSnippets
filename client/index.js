@@ -2,30 +2,28 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 
+import { BrowserRouter,Switch, Route, Link} from 'react-router-dom';
+
 
 import App from './components/App';
 
 
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import { Provider } from "react-redux";
-import { snippetReducer } from "./reducers/SnippetReducer";
-import thunkMiddleware from "redux-thunk";
 
+import { Provider } from "react-redux";
 
 import * as snippetsActions from './actions/snippetsActions';
 
-const createStoreWithMiddleware = applyMiddleware(
-  thunkMiddleware
-)(createStore)
+import configureStore from './configureStore';
 
-let store = createStoreWithMiddleware(combineReducers({snippets:snippetReducer}));
-
+let store = configureStore();
 // fetch data from server
 store.dispatch(snippetsActions.getSnippetsFromServer()); 
-console.log("store",store.getState());
+console.log("store2",store.getState());
 
 ReactDOM.render(<Provider store={store}>
-					<App />
+					<BrowserRouter>
+						<App />
+					</BrowserRouter>
 				</Provider>
 				, document.getElementById("app"));
 

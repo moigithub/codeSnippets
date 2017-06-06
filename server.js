@@ -4,7 +4,14 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import express from 'express';
+//import ejs from 'ejs';
 import path from 'path';
+
+import ReactDOMServer from 'react-dom/server'
+
+import config from './config';
+
+import App from './client/components/App';
 
 import schema from './schema';
 
@@ -17,7 +24,7 @@ import Snippet from './models/Snippet.js';
 
 
 var app = express();
-
+app.set('view engine','ejs')
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/snippets');
@@ -44,11 +51,20 @@ app.use(session({
 
 //app.use('/api', apiSnippets);
 
+import htmlToString from './serverRender';
+
+app.get('/', (req,res)=>{
+  htmlToString().then(html=>{
+    res.render('index', { html:html });
+  })
+});
+
 
 // to request data to server from client
 // send a POST request with application/json as content-type
 // {"query":"{Users{_id,email,displayName}}"}
 app.use('/graphql', schema);
+
 
 //create some data on db
 const seed=true;
@@ -151,7 +167,7 @@ if (seed) {
 }
 
 
-app.listen(process.env.PORT || 3000, function(){
+app.listen(config.port, function(){
 	console.log("listening on 3000!!");
 });
 

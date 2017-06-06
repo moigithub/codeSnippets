@@ -2,6 +2,7 @@ import {GETSNIPPETDATA, SETSNIPPETDATA} from '../reducers/const'
 
 import axios from 'axios';
 
+import config from '../../config';
 
 export const getAllSnippets = (data)=>(
 {
@@ -34,7 +35,9 @@ export const setAllSnippets = (data)=>(
 //{"query":"query findSnippets($tags:[String], $all:Boolean){CodeSnippets(tags:$tags,all:$all){_id,language,title,description,code,tags,links,author{email,displayName}}}",
 //"variables":{"tags":["react","react router 4"],"all":true},"operationName":"findSnippets"}
 
-const API_URL = '/graphql';
+const API_URL = config.host+':'+config.port+'/graphql';
+//console.log("apiurl", API_URL);
+
 const options = { headers: {'Content-Type': 'application/json'}};
 
 export const getSnippetsFromServer=(tags=[],all=false,language="")=> {
@@ -55,10 +58,11 @@ export const getSnippetsFromServer=(tags=[],all=false,language="")=> {
 		"operationName":"findSnippets"
 	};
 
-    return function(dispatch){
-    	axios.post(API_URL, queryJSON)
+    return function(dispatch, getState){
+    	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 	//	    console.log(response.data.data.CodeSnippets);
+
 		    dispatch(setAllSnippets(response.data.data.CodeSnippets));
 		  })
 		  .catch(function (error) {
