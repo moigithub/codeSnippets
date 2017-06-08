@@ -8,6 +8,8 @@ import express from 'express';
 import path from 'path';
 
 import ReactDOMServer from 'react-dom/server'
+import { match, matchPath, RouterContext } from 'react-router';
+import { renderToString } from 'react-dom/server';
 
 import config from './config';
 
@@ -52,18 +54,54 @@ app.use(session({
 //app.use('/api', apiSnippets);
 
 import htmlToString from './serverRender';
-
+/*
 app.get('/', (req,res)=>{
-  htmlToString().then(html=>{
+  htmlToString(req).then(html=>{
     res.render('index', { html:html });
   })
 });
-
+*/
 
 // to request data to server from client
 // send a POST request with application/json as content-type
 // {"query":"{Users{_id,email,displayName}}"}
 app.use('/graphql', schema);
+
+// universal routing and rendering
+app.get('*', (req, res) => {
+  match(
+    { routes, location: req.url },
+    (err, redirectLocation, renderProps) => {
+
+console.log(err, redirectLocation, renderProps);
+      // in case of error display the error message
+      if (err) {
+        return res.status(500).send(err.message);
+      }
+
+      // in case of redirect propagate the redirect to the browser
+      if (redirectLocation) {
+        return res.redirect(302, redirectLocation.pathname + redirectLocation.search);
+      }
+
+       // generate the React markup for the current route
+      let markup;
+      if (renderProps) {
+        // if the current route matched we have renderProps
+        markup = renderToString(<RouterContext {...renderProps}/>);
+      } else {
+        // otherwise we can render a 404 page
+        markup = <h1>404 Not found!.</h1>;
+        res.status(404);
+      }
+
+      // render the index template with the embedded React markup
+      return res.render('index', { markup });
+    }
+
+
+    );
+});
 
 
 //create some data on db

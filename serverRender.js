@@ -13,13 +13,13 @@ let store = configureStore();
 
 
 
-function htmlToString(){
+function htmlToString(req){
 	const context = {};
 
 	return store.dispatch(snippetsActions.getSnippetsFromServer()).then( ()=>{
 		return ReactDOMServer.renderToString(
 			<Provider store={store}>
-				<StaticRouter context={context}>
+				<StaticRouter location={req.url} context={context}>
 					<App />
 				</StaticRouter>
 			</Provider>
