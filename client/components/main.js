@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
+
 import SnippetDetail from './snippetDetail';
 import SnippetList from './SnippetList';
 import FilterForm from './FilterForm';
@@ -8,50 +9,8 @@ import FilterLanguage from './FilterLanguage';
 
 import * as snippetsActions from '../actions/snippetsActions';
 
-const sl = [
-	{id:1, 
-		language: 'js', 
-		title: 'some title', 
-		description: 'some desc', 
-		postedBy: 'jojolete', 
-		code:'1',
-		links:['url1']},
-	{id:2, 
-		language: 'js', title: 'mongoose connect & err handler', 
-		description: 'some desc', 
-		postedBy: 'jojolete', 
-		code:'1',
-		links:['url1']},
-	{id:3, 
-		language: 'js', title: 'react router 4', 
-		description: 'some desc', 
-		postedBy: 'jojolete', 
-		code:'1',
-		links:['url1']},
-	{id:4, 
-		language: 'rb', title: 'asdf yttry', 
-		description: 'some desc', 
-		postedBy: 'jojolete', 
-		code:'1',
-		links:['url1']},
-	{id:5, 
-		language: 'vb', title: 'form asdf', 
-		description: 'some desc', 
-		postedBy: 'jojolete', 
-		code:'1',
-		links:['url1']},
-	{id:6, 
-		language: 'php', title: 'fetch data', 
-		description: 'some desc', 
-		postedBy: 'jojolete', 
-		code:'1',
-		links:['url1']}
-];
 
-
-const detail = sl[0];
-
- class Main extends React.Component {
+class Main extends React.Component {
  	/*
  	constructor(){
  		super();
@@ -63,22 +22,10 @@ const detail = sl[0];
 
  	}
 */
- 		state={
- 			currentSelected : null,
- 			filterTags:[],
- 			language:""
- 		}
-
- 	componentDidMount(){
-
- 		//console.log("didmount", this.props);
- 		this.setState({currentSelected: this.props.snippets[0]});
- 	}
-
- 	setSnippetSelected=(snippet)=>{
- 		//console.log("setSnippetSelected", snippet);
- 		this.setState({currentSelected: snippet});
- 	}
+	state={
+		filterTags:[],
+		language:""
+	}
 
  	addTag=(tag)=>{
  		var allTags = this.state.filterTags.slice();
@@ -100,8 +47,9 @@ const detail = sl[0];
  	}
 
 	render(){
-	//	console.log("main render props",this.props);
+		console.log("main render props",this.props);
 		//console.log("actions",snippetsActions);
+		const {match, location} = this.props;
 //console.log("main state", this.state);
 		return (
 		<div className="container">
@@ -109,27 +57,30 @@ const detail = sl[0];
 				<div className="col-xs-12 col-sm-4 leftbar">
 					<FilterForm addTag = {this.addTag} removeTag = {this.removeTag} tagList = {this.state.filterTags} />
 					<FilterLanguage value={this.state.language} setLanguage={this.setLanguage} />
-					<SnippetList snippetsList = {this.props.snippets} setSnippetSelected={this.setSnippetSelected} />
+					<SnippetList snippetsList = {this.props.snippets} getSnippetById={this.props.getSnippetById} />
 
 				</div>
 
 
-				<SnippetDetail {...this.state.currentSelected}/>
+				<SnippetDetail {...this.props.currentSelected}/>
 			</div>
-		</div>		);
+		</div>		
+		);
 	}
 }
 
 function mapStateToProps(state){
 	console.log("mapStateToProps",state);
 	return {
-		snippets:state.snippets
+		snippets:state.snippets,
+		currentSelected:state.currentSelected
 	}
 }
 
 function mapDispatchToProps(dispatch, oo){
 	return {
-		getSnippets: (tags,all,language)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language))
+		getSnippets: (tags,all,language)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language)),
+		getSnippetById: (id)=>dispatch(getSnippetByIdFromServer(id))
 	}
 }
 

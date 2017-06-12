@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, combineReducers } from "redux";
 import thunkMiddleware from "redux-thunk";
 
 
-import { snippetReducer } from "./reducers/SnippetReducer";
+import { snippetReducer, currentSnippetReducer } from "./reducers/SnippetReducer";
 
 
 const createStoreWithMiddleware = applyMiddleware(
@@ -23,7 +23,12 @@ let store = createStore(reducer, applyMiddleware(thunk))
 //var store = createStore(reducerFunction, initialState, storeEnhancers);
 export default function configureStore(initialState){
 	return createStoreWithMiddleware(
-		combineReducers({snippets:snippetReducer}),
+		combineReducers(
+			{
+				snippets          :snippetReducer, 
+				currentSelected   :currentSnippetReducer
+			}
+		),
 		initialState
 		);	
 } 

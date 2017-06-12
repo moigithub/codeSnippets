@@ -9,11 +9,11 @@ import path from 'path';
 
 import ReactDOMServer from 'react-dom/server'
 import { match, matchPath, RouterContext } from 'react-router';
+import { StaticRouter } from 'react-router';
 import { renderToString } from 'react-dom/server';
 
 import config from './config';
 
-import App from './client/components/App';
 
 import schema from './schema';
 
@@ -21,12 +21,25 @@ import apiSnippets from './api/apiSnippets';
 
 var mongoStore = require('connect-mongo')(session);
 
+
+
+import React from 'react';
+import { Provider } from "react-redux";
+//import App from './client/components/App';
+import configureStore from './client/configureStore';
+import * as snippetsActions from './client/actions/snippetsActions';
+import {renderRoutes} from 'react-router-config';
+
+
 import User from './models/User.js';
 import Snippet from './models/Snippet.js';
-
+import routes from './client/routes';
+import AppLayout from './client/components/AppLayout';
 
 var app = express();
 app.set('view engine','ejs')
+
+
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/snippets');
@@ -53,7 +66,7 @@ app.use(session({
 
 //app.use('/api', apiSnippets);
 
-import htmlToString from './serverRender';
+
 /*
 app.get('/', (req,res)=>{
   htmlToString(req).then(html=>{
@@ -69,38 +82,30 @@ app.use('/graphql', schema);
 
 // universal routing and rendering
 app.get('*', (req, res) => {
-  match(
-    { routes, location: req.url },
-    (err, redirectLocation, renderProps) => {
 
-console.log(err, redirectLocation, renderProps);
-      // in case of error display the error message
-      if (err) {
-        return res.status(500).send(err.message);
-      }
-
-      // in case of redirect propagate the redirect to the browser
-      if (redirectLocation) {
-        return res.redirect(302, redirectLocation.pathname + redirectLocation.search);
-      }
-
-       // generate the React markup for the current route
-      let markup;
-      if (renderProps) {
-        // if the current route matched we have renderProps
-        markup = renderToString(<RouterContext {...renderProps}/>);
-      } else {
-        // otherwise we can render a 404 page
-        markup = <h1>404 Not found!.</h1>;
-        res.status(404);
-      }
-
-      // render the index template with the embedded React markup
-      return res.render('index', { markup });
+  let store = configureStore();
+  const context = {};
+console.log("server \n\n\n\n*",req.params);
+  return store.dispatch(snippetsActions.getSnippetsFromServer()).then( ()=>{
+    const html= ReactDOMServer.renderToString(
+      <Provider store={store}>
+        <StaticRouter location={req.url} context={context}>
+          <AppLayout>
+            {renderRoutes(routes)}
+          </AppLayout>
+        </StaticRouter>
+      </Provider>
+      );
+  
+    if (context.url) {
+        // Somewhere a `<Redirect>` was rendered
+        console.log("context ",context, context.url);
+        res.redirect(301, context.url)
+    } else {
+      console.log("ssr");
+        res.render('index', { html });
     }
-
-
-    );
+  });
 });
 
 

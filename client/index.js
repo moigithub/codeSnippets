@@ -3,13 +3,14 @@ import ReactDOM from 'react-dom';
 
 
 import { BrowserRouter,Switch, Route, Link} from 'react-router-dom';
+import {renderRoutes} from 'react-router-config';
 
+//import App from './components/App';
 
-import App from './components/App';
-
-
+import routes from './routes';
 
 import { Provider } from "react-redux";
+import AppLayout from './components/AppLayout';
 
 import * as snippetsActions from './actions/snippetsActions';
 
@@ -22,11 +23,11 @@ console.log("store2",store.getState());
 
 ReactDOM.render(<Provider store={store}>
 					<BrowserRouter>
-						<App />
+						<AppLayout>
+							{renderRoutes(routes)}
+						</AppLayout>
 					</BrowserRouter>
 				</Provider>
 				, document.getElementById("app"));
 
 
-
-//asdfdsf

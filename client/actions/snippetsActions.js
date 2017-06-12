@@ -1,4 +1,4 @@
-import {GETSNIPPETDATA, SETSNIPPETDATA} from '../reducers/const'
+import {GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA} from '../reducers/const'
 
 import axios from 'axios';
 
@@ -20,6 +20,13 @@ export const setAllSnippets = (data)=>(
 
 );
 
+export const setCurrentSnippet = (snippet)=>(
+{
+	type: SETCURRENTSNIPPETDATA,
+	data : snippet
+}
+
+);
 
 ///////////////////////////////////////////////////////////////////////////////
 /// async actions
@@ -64,6 +71,37 @@ export const getSnippetsFromServer=(tags=[],all=false,language="")=> {
 	//	    console.log(response.data.data.CodeSnippets);
 
 		    dispatch(setAllSnippets(response.data.data.CodeSnippets));
+		  })
+		  .catch(function (error) {
+		    console.log(error);
+		  });
+    }
+}
+
+
+
+export const getSnippetByIdFromServer=(snippetId)=> {
+//    console.log("getSnippetsFromServer", tags, all);
+    const query = `query findSnippet(snippetId:String){
+			CodeSnippet(snippetId:$snippetId){
+				_id,language,title,description,code,tags,links,author{email,displayName}
+			}
+		}`;
+	let queryJSON = 
+	{
+		"query":query,
+		"variables":{
+			"snippetId":snippetId
+		},
+		"operationName":"findSnippet"
+	};
+
+    return function(dispatch, getState){
+    	return axios.post(API_URL, queryJSON)
+    	  .then(function (response) {
+		    console.log("current snippet by id",response.data.data.CodeSnippets);
+
+		    dispatch(setCurrentSnippet(response.data.data.CodeSnippets));
 		  })
 		  .catch(function (error) {
 		    console.log(error);
