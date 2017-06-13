@@ -56,11 +56,11 @@ class Main extends React.Component {
  	}
 
 	render(){
-		console.log("main render props",this.props);
+//		console.log("main render props",this.props);
 		//console.log("actions",snippetsActions);
 		const {match, location} = this.props;
 //console.log("main state", this.state);
-console.log("main render", match.params)
+//console.log("main render", match.params)
 		return (
 		<div className="container">
 			<div className="row">

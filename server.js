@@ -80,32 +80,43 @@ app.get('/', (req,res)=>{
 // {"query":"{Users{_id,email,displayName}}"}
 app.use('/graphql', schema);
 
-// universal routing and rendering
-app.get('*', (req, res) => {
 
-  let store = configureStore();
-  const context = {};
-//console.log("server \n\n\n\n*",req.params);
-  return store.dispatch(snippetsActions.getSnippetsFromServer()).then( ()=>{
-    const html= ReactDOMServer.renderToString(
-      <Provider store={store}>
-        <StaticRouter location={req.url} context={context}>
-          <AppLayout>
-            {renderRoutes(routes)}
-          </AppLayout>
-        </StaticRouter>
-      </Provider>
-      );
-  
-    if (context.url) {
-        // Somewhere a `<Redirect>` was rendered
-        console.log("context ",context, context.url);
-        res.redirect(301, context.url)
-    } else {
-      console.log("ssr");
-        res.render('index', { html });
-    }
-  });
+// universal routing and rendering
+app.get('/:id?', (req, res) => {
+
+let store = configureStore();
+const context = {};
+var html;
+
+console.log("server \n\n\n\n*",req.params);
+  return store.dispatch(snippetsActions.getSnippetsFromServer())
+    .then( ()=>{
+      const snippetId = req.params.id;
+      if(snippetId){
+        console.log("snippetId", snippetId);
+        return store.dispatch(snippetsActions.getSnippetByIdFromServer(snippetId))
+      }
+    })
+    .then(()=>{
+        html= ReactDOMServer.renderToString(
+          <Provider store={store}>
+            <StaticRouter location={req.url} context={context}>
+              <AppLayout>
+                {renderRoutes(routes)}
+              </AppLayout>
+            </StaticRouter>
+          </Provider>
+          );
+    
+        if (context.url) {
+            // Somewhere a `<Redirect>` was rendered
+            console.log("context ",context, context.url);
+            res.redirect(301, context.url)
+        } else {
+          console.log("ssr");
+            res.render('index', { html });
+        }
+    });
 });
 
 

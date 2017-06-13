@@ -82,8 +82,8 @@ export const getSnippetsFromServer=(tags=[],all=false,language="")=> {
 
 export const getSnippetByIdFromServer=(snippetId)=> {
 //    console.log("getSnippetsFromServer", tags, all);
-    const query = `query findSnippet($snippetId:String!){
-			CodeSnippet(snippetId:$snippetId){
+    const query = `query findSnippet($Id:String!){
+			CodeSnippet(snippetId:$Id){
 				_id,language,title,description,code,tags,links,author{email,displayName}
 			}
 		}`;
@@ -91,12 +91,12 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 	{
 		"query":query,
 		"variables":{
-			"snippetId":snippetId
+			"Id":snippetId
 		},
 		"operationName":"findSnippet"
 	};
 
-	
+
      console.log("getSnippetByIdFromServer");
     return function(dispatch, getState){
     	return axios.post(API_URL, queryJSON)
