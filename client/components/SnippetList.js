@@ -8,7 +8,7 @@ const SnippetList = (props) => {
 		    <Link to={`/${snippet._id}`}  
 		    	className="list-group-item" 
 		    	key={snippet._id} 
-		    	onClick={()=>props.getSnippetById(snippet._id)}>
+		    	>
 			    	<span className="badge">{snippet.language}</span>
 			     	{snippet.title}
 		     </Link>

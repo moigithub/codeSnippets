@@ -7,7 +7,7 @@ import routes from '../routes';
 
 
 const AppLayout = (props) => {
-	console.log("AppLayout",props.children);
+//	console.log("AppLayout",props.children);
 	return (
   <div>
 	<Navigation/>

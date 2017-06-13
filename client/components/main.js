@@ -27,6 +27,15 @@ class Main extends React.Component {
 		language:""
 	}
 
+	componentWillReceiveProps(nextProp){
+		console.log("cwrp",nextProp);
+		console.log("cwrp this",this.props);
+		const id = nextProp.match.params.snippetId;
+		if(id && this.props.currentSelected._id !== id){
+			this.props.getSnippetById(id)
+		}
+	}
+
  	addTag=(tag)=>{
  		var allTags = this.state.filterTags.slice();
  		allTags.push(tag);
@@ -51,6 +60,7 @@ class Main extends React.Component {
 		//console.log("actions",snippetsActions);
 		const {match, location} = this.props;
 //console.log("main state", this.state);
+console.log("main render", match.params)
 		return (
 		<div className="container">
 			<div className="row">
@@ -70,7 +80,7 @@ class Main extends React.Component {
 }
 
 function mapStateToProps(state){
-	console.log("mapStateToProps",state);
+	//console.log("mapStateToProps",state);
 	return {
 		snippets:state.snippets,
 		currentSelected:state.currentSelected
@@ -80,7 +90,9 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch, oo){
 	return {
 		getSnippets: (tags,all,language)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language)),
-		getSnippetById: (id)=>dispatch(getSnippetByIdFromServer(id))
+		getSnippetById: (id)=>{
+			console.log("getSnippetById Main.js", id);
+			return dispatch(snippetsActions.getSnippetByIdFromServer(id))}
 	}
 }
 

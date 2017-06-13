@@ -85,7 +85,7 @@ app.get('*', (req, res) => {
 
   let store = configureStore();
   const context = {};
-console.log("server \n\n\n\n*",req.params);
+//console.log("server \n\n\n\n*",req.params);
   return store.dispatch(snippetsActions.getSnippetsFromServer()).then( ()=>{
     const html= ReactDOMServer.renderToString(
       <Provider store={store}>
