@@ -5,7 +5,7 @@ const SnippetList = (props) => {
 	//console.log("snipets list ",props);
 	const snippets = props.snippetsList.map(snippet => {
 		return (
-		    <Link to={`/${snippet._id}`}  
+		    <Link to={`/snippets/${snippet._id}`}  
 		    	className="list-group-item" 
 		    	key={snippet._id} 
 		    	>

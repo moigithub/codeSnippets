@@ -4,23 +4,19 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import express from 'express';
-//import ejs from 'ejs';
-import path from 'path';
 
-import ReactDOMServer from 'react-dom/server'
-import { match, matchPath, RouterContext } from 'react-router';
-import { StaticRouter } from 'react-router';
-import { renderToString } from 'react-dom/server';
+
+var passport = require('passport');
+var flash    = require('connect-flash');
+
+
+import path from 'path';
 
 import config from './config';
 
-
 import schema from './schema';
 
-import apiSnippets from './api/apiSnippets';
-
-var mongoStore = require('connect-mongo')(session);
-
+//import apiSnippets from './api/apiSnippets';
 
 
 import React from 'react';
@@ -29,7 +25,9 @@ import { Provider } from "react-redux";
 import configureStore from './client/configureStore';
 import * as snippetsActions from './client/actions/snippetsActions';
 import {renderRoutes} from 'react-router-config';
-
+import { match, matchPath, RouterContext } from 'react-router';
+import { StaticRouter } from 'react-router';
+import { renderToString } from 'react-dom/server';
 
 import User from './models/User.js';
 import Snippet from './models/Snippet.js';
@@ -48,13 +46,16 @@ mongoose.connection.on('error', function(err){
   process.exit(-1);
 });
 
+
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(flash());
 
 app.use(express.static(path.join(__dirname,'/public')));
 
+var mongoStore = require('connect-mongo')(session);
 
 app.use(session({
 	secret: 'my super secret password.',
@@ -67,13 +68,51 @@ app.use(session({
 //app.use('/api', apiSnippets);
 
 
-/*
-app.get('/', (req,res)=>{
-  htmlToString(req).then(html=>{
-    res.render('index', { html:html });
-  })
+
+/* **************  */
+/*  auth           */
+/* **************  */
+import passportConfig from './passport';
+passportConfig(passport);
+
+app.get('/login', function(req, res) {
+
+    // render the page and pass in any flash data if it exists
+    res.render('login.ejs', { message: req.flash('loginMessage') }); 
 });
-*/
+
+app.post('/login', passport.authenticate('local-login',{
+  successRedirect: '/snippets',
+  failureRedirect: '/login',
+  failureFlash: true
+}));
+
+app.get('/signup', function(req, res) {
+
+    // render the page and pass in any flash data if it exists
+    res.render('signup.ejs', { message: req.flash('signupMessage') });
+});
+
+app.post('/signup', passport.authenticate('local-signup', {
+  successRedirect: '/',
+  failureRedirect: '/signup',
+  failureFlash: true
+}));
+
+app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
+
+app.get('/user', function(req,res){
+  res.json(req.User);
+});
+
+function checkMid(req,res,next){
+  console.log("signup");
+  return next();
+}
+
 
 // to request data to server from client
 // send a POST request with application/json as content-type
@@ -82,23 +121,23 @@ app.use('/graphql', schema);
 
 
 // universal routing and rendering
-app.get('/:id?', (req, res) => {
+app.get('/snippets/:id?', (req, res) => {
 
 let store = configureStore();
 const context = {};
 var html;
 
-console.log("server \n\n\n\n*",req.params);
+//console.log("server \n\n\n\n*",req.params);
   return store.dispatch(snippetsActions.getSnippetsFromServer())
     .then( ()=>{
       const snippetId = req.params.id;
       if(snippetId){
-        console.log("snippetId", snippetId);
+//        console.log("snippetId", snippetId);
         return store.dispatch(snippetsActions.getSnippetByIdFromServer(snippetId))
       }
     })
     .then(()=>{
-        html= ReactDOMServer.renderToString(
+        html= renderToString(
           <Provider store={store}>
             <StaticRouter location={req.url} context={context}>
               <AppLayout>
@@ -110,15 +149,18 @@ console.log("server \n\n\n\n*",req.params);
     
         if (context.url) {
             // Somewhere a `<Redirect>` was rendered
-            console.log("context ",context, context.url);
+  //          console.log("context ",context, context.url);
             res.redirect(301, context.url)
         } else {
-          console.log("ssr");
+  //        console.log("ssr");
             res.render('index', { html });
         }
     });
 });
 
+app.get('*', (req,res)=>{
+  res.redirect('/snippets');
+});
 
 //create some data on db
 const seed=true;

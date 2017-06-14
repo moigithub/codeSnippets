@@ -16,7 +16,7 @@ const routes = (
 
 const routes = [{
   component: Main,
-  path: '/:snippetId?',
+  path: '/snippets/:snippetId?',
   exact: true
 }, 
 {
