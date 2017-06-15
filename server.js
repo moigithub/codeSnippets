@@ -64,6 +64,8 @@ app.use(session({
     store: new mongoStore({mongooseConnection: mongoose.connection})
 
 }));
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
 
 //app.use('/api', apiSnippets);
 
@@ -94,7 +96,7 @@ app.get('/signup', function(req, res) {
 });
 
 app.post('/signup', passport.authenticate('local-signup', {
-  successRedirect: '/',
+  successRedirect: '/snippets',
   failureRedirect: '/signup',
   failureFlash: true
 }));
@@ -105,13 +107,9 @@ app.get('/logout', function(req, res) {
 });
 
 app.get('/user', function(req,res){
-  res.json(req.User);
+console.log(req);
+  res.json(req.user);
 });
-
-function checkMid(req,res,next){
-  console.log("signup");
-  return next();
-}
 
 
 // to request data to server from client
@@ -140,7 +138,7 @@ var html;
         html= renderToString(
           <Provider store={store}>
             <StaticRouter location={req.url} context={context}>
-              <AppLayout>
+              <AppLayout user={req.user|| "nada" }>
                 {renderRoutes(routes)}
               </AppLayout>
             </StaticRouter>
@@ -153,17 +151,18 @@ var html;
             res.redirect(301, context.url)
         } else {
   //        console.log("ssr");
-            res.render('index', { html });
+            res.render('index', { html , user: req.user});
         }
     });
 });
 
 app.get('*', (req,res)=>{
+  console.log("catch all, redirect");
   res.redirect('/snippets');
 });
 
 //create some data on db
-const seed=true;
+const seed=false;
 if (seed) {
   Snippet.find({}).remove(function(){
     User.find({}).remove(function() {
@@ -171,7 +170,7 @@ if (seed) {
       {
       	email: 'test@test.com',
         password: 'test',
-        displayName: 'test',
+        ame: 'test',
         isAdmin: false
       },function(err,u){
         //console.log(err, u);
@@ -212,7 +211,7 @@ if (seed) {
       User.create({
       	email: 'Moi@test.com',
         password: 'test',
-        displayName: 'Moi',
+        name: 'Moi',
         isAdmin: false
       },function(err,u){
         Snippet.create({
@@ -231,7 +230,7 @@ if (seed) {
       User.create({
       	email: 'booo@test.com',
         password: 'test',
-        displayName: 'Boo',
+        name: 'Boo',
         isAdmin: false
       },function(err,u){
         Snippet.create({

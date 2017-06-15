@@ -8,9 +8,16 @@ import routes from '../routes';
 
 const AppLayout = (props) => {
 //	console.log("AppLayout",props.children);
+
+
+//TODO *********
+// class component.. 
+// on didmount u otro life cycle event.. hacer request al server del user
+
+console.log("applayout props ",props);
 	return (
   <div>
-	<Navigation/>
+	<Navigation user={props.user}/>
 	{props.children}
   </div>
 )}
