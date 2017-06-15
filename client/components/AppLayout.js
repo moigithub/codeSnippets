@@ -22,6 +22,8 @@ console.log("applayout props ",props);
   </div>
 )}
 
-
+AppLayout.defaultProps = {
+	user: null
+};
 
 export default AppLayout;
