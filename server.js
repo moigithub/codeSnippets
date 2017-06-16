@@ -138,7 +138,7 @@ var html;
         html= renderToString(
           <Provider store={store}>
             <StaticRouter location={req.url} context={context}>
-              <AppLayout user={req.user|| "nada" }>
+              <AppLayout user={req.user|| null }>
                 {renderRoutes(routes)}
               </AppLayout>
             </StaticRouter>

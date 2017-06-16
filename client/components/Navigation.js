@@ -52,7 +52,7 @@ class Header extends React.Component {
 				{!this.state.user &&
 			 		<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					
-					      <ul className="nav navbar-nav navbar-left">
+					      <ul className="nav navbar-nav navbar-right">
 					        <li><a href="/login">Login</a></li>
 					        <li><a href="/signup">SignUp</a></li>
 					      </ul>

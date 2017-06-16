@@ -18,15 +18,7 @@ const routes = [{
   component: Main,
   path: '/snippets/:snippetId?',
   exact: true
-}
-
-]
-
-
-export default routes;
-
-/*
-, 
+}, 
 {
   component: ()=>(<h1>my Snippets</h1>),
   path: '/MySnippets'
@@ -35,4 +27,12 @@ export default routes;
   component: ()=>(<h1>NEW Snippets</h1>),
   path: '/new'
 }
+
+]
+
+
+export default routes;
+
+/*
+
 */
