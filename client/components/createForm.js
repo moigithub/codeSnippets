@@ -6,7 +6,9 @@ const renderField = ({
   input,
   label,
   type,
-  meta: { touched, error, warning }
+  meta: { touched, error, warning },
+  children,
+  ...rest
 }) => (
   <div>
     <label>{label}</label>
