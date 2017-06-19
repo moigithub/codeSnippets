@@ -24,7 +24,8 @@ import { Provider } from "react-redux";
 //import App from './client/components/App';
 import configureStore from './client/configureStore';
 import * as snippetsActions from './client/actions/snippetsActions';
-import {renderRoutes} from 'react-router-config';
+import {renderRoutes, matchRoutes} from 'react-router-config';
+
 import { match, matchPath, RouterContext } from 'react-router';
 import { StaticRouter } from 'react-router';
 import { renderToString } from 'react-dom/server';
@@ -107,7 +108,7 @@ app.get('/logout', function(req, res) {
 });
 
 app.get('/user', function(req,res){
-console.log(req);
+//console.log(req);
   res.json(req.user);
 });
 
@@ -119,13 +120,46 @@ app.use('/graphql', schema);
 
 
 // universal routing and rendering
-app.get('/snippets/:id?', (req, res) => {
+//load data helper
+const loadBranchData = location=> {
+  console.log("server.js: location ", location, location.pathname);
 
-let store = configureStore();
-const context = {};
-var html;
+  const branch = matchRoutes(routes, location);
 
-//console.log("server \n\n\n\n*",req.params);
+  /*
+  const match = matchPath(
+      location.pathname, // global DOM variable
+      { path, exact }
+    )
+
+  */
+  console.log("server.js branch", branch);
+  const promises = branch.map(({route, match})=>{
+    //invoke component loadData method
+    //which could be a promise
+    console.log("loadBranchData server.js ", route, match);
+
+    return route.loadData   //if have loadData method
+      ? route.loadData(match)  //invoke
+      : Promise.resolve(null)
+  });
+
+  return Promise.all(promises);
+}
+
+//app.get('/snippets/:id?', (req, res) => {
+app.get('*', (req,res)=>{
+
+  let store = configureStore();
+  const context = {};
+  var html;
+
+  console.log("server \n\n\n\n*",req.params);
+
+  loadBranchData(req.url).then(data=>{
+    console.log("server.js: all data loaded",data)
+  });
+
   return store.dispatch(snippetsActions.getSnippetsFromServer())
     .then( ()=>{
       const snippetId = req.params.id;
@@ -145,6 +179,7 @@ var html;
           </Provider>
           );
     
+    console.log("server.js:  static router context",context);
         if (context.url) {
             // Somewhere a `<Redirect>` was rendered
   //          console.log("context ",context, context.url);
@@ -156,10 +191,12 @@ var html;
     });
 });
 
+/*
 app.get('*', (req,res)=>{
   console.log("catch all, redirect");
   res.redirect('/snippets');
 });
+*/
 
 //create some data on db
 const seed=false;

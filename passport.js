@@ -33,7 +33,7 @@ console.log("configuring paspport");
     				if(user){
     					return done(null, false, req.flash('signupMessage', 'That email is already in use.'));
     				} else {
-            console.log('local-signup', email, password);
+//            console.log('local-signup', email, password);
             
     					var newUser = new User();
     					newUser.local.email = email;
@@ -41,7 +41,7 @@ console.log("configuring paspport");
 
     					newUser.save(function(err){
     						if(err) return done(err);
-                            console.log("newuser saved", newUser);
+//                            console.log("newuser saved", newUser);
 
     						return done(null, newUser);
     					});
@@ -60,7 +60,7 @@ console.log("configuring paspport");
 		passReqToCallback: true
 	},
 		function(req, email, password, done){
-			console.log('local-login', email, password);
+			//console.log('local-login', email, password);
 
 			User.findOne({'local.email': email}, function(err, user){
 				if (err) return done(err);
@@ -69,7 +69,7 @@ console.log("configuring paspport");
 					return done(null, false, req.flash('loginMessage', 'No user found.'))
 				}
 
-                console.log('login ', user)
+    //            console.log('login ', user)
 
 				return done(null, user);;
 

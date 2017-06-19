@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
+import { reducer as reduxFormReducer } from 'redux-form';
 import thunkMiddleware from "redux-thunk";
 
 
@@ -25,7 +26,11 @@ let store = createStore(reducer, applyMiddleware(thunk))
 export default function configureStore(initialState){
 	console.log("initial state", initialState);;
 	return createStoreWithMiddleware(
-		combineReducers({snippets:snippetReducer}),
+		combineReducers({
+			form: reduxFormReducer, // mounted under "form"
+			snippets:snippetReducer
+		}),
 		initialState
 		);	
 } 
+

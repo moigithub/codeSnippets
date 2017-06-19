@@ -14,7 +14,7 @@ const AppLayout = (props) => {
 // class component.. 
 // on didmount u otro life cycle event.. hacer request al server del user
 
-console.log("applayout props ",props);
+///console.log("applayout props ",props);
 	return (
   <div>
 	<Navigation user={props.user}/>

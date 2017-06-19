@@ -91,7 +91,7 @@ function mapDispatchToProps(dispatch, oo){
 	return {
 		getSnippets: (tags,all,language)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language)),
 		getSnippetById: (id)=>{
-			console.log("getSnippetById Main.js", id);
+	//		console.log("getSnippetById Main.js", id);
 			return dispatch(snippetsActions.getSnippetByIdFromServer(id))}
 	}
 }

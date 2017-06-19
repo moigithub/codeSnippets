@@ -97,11 +97,11 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 	};
 
 
-     console.log("getSnippetByIdFromServer");
+   // console.log("getSnippetByIdFromServer");
     return function(dispatch, getState){
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
-		    console.log("current snippet by id",response.data);
+	//	    console.log("current snippet by id",response.data);
 
 		    dispatch(setCurrentSnippet(response.data.data.CodeSnippet));
 		  })

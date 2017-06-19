@@ -150,7 +150,7 @@ const QueryType = new GraphQLObjectType({
 			},
 			resolve: function(parentValue, args){
 				return new Promise((resolve, reject)=>{
-					console.log("codesnippetSSS", parentValue, args);
+//					console.log("codesnippetSSS", parentValue, args);
 
 					let query={};
 
@@ -166,7 +166,7 @@ const QueryType = new GraphQLObjectType({
 					if(args.language && args.language.trim()!==""){
 						query.language=new RegExp(args.language,"gi");
 					}
-console.log("schema snippet query",query)
+//console.log("schema snippet query",query)
 					Snippet.find(query, function(err, snippets){
 						if(err) {
 							return reject(err);

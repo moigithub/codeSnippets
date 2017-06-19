@@ -3,6 +3,8 @@ import React from 'react';
 
 
 import Main from './components/Main';
+import ContactForm from './components/createForm';
+
 
 /*
 const routes = (
@@ -14,6 +16,10 @@ const routes = (
 );
 */
 
+const handleSubmit = (d)=>console.log(d);
+const form = ()=>(<ContactForm onSubmit={handleSubmit}/>);
+
+
 const routes = [{
   component: Main,
   path: '/snippets/:snippetId?',
@@ -24,7 +30,7 @@ const routes = [{
   path: '/MySnippets'
 }, 
 {
-  component: ()=>(<h1>NEW Snippets</h1>),
+  component: form,
   path: '/new'
 }
 

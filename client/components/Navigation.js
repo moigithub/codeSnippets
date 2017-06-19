@@ -11,15 +11,15 @@ class Header extends React.Component {
 	}
 
 	componentDidMount(){
-		console.log("navigation: getting user data");
+	//	console.log("navigation: getting user data");
 		axios.get('/user').then(data=>{
-			console.log("navigation user",data.data);
+	//		console.log("navigation user",data.data);
 			this.setState({user:data.data});
 		});
 	}
 
 	render(){
-		console.log(this.state);
+	//	console.log(this.state);
 
 		return (
 		  <header>
