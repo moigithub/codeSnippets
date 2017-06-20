@@ -13,7 +13,8 @@ const renderField = ({
   <div>
     <label>{label}</label>
     <div>
-      <input {...input} placeholder={label} type={type} />
+      {type==="textarea" && <textarea {...input} placeholder={label} type={type} />}
+      {type!=="textarea" && <input {...input} placeholder={label} type={type} />}
       {touched &&
         ((error && <span>{error}</span>) ||
           (warning && <span>{warning}</span>))}
@@ -82,12 +83,7 @@ let ContactForm = props => {
         </div>
       </div>
 
-      <div>
-        <label>Code</label>
-        <div>
-          <Field name="code" component="textarea" />
-        </div>
-      </div>
+      <Field name="code" type="textarea" component={renderField} label="Code"/>
 
       <FieldArray name="links" component={renderLinks} />
 
@@ -120,25 +116,21 @@ let ContactForm = props => {
 
 const validate = values => {
   const errors = {}
-  /*
-  if (!values.username) {
-    errors.username = 'Required'
-  } else if (values.username.length > 15) {
-    errors.username = 'Must be 15 characters or less'
+  
+  if (!values.title) {
+    errors.title = 'Required'
+  } else if (values.title.length < 3) {
+    errors.title = 'Must be at least 3 characters or more'
   }
-  if (!values.email) {
-    errors.email = 'Required'
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address'
+  if (!values.code) {
+    errors.code = 'Required'
+  } else if (values.code.length < 3) {
+    errors.code = 'Enter a valid code.'
   }
-  if (!values.age) {
-    errors.age = 'Required'
-  } else if (isNaN(Number(values.age))) {
-    errors.age = 'Must be a number'
-  } else if (Number(values.age) < 18) {
-    errors.age = 'Sorry, you must be at least 18 years old'
+  if (!values.language) {
+    errors.language = 'Required'
   }
-  */
+  
   return errors
 }
 

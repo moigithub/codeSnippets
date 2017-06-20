@@ -16,7 +16,12 @@ const routes = (
 );
 */
 
-const handleSubmit = (d)=>console.log(d);
+const handleSubmit = (d)=>{
+  console.log(d);
+  // TODO
+  
+};
+
 const form = ()=>(<ContactForm onSubmit={handleSubmit}/>);
 
 
