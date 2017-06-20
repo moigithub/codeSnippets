@@ -32,7 +32,7 @@ const renderLinks = ({ fields, meta: { error } }) => (
           type="button"
           title="Remove link"
           onClick={() => fields.remove(index)}
-        />
+        >Remove</button>
         <Field
           name={link}
           type="text"

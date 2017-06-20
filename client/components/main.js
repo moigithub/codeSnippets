@@ -36,6 +36,17 @@ class Main extends React.Component {
 		}
 	}
 
+	static loadData=({store,match})=>{
+		console.log("main.js loadData match",match);
+		
+		if (match && match.params.snippetId) {
+			return store.dispatch(snippetsActions.getSnippetByIdFromServer(match.params.snippetId));
+		} else {
+			return store.dispatch(snippetsActions.getSnippetsFromServer([], false, ""));
+		}
+		
+	}
+
  	addTag=(tag)=>{
  		var allTags = this.state.filterTags.slice();
  		allTags.push(tag);

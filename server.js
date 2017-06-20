@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import express from 'express';
-
+var favicon = require('serve-favicon');
 
 var passport = require('passport');
 var flash    = require('connect-flash');
@@ -37,7 +37,7 @@ import AppLayout from './client/components/AppLayout';
 
 var app = express();
 app.set('view engine','ejs')
-
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 
 mongoose.Promise = global.Promise;
@@ -121,27 +121,27 @@ app.use('/graphql', schema);
 
 // universal routing and rendering
 //load data helper
-const loadBranchData = location=> {
+const loadBranchData = (store,location)=> {
   console.log("server.js: location ", location, location.pathname);
 
   const branch = matchRoutes(routes, location);
 
-  /*
-  const match = matchPath(
-      location.pathname, // global DOM variable
-      { path, exact }
-    )
-
-  */
   console.log("server.js branch", branch);
   const promises = branch.map(({route, match})=>{
-    //invoke component loadData method
-    //which could be a promise
-    console.log("loadBranchData server.js ", route, match);
+  //invoke component loadData method
+  //which could be a promise
+  console.log("----------------------");
+  console.log("loadBranchData server.js => route: ", route, "\nmatch: ",match);
+  console.log("----------------------");
+  console.log("server.js loadBranchData => route.component :\n", route.component);
+  console.log("----------------------");
+  console.log("server.js loadBranchData => route.component.wrappedComponent :\n", route.component.WrappedComponent);
+  console.log("----------------------");
 
-    return route.loadData   //if have loadData method
-      ? route.loadData(match)  //invoke
-      : Promise.resolve(null)
+  const component = route.component;
+  return component.WrappedComponent && component.WrappedComponent.loadData  //if have loadData method
+    ? component.loadData({store,match})  //invoke
+    : Promise.resolve(null)
   });
 
   return Promise.all(promises);
@@ -156,7 +156,7 @@ app.get('*', (req,res)=>{
 
   console.log("server \n\n\n\n*",req.params);
 
-  loadBranchData(req.url).then(data=>{
+  loadBranchData(store,req.url).then(data=>{
     console.log("server.js: all data loaded",data)
   });
 
