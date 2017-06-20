@@ -1,5 +1,15 @@
 const expressGraphQL = require('express-graphql');
-import {GraphQLSchema, GraphQLObjectType, GraphQLString,GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLID, GraphQLNonNull} from 'graphql';
+import {
+	GraphQLSchema, 
+	GraphQLObjectType, 
+	GraphQLInputObjectType, 
+	GraphQLString,
+	GraphQLBoolean, 
+	GraphQLInt, 
+	GraphQLList, 
+	GraphQLID, 
+	GraphQLNonNull
+} from 'graphql';
 
 import mongoose from 'mongoose';
 import User from './models/User.js';
@@ -55,7 +65,7 @@ const UserType = new GraphQLObjectType({
 	description: 'User info',
 	fields: ()=>({
 		_id: {
-			type: GraphQLString
+			type: GraphQLID
 		},
 		email:{
 			type: GraphQLString
@@ -182,6 +192,90 @@ const QueryType = new GraphQLObjectType({
 });
 
 
+
+/*#####################*/
+///  MUTATIONs
+/*#####################*/
+
+const CodeSnippetInputType = new GraphQLInputObjectType({
+	name: 'SnippetInput',
+	fields:{
+		language: {
+			type: GraphQLString,	
+			description: 'Language'
+		},
+		title: {
+			type: GraphQLString
+		},
+		description: {
+			type: GraphQLString
+		},
+		code: {
+			type: GraphQLString
+		},
+		authorId: {
+			type: new GraphQLNonNull(GraphQLID)
+		},
+		tags: {
+			type: new GraphQLList(GraphQLString) 
+		},
+		links: {
+			type: new GraphQLList(GraphQLString) 
+		},
+	}
+});
+
+const mutationType = new GraphQLObjectType({
+	name: 'Mutation',
+	fields:{
+		createSnippet : {
+			type: CodeSnippetType,
+			args:{
+				snippet:{
+					type: new GraphQLNonNull(CodeSnippetInputType)
+				}
+
+			},
+			resolve: (__, args)=>{
+				return new Promise((resolve, reject)=>{
+					// insert into db
+					const { 
+						language, 
+						title, 
+						description, 
+						code, 
+						authorId: postedBy,
+						tags,
+						links
+					} = args.snippet;
+
+					const newSnippet={
+						language, 
+						title, 
+						description, 
+						code, 
+						postedBy,
+						tags,
+						links						
+					};
+					
+					Snippet.create(newSnippet, (err, snippet)=>{
+						if(err) {
+							return reject(err);
+						}
+						return resolve(snippet);
+					});
+				});
+			}
+		}
+	}
+
+
+})
+
+
+
+/*#####################*/
 
 var schema = new GraphQLSchema({
 	query : QueryType
