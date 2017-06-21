@@ -96,6 +96,7 @@ const UserType = new GraphQLObjectType({
 const QueryType = new GraphQLObjectType({
 	name : 'query',
 	fields: {
+		authInfo: {type: GraphQLString},
 		User: {
 			type: UserType,
 			args: {
@@ -236,10 +237,11 @@ const mutationType = new GraphQLObjectType({
 				}
 
 			},
-			resolve: (__, args)=>{
+			resolve: (__, args, context)=>{
 				return new Promise((resolve, reject)=>{
 					// insert into db
-
+console.log("mutation createSnippet resolve context: ",context.session);
+					const userId = context.session.passport.user;
 					Snippet.create(args.snippet, (err, snippet)=>{
 						if(err) {
 							return reject(err);
@@ -264,8 +266,15 @@ var schema = new GraphQLSchema({
 });
 
 
+const root = {
+	authInfo: function(args, request){
+		console.log("authInfo",request);
+		return request.user;
+	}
+}
 
 export default expressGraphQL({
 	schema,
-	graphiql: true
+	graphiql: true,
+	rootValue : root
 })
