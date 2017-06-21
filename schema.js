@@ -242,7 +242,17 @@ const mutationType = new GraphQLObjectType({
 					// insert into db
 console.log("mutation createSnippet resolve context: ",context.session);
 					const userId = context.session.passport.user;
-					Snippet.create(args.snippet, (err, snippet)=>{
+					const newSnippet = {
+						language: args.snippet.language,
+						title: args.snippet.title,
+						description: args.snippet.description,
+						code: args.snippet.code,
+						postedBy: userId,
+						tags: args.snippet.tags,
+						links: args.snippet.links
+					};
+					console.log("mutation createSnippet ------> \n", newSnippet);
+					Snippet.create(newSnippet, (err, snippet)=>{
 						if(err) {
 							return reject(err);
 						}

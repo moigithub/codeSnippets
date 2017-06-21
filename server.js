@@ -109,8 +109,12 @@ app.get('/logout', function(req, res) {
 
 app.get('/user', function(req,res){
 //console.log(req);
-const  {_id, name, email} = req.user;
-  res.json({user: {_id, name, email}});
+  if(req.user){
+    const  {_id, name, email} = req.user;
+    res.json({user: {_id, name, email}});
+  } else {
+    res.json({user:null});
+  }
 });
 
 
@@ -131,6 +135,7 @@ const loadBranchData = (store,location)=> {
   const promises = branch.map(({route, match})=>{
   //invoke component loadData method
   //which could be a promise
+/*  
   console.log("----------------------");
   console.log("loadBranchData server.js => route: ", route, "\nmatch: ",match);
   console.log("----------------------");
@@ -138,7 +143,7 @@ const loadBranchData = (store,location)=> {
   console.log("----------------------");
   console.log("server.js loadBranchData => route.component.wrappedComponent :\n", route.component.WrappedComponent);
   console.log("----------------------");
-
+*/
   const component = route.component;
   return component.WrappedComponent && component.WrappedComponent.loadData  //if have loadData method
     ? component.loadData({store,match})  //invoke

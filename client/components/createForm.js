@@ -10,39 +10,42 @@ const renderField = ({
   children,
   ...rest
 }) => (
-  <div>
-    <label>{label}</label>
-    <div>
-      {type==="textarea" && <textarea {...input} placeholder={label} type={type} />}
-      {type!=="textarea" && <input {...input} placeholder={label} type={type} />}
+  <div className="form-group">
+    <label className="col-sm-2 control-label">{label}</label>
+    <div className="col-sm-10">
+      {type==="textarea" && <textarea {...input} placeholder={label} type={type} className="form-control"/>}
+      {type!=="textarea" && <input {...input} placeholder={label} type={type}  className="form-control"/>}
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
-    </div>
+        ((error && <p className="help-block pull-right">{error}</p>) ||
+          (warning && <p className="help-block pull-right">{warning}</p>))}
+    </div>      
   </div>
 )
 
 const renderLinks = ({ fields, meta: { error } }) => (
   <ul>
     <li>
-      <button type="button" onClick={() => fields.push()}>Add Link</button>
+      <button type="button" className="btn btn-primary" onClick={() => fields.push()}>Add Link</button>
     </li>
     {fields.map((link, index) => (
-      <li key={index}>
-        <button
-          type="button"
-          title="Remove link"
-          onClick={() => fields.remove(index)}
-        >Remove</button>
+      <li key={index} className="form-group col-sm-10">
         <Field
           name={link}
           type="text"
           component={renderField}
           label={`Link #${index + 1}`}
         />
+        <span className="col-sm-2">
+          <button
+            type="button"
+            title="Remove link"
+            className="btn btn-danger"
+            onClick={() => fields.remove(index)}
+          >Remove</button>
+        </span>
       </li>
     ))}
-    {error && <li className="error">{error}</li>}
+    {error && <li className="error help-block pull-right">{error}</li>}
   </ul>
 );
 
@@ -60,64 +63,71 @@ let ContactForm = props => {
   const { handleSubmit, load, pristine, reset, submitting } = props
   //console.log("createForm.js props",props);
   return (
-    <form onSubmit={ handleSubmit }>
-      <Field
-        name="title"
-        type="text"
-        component={renderField}
-        label="Title"
-      />
+    <div className="container">
+      <h1>New Snippet</h1>
+      <form onSubmit={ handleSubmit } className="form-horizontal">
+        <Field
+          name="title"
+          type="text"
+          component={renderField}
+          label="Title"
+          className="form-control"
+        />
 
-      <div>
-        <label htmlFor="description">Description</label>
-        <Field name="description" component="input" type="text" />
-      </div>
-      
-      <div>
-        <label>Language</label>
-        <div>
-          <Field name="language" component="select">
-            <option value="">All</option>
-            <option value="Javascript">Javascript</option>
-            <option value="Ruby">Ruby</option>
-          </Field>
+        
+        <Field name="description" 
+          component={renderField}
+          type="text" 
+          label="Description" 
+          className="form-control"/>
+        
+        
+        <div className="form-group">
+          <label className="col-sm-2 control-label">Language</label>
+          <div className="col-sm-10">
+            <Field name="language" component="select" className="form-control">
+              <option value="">All</option>
+              <option value="Javascript">Javascript</option>
+              <option value="Ruby">Ruby</option>
+            </Field>
+          </div>
         </div>
-      </div>
 
-      <Field name="code" type="textarea" component={renderField} label="Code"/>
+        <Field name="code" type="textarea" component={renderField} label="Code"/>
 
-      <Field
-        name="tags"
-        type="text"
-        component={renderField}
-        label="Tags"
-      />
+        <Field
+          name="tags"
+          type="text"
+          component={renderField}
+          label="Tags"
+        />
 
-      <FieldArray name="links" component={renderLinks} />
+        <FieldArray name="links" component={renderLinks} />
 
-{/*
-      <div>
-        <label>Favorite Color</label>
+  {/*
         <div>
-          <Field name="favoriteColor" component="select">
-            <option value="">Select a color...</option>
-            {colors.map(colorOption => (
-              <option value={colorOption} key={colorOption}>
-                {colorOption}
-              </option>
-            ))}
-          </Field>
+          <label>Favorite Color</label>
+          <div>
+            <Field name="favoriteColor" component="select">
+              <option value="">Select a color...</option>
+              {colors.map(colorOption => (
+                <option value={colorOption} key={colorOption}>
+                  {colorOption}
+                </option>
+              ))}
+            </Field>
+          </div>
         </div>
-      </div>
-*/}      
-      <div>
-        <button type="submit" disabled={pristine || submitting}>Submit</button>
-        <button type="button" disabled={pristine || submitting} onClick={reset}>
-          Undo Changes
-        </button>
-      </div>
-      
-    </form>
+  */}      
+        <div>
+          <button type="submit" className="btn btn-primary" disabled={pristine || submitting}>Submit</button>
+          <button type="button" className="btn btn-warning" disabled={pristine || submitting} onClick={reset}>
+            Undo Changes
+          </button>
+        </div>
+        
+      </form>
+    </div>
   )
 }
 
