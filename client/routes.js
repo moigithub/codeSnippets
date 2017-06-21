@@ -16,13 +16,6 @@ const routes = (
 );
 */
 
-const handleSubmit = (d)=>{
-  console.log(d);
-  // TODO
-  
-};
-
-const form = ()=>(<ContactForm onSubmit={handleSubmit}/>);
 
 
 const routes = [{
@@ -35,7 +28,7 @@ const routes = [{
   path: '/MySnippets'
 }, 
 {
-  component: form,
+  component: ContactForm,
   path: '/new'
 }
 

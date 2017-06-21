@@ -22,8 +22,8 @@ const SnippetDetail = (props) => {
 				</span>
 			) 
 	}): [];
-
-	let author = props.author.displayName || props.author.email || "";
+console.log("SnippetDetail props: ",props);
+	let author = props.author ? (props.author.name || props.author.email || "") : "";
 	return (
 		<div className="col-xs-12 col-sm-8">
 			<h1>{props.title}</h1>

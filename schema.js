@@ -70,7 +70,7 @@ const UserType = new GraphQLObjectType({
 		email:{
 			type: GraphQLString
 		},
-		displayName:{
+		name:{
 			type: GraphQLString
 		},
 		snippets:{
@@ -213,7 +213,7 @@ const CodeSnippetInputType = new GraphQLInputObjectType({
 		code: {
 			type: GraphQLString
 		},
-		authorId: {
+		postedBy: {
 			type: new GraphQLNonNull(GraphQLID)
 		},
 		tags: {
@@ -239,27 +239,8 @@ const mutationType = new GraphQLObjectType({
 			resolve: (__, args)=>{
 				return new Promise((resolve, reject)=>{
 					// insert into db
-					const { 
-						language, 
-						title, 
-						description, 
-						code, 
-						authorId: postedBy,
-						tags,
-						links
-					} = args.snippet;
 
-					const newSnippet={
-						language, 
-						title, 
-						description, 
-						code, 
-						postedBy,
-						tags,
-						links						
-					};
-					
-					Snippet.create(newSnippet, (err, snippet)=>{
+					Snippet.create(args.snippet, (err, snippet)=>{
 						if(err) {
 							return reject(err);
 						}
@@ -278,7 +259,8 @@ const mutationType = new GraphQLObjectType({
 /*#####################*/
 
 var schema = new GraphQLSchema({
-	query : QueryType
+	query : QueryType,
+	mutation: mutationType
 });
 
 

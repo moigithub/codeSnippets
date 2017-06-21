@@ -58,6 +58,7 @@ const renderLinks = ({ fields, meta: { error } }) => (
 */
 let ContactForm = props => {
   const { handleSubmit, load, pristine, reset, submitting } = props
+  //console.log("createForm.js props",props);
   return (
     <form onSubmit={ handleSubmit }>
       <Field
@@ -84,6 +85,13 @@ let ContactForm = props => {
       </div>
 
       <Field name="code" type="textarea" component={renderField} label="Code"/>
+
+      <Field
+        name="tags"
+        type="text"
+        component={renderField}
+        label="Tags"
+      />
 
       <FieldArray name="links" component={renderLinks} />
 
@@ -151,6 +159,18 @@ ContactForm = reduxForm({
 })(ContactForm)
 
 
+
+
+
+import {createSnippetAsync} from '../actions/snippetsActions';
+
+function mapDispatchToProps(dispatch){
+  return {
+    createSnippet : (snippet)=>dispatch(createSnippetAsync(snippet))
+  }
+}
+
+
 ContactForm = connect(
   /*
   state => ({
@@ -158,10 +178,29 @@ ContactForm = connect(
   }),
   { load: loadAccount } // bind account loading action creator
   */
+  null, mapDispatchToProps
 )(ContactForm)
 
 
-export default ContactForm;
+
+const handleSubmit = (values,dispatch, props)=>{
+  console.log("createForm: handleSubmit",values,dispatch,props);
+  const snippetObj={
+    "language":values.language,
+    "title":values.title,
+    "description":values.description,
+    "code":values.code,
+    "postedBy":values.postedBy,
+    "tags":values.tags.split(","),
+    "links":values.links
+  };
+  props.createSnippet(snippetObj);
+};
+
+const form = ()=>(<ContactForm onSubmit={handleSubmit}/>);
+
+
+export default form;
 
 
 

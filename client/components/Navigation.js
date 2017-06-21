@@ -44,7 +44,7 @@ class Header extends React.Component {
 					        <li><Link to='/new'>Create Snippet</Link></li>
 					      </ul>
 					      <ul className="nav navbar-nav navbar-right">
-					        <li><p className="navbar-text" href="#">Welcome <strong><span>{this.state.user.local.email}</span></strong></p></li>
+					        <li><p className="navbar-text" href="#">Welcome <strong><span>{this.state.user.email}</span></strong></p></li>
 					        <li><a href="/logout">Logout</a></li>
 					      </ul>
 				    </div>

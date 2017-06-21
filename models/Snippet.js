@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 var SnippetSchema = new mongoose.Schema({
-	language : String,
-	description: String,
 	title: String,
+	description: String,
+	language : String,
 	code: String,
 	tags : [String],
 	links: [String],

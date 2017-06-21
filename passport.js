@@ -7,11 +7,12 @@ export default function(passport){
 console.log("configuring paspport");
 	// used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-        done(null, user.id);
+        done(null, user._id);
     });
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
+    //    console.log("passport deserialize",id)
         User.findById(id, function(err, user) {
             done(err, user);
         });
@@ -25,9 +26,7 @@ console.log("configuring paspport");
     	function(req, email, password, done){
 
     		process.nextTick(function(){
-
-
-    			User.findOne({'local.email': email}, function(err, user){
+    			User.findOne({'email': email, 'provider': 'local'}, function(err, user){
     				if(err) return done(err);
 
     				if(user){
@@ -36,12 +35,13 @@ console.log("configuring paspport");
 //            console.log('local-signup', email, password);
             
     					var newUser = new User();
-    					newUser.local.email = email;
-    					newUser.local.password = newUser.generateHash(password);
+    					newUser.email = email;
+                        newUser.provider = 'local';
+    					newUser.password = newUser.generateHash(password);
 
     					newUser.save(function(err){
     						if(err) return done(err);
-//                            console.log("newuser saved", newUser);
+                            console.log("newuser saved", newUser);
 
     						return done(null, newUser);
     					});
@@ -62,7 +62,7 @@ console.log("configuring paspport");
 		function(req, email, password, done){
 			//console.log('local-login', email, password);
 
-			User.findOne({'local.email': email}, function(err, user){
+			User.findOne({'email': email, 'provider':'local'}, function(err, user){
 				if (err) return done(err);
 
 				if(!user){

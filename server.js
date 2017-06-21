@@ -109,7 +109,8 @@ app.get('/logout', function(req, res) {
 
 app.get('/user', function(req,res){
 //console.log(req);
-  res.json(req.user);
+const  {_id, name, email} = req.user;
+  res.json({user: {_id, name, email}});
 });
 
 
@@ -199,16 +200,16 @@ app.get('*', (req,res)=>{
 */
 
 //create some data on db
-const seed=false;
+const seed=true;
 if (seed) {
   Snippet.find({}).remove(function(){
     User.find({}).remove(function() {
       User.create(
-      {
+      { 
       	email: 'test@test.com',
         password: 'test',
-        ame: 'test',
-        isAdmin: false
+        name: 'test',
+        provider: 'local'
       },function(err,u){
         //console.log(err, u);
 
@@ -249,7 +250,7 @@ if (seed) {
       	email: 'Moi@test.com',
         password: 'test',
         name: 'Moi',
-        isAdmin: false
+        provider: 'local'
       },function(err,u){
         Snippet.create({
           language : 'javascript',
@@ -268,7 +269,7 @@ if (seed) {
       	email: 'booo@test.com',
         password: 'test',
         name: 'Boo',
-        isAdmin: false
+        provider: 'local'
       },function(err,u){
         Snippet.create({
           language : 'javascript',

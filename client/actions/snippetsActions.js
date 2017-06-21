@@ -1,4 +1,4 @@
-import {GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA} from '../reducers/const'
+import {ADDSNIPPETDATA, GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA} from '../reducers/const'
 
 import axios from 'axios';
 
@@ -9,7 +9,6 @@ export const getAllSnippets = (data)=>(
 	type: GETSNIPPETDATA,
 	data : data
 }
-
 );
 
 export const setAllSnippets = (data)=>(
@@ -17,7 +16,6 @@ export const setAllSnippets = (data)=>(
 	type: SETSNIPPETDATA,
 	data : data
 }
-
 );
 
 export const setCurrentSnippet = (snippet)=>(
@@ -25,7 +23,13 @@ export const setCurrentSnippet = (snippet)=>(
 	type: SETCURRENTSNIPPETDATA,
 	data : snippet
 }
+);
 
+export const createSnippet = (snippet)=>(
+{
+	type: ADDSNIPPETDATA,
+	data : snippet
+}
 );
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -51,7 +55,7 @@ export const getSnippetsFromServer=(tags=[],all=false,language="")=> {
 //    console.log("getSnippetsFromServer", tags, all);
     const query = `query findSnippets($tags:[String], $all:Boolean, $language:String){
 			CodeSnippets(tags:$tags,all:$all,language:$language){
-				_id,language,title,description,code,tags,links,author{email,displayName}
+				_id,language,title,description,code,tags,links,author{email,name}
 			}
 		}`;
 	let queryJSON = 
@@ -84,7 +88,7 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 //    console.log("getSnippetsFromServer", tags, all);
     const query = `query findSnippet($Id:String!){
 			CodeSnippet(snippetId:$Id){
-				_id,language,title,description,code,tags,links,author{email,displayName}
+				_id,language,title,description,code,tags,links,author{email,name}
 			}
 		}`;
 	let queryJSON = 
@@ -104,6 +108,43 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 	//	    console.log("current snippet by id",response.data);
 
 		    dispatch(setCurrentSnippet(response.data.data.CodeSnippet));
+		  })
+		  .catch(function (error) {
+		    console.log(error);
+		  });
+    }
+}
+
+export const createSnippetAsync=({language="", title="", description="", code="", postedBy="", tags=[], links=[]})=> {
+//    console.log("getSnippetsFromServer", tags, all);
+    const query = `mutation add($s:SnippetInput!){
+    	createSnippet(snippet:$s){_id,language,title,description,code,tags,links,author{email,name}}
+    }`;
+	let queryJSON = 
+	{
+		"query":query,
+		"variables":{
+			"s":{
+				"language":language,
+				"title":title,
+				"description":description,
+				"code":code,
+				"postedBy":postedBy,
+				"tags":tags,
+				"links":links
+			}
+		},
+		"operationName":"add"
+	};
+
+
+   // console.log("getSnippetByIdFromServer");
+    return function(dispatch, getState){
+    	return axios.post(API_URL, queryJSON)
+    	  .then(function (response) {
+		    console.log("create snippet",response.data);
+
+		    dispatch(createSnippet(response.data.data.CodeSnippet));
 		  })
 		  .catch(function (error) {
 		    console.log(error);
