@@ -1,4 +1,11 @@
-import {ADDSNIPPETDATA, GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA} from '../reducers/const'
+import {
+	ADDSNIPPETDATA, GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA,
+	ADDTAG ,
+	REMOVETAG,
+	MYSNIPPETS,
+	ALLSNIPPETS,
+	SETLANGUAGE 
+} from '../reducers/const'
 
 import axios from 'axios';
 
@@ -31,6 +38,12 @@ export const createSnippet = (snippet)=>(
 	data : snippet
 }
 );
+
+
+export const setLanguage = (language)=>({type:SETLANGUAGE ,data:language});
+export const addTag = (tag)=>({type:ADDTAG ,data:tag});
+export const removeTag = (tag)=>({type:REMOVETAG ,data:tag});
+
 
 ///////////////////////////////////////////////////////////////////////////////
 /// async actions
@@ -144,7 +157,7 @@ export const createSnippetAsync=({language="", title="", description="", code=""
     	  .then(function (response) {
 		    console.log("create snippet",response.data);
 
-		    dispatch(createSnippet(response.data.data.CodeSnippet));
+		    dispatch(createSnippet(response.data.data.createSnippet));
 		  })
 		  .catch(function (error) {
 		    console.log(error);

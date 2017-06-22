@@ -23,16 +23,24 @@ class Main extends React.Component {
  	}
 */
 	state={
-		filterTags:[],
-		language:""
+	
 	}
 
 	componentWillReceiveProps(nextProp){
-		console.log("cwrp",nextProp);
+		console.log("cwrp next",nextProp);
 		console.log("cwrp this",this.props);
+		
+
+
 		const id = nextProp.match.params.snippetId;
-		if(id && this.props.currentSelected._id !== id){
+		if((id && !this.props.currentSelected)||(id && this.props.currentSelected._id !== id)){
 			this.props.getSnippetById(id)
+		} else if(
+			(this.props.language !==nextProp.language)||
+			([...this.props.filterTags,...nextProp.filterTags]
+				.filter((n,i,a)=>a.indexOf(n)==a.lastIndexOf(n)).length>0)
+			) {
+			this.props.getSnippets(nextProp.filterTags, false, nextProp.language);			 
 		}
 	}
 
@@ -47,24 +55,6 @@ class Main extends React.Component {
 		
 	}
 
- 	addTag=(tag)=>{
- 		var allTags = this.state.filterTags.slice();
- 		allTags.push(tag);
- 		this.setState({filterTags: allTags});
- 	//	console.log(allTags)
- 		this.props.getSnippets(allTags, false)
- 	}
-
- 	removeTag=(tag)=>{
- 		var allTags = this.state.filterTags.filter(t=>t!==tag);
- 		this.setState({filterTags: allTags});
- 		this.props.getSnippets(allTags, false)
- 	}
-
- 	setLanguage=(language)=>{
- 		this.setState({language: language});
- 		this.props.getSnippets(this.state.filterTags, false, language);
- 	}
 
 	render(){
 //		console.log("main render props",this.props);
@@ -76,9 +66,9 @@ class Main extends React.Component {
 		<div className="container">
 			<div className="row">
 				<div className="col-xs-12 col-sm-4 leftbar">
-					<FilterForm addTag = {this.addTag} removeTag = {this.removeTag} tagList = {this.state.filterTags} />
-					<FilterLanguage value={this.state.language} setLanguage={this.setLanguage} />
-					<SnippetList snippetsList = {this.props.snippets} getSnippetById={this.props.getSnippetById} />
+					<FilterForm />
+					<FilterLanguage />
+					<SnippetList snippetsList = {this.props.snippets} />
 
 				</div>
 
@@ -94,17 +84,23 @@ function mapStateToProps(state){
 	//console.log("mapStateToProps",state);
 	return {
 		snippets:state.snippets,
-		currentSelected:state.currentSelected
+		currentSelected:state.currentSelected,
+		language: state.languageFilter,
+		filterTags: state.snippetTagFilter,
+		mySnippets: state.mySnippets
 	}
 }
 
-function mapDispatchToProps(dispatch, oo){
+function mapDispatchToProps(dispatch, getState, ownProps){
 	return {
 		getSnippets: (tags,all,language)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language)),
 		getSnippetById: (id)=>{
 	//		console.log("getSnippetById Main.js", id);
-			return dispatch(snippetsActions.getSnippetByIdFromServer(id))}
+			return dispatch(snippetsActions.getSnippetByIdFromServer(id))
+		}
 	}
+
+
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(Main)

@@ -1,6 +1,8 @@
 import React from 'react';
-import TagList from './TagList';
+import {connect} from 'react-redux';
 
+import TagList from './TagList';
+import {addTag, removeTag} from '../actions/snippetsActions';
 
 class FilterForm extends React.Component {
 
@@ -23,7 +25,7 @@ class FilterForm extends React.Component {
 
 
 	render(){
-		const {addTag, removeTag, tagList} = this.props;
+		const {removeTag, tagList} = this.props;
 		return (
 			<div className="filter">
 				<form onSubmit={this.handleSubmit} id="searchForm">
@@ -51,4 +53,20 @@ class FilterForm extends React.Component {
 	}
 }
 
-export default FilterForm;
+
+
+
+function mapStateToProps(state){
+	return {
+		tagList: state.snippetTagFilter
+	}
+}
+
+function mapDispatchToProps(dispatch){
+	return {
+		addTag: (tag)=>dispatch(addTag(tag)),
+		removeTag: (tag)=>dispatch(removeTag(tag))
+	}
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(FilterForm);

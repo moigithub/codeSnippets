@@ -24,7 +24,7 @@ const routes = [{
   exact: true
 }, 
 {
-  component: ()=>(<h1>my Snippets</h1>),
+  component: Main,
   path: '/MySnippets'
 }, 
 {

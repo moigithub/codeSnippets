@@ -1,20 +1,22 @@
 import React from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
+import {withRouter} from "react-router-dom";
 
 const renderField = ({
   input,
   label,
   type,
+  clase,
   meta: { touched, error, warning },
   children,
   ...rest
 }) => (
-  <div className="form-group">
+  <div className={clase}>
     <label className="col-sm-2 control-label">{label}</label>
     <div className="col-sm-10">
-      {type==="textarea" && <textarea {...input} placeholder={label} type={type} className="form-control"/>}
-      {type!=="textarea" && <input {...input} placeholder={label} type={type}  className="form-control"/>}
+      {type==="textarea" && <textarea {...input} {...rest} placeholder={label} type={type} className="form-control"/>}
+      {type!=="textarea" && <input {...input} {...rest} placeholder={label} type={type}  className="form-control"/>}
       {touched &&
         ((error && <p className="help-block pull-right">{error}</p>) ||
           (warning && <p className="help-block pull-right">{warning}</p>))}
@@ -28,9 +30,10 @@ const renderLinks = ({ fields, meta: { error } }) => (
       <button type="button" className="btn btn-primary" onClick={() => fields.push()}>Add Link</button>
     </li>
     {fields.map((link, index) => (
-      <li key={index} className="form-group col-sm-10">
+      <li key={index} className="row ">
         <Field
           name={link}
+          clase="form-group col-sm-10"
           type="text"
           component={renderField}
           label={`Link #${index + 1}`}
@@ -61,13 +64,14 @@ const renderLinks = ({ fields, meta: { error } }) => (
 */
 let ContactForm = props => {
   const { handleSubmit, load, pristine, reset, submitting } = props
-  //console.log("createForm.js props",props);
+  console.log("createForm.js props",props);
   return (
     <div className="container">
       <h1>New Snippet</h1>
       <form onSubmit={ handleSubmit } className="form-horizontal">
         <Field
           name="title"
+          clase="form-group"
           type="text"
           component={renderField}
           label="Title"
@@ -77,6 +81,7 @@ let ContactForm = props => {
         
         <Field name="description" 
           component={renderField}
+          clase="form-group"
           type="text" 
           label="Description" 
           className="form-control"/>
@@ -93,10 +98,16 @@ let ContactForm = props => {
           </div>
         </div>
 
-        <Field name="code" type="textarea" component={renderField} label="Code"/>
+        <Field name="code" 
+          type="textarea" 
+          clase="form-group"
+          rows={6}
+          component={renderField} 
+          label="Code"/>
 
         <Field
           name="tags"
+          clase="form-group"
           type="text"
           component={renderField}
           label="Tags"
@@ -122,7 +133,7 @@ let ContactForm = props => {
         <div>
           <button type="submit" className="btn btn-primary" disabled={pristine || submitting}>Submit</button>
           <button type="button" className="btn btn-warning" disabled={pristine || submitting} onClick={reset}>
-            Undo Changes
+            Clear Form
           </button>
         </div>
         
@@ -181,7 +192,7 @@ function mapDispatchToProps(dispatch){
 }
 
 
-ContactForm = connect(
+ContactForm = withRouter(connect(
   /*
   state => ({
     initialValues: state.account.data // pull initial values from account reducer
@@ -189,7 +200,7 @@ ContactForm = connect(
   { load: loadAccount } // bind account loading action creator
   */
   null, mapDispatchToProps
-)(ContactForm)
+)(ContactForm));
 
 
 
@@ -204,7 +215,9 @@ const handleSubmit = (values,dispatch, props)=>{
     "tags":values.tags.split(","),
     "links":values.links
   };
-  props.createSnippet(snippetObj);
+  var x=props.createSnippet(snippetObj);
+  console.log("handleSubmit x",x);
+  props.history.push('/snippets');
 };
 
 const form = ()=>(<ContactForm onSubmit={handleSubmit}/>);
