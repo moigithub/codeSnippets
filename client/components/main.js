@@ -30,7 +30,11 @@ class Main extends React.Component {
 		console.log("cwrp next",nextProp);
 		console.log("cwrp this",this.props);
 		
-
+		if(nextProp.match.path==="/MySnippets"){
+			this.props.showMySnippets(true);
+		} else {
+			this.props.showMySnippets(false);
+		}
 
 		const id = nextProp.match.params.snippetId;
 		if((id && !this.props.currentSelected)||(id && this.props.currentSelected._id !== id)){
@@ -43,6 +47,7 @@ class Main extends React.Component {
 			this.props.getSnippets(nextProp.filterTags, false, nextProp.language);			 
 		}
 	}
+
 
 	static loadData=({store,match})=>{
 		console.log("main.js loadData match",match);
@@ -94,10 +99,8 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch, getState, ownProps){
 	return {
 		getSnippets: (tags,all,language)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language)),
-		getSnippetById: (id)=>{
-	//		console.log("getSnippetById Main.js", id);
-			return dispatch(snippetsActions.getSnippetByIdFromServer(id))
-		}
+		getSnippetById: (id)=>dispatch(snippetsActions.getSnippetByIdFromServer(id)),
+		showMySnippets: (status)=>dispatch(snippetsActions.mySnippets(status))
 	}
 
 

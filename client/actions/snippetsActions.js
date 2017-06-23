@@ -39,6 +39,13 @@ export const createSnippet = (snippet)=>(
 }
 );
 
+export const mySnippets = (isMine)=>{
+	if(isMine){
+		return {type: MYSNIPPETS/*, data:true*/}
+	} else {
+		return {type: ALLSNIPPETS/*, data:false*/}
+	}
+}
 
 export const setLanguage = (language)=>({type:SETLANGUAGE ,data:language});
 export const addTag = (tag)=>({type:ADDTAG ,data:tag});

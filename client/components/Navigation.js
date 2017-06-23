@@ -11,9 +11,9 @@ class Header extends React.Component {
 	}
 
 	componentDidMount(){
-		console.log("navigation: getting user data");
+	//	console.log("navigation: getting user data");
 		axios.get('/user').then(data=>{
-			console.log("navigation user",data.data);
+	//		console.log("navigation user",data.data);
 			this.setState({user:data.data.user});
 		});
 	}
@@ -22,14 +22,14 @@ class Header extends React.Component {
 		console.log("navigation cwrp",nextProps, this.state)
 		if(nextProps.user !== this.state.user){
 			axios.get('/user').then(data=>{
-				console.log("navigation user",data.data);
+	//			console.log("navigation user",data.data);
 				this.setState({user:data.data.user});
 			});
 		}
 	}
 
 	render(){
-		console.log(this.state);
+	//	console.log(this.state);
 
 		return (
 		  <header>

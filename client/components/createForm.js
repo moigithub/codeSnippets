@@ -64,7 +64,7 @@ const renderLinks = ({ fields, meta: { error } }) => (
 */
 let ContactForm = props => {
   const { handleSubmit, load, pristine, reset, submitting } = props
-  console.log("createForm.js props",props);
+//  console.log("createForm.js props",props);
   return (
     <div className="container">
       <h1>New Snippet</h1>
@@ -205,7 +205,7 @@ ContactForm = withRouter(connect(
 
 
 const handleSubmit = (values,dispatch, props)=>{
-  console.log("createForm: handleSubmit",values,dispatch,props);
+//  console.log("createForm: handleSubmit",values,dispatch,props);
   const snippetObj={
     "language":values.language,
     "title":values.title,
