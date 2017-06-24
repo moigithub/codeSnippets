@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from "react-router-dom";
 
 
 import SnippetDetail from './snippetDetail';
@@ -29,12 +30,14 @@ class Main extends React.Component {
 	componentWillReceiveProps(nextProp){
 		console.log("cwrp next",nextProp);
 		console.log("cwrp this",this.props);
-		
-		if(nextProp.match.path==="/MySnippets"){
-			this.props.showMySnippets(true);
-		} else {
-			this.props.showMySnippets(false);
+
+		var mySnippets = "";
+		let queryParams = new URLSearchParams(nextProp.location.search);
+		if(queryParams.has("user") ){
+			mySnippets = queryParams.get("user").toLowerCase();
+			console.log("mySnippets1", mySnippets);
 		}
+		console.log("mySnippets2", mySnippets);
 
 		const id = nextProp.match.params.snippetId;
 		if((id && !this.props.currentSelected)||(id && this.props.currentSelected._id !== id)){
@@ -42,20 +45,29 @@ class Main extends React.Component {
 		} else if(
 			(this.props.language !==nextProp.language)||
 			([...this.props.filterTags,...nextProp.filterTags]
-				.filter((n,i,a)=>a.indexOf(n)==a.lastIndexOf(n)).length>0)
+				.filter((n,i,a)=>a.indexOf(n)==a.lastIndexOf(n)).length>0)||
+			(this.props.location.search !== nextProp.location.search)
 			) {
-			this.props.getSnippets(nextProp.filterTags, false, nextProp.language);			 
+console.log("mySnippets3", mySnippets);
+			this.props.getSnippets(nextProp.filterTags, false, nextProp.language, mySnippets);			 
 		}
 	}
 
 
-	static loadData=({store,match})=>{
+	static loadData=({store,match,query})=>{
 		console.log("main.js loadData match",match);
-		
+
+		var mySnippets = "";
+		//let queryParams = new URLSearchParams(this.props.location.search);
+		console.log("node query param",query);
+		if(query.user){
+			mySnippets = query.user.toLowerCase();
+		}
+
 		if (match && match.params.snippetId) {
 			return store.dispatch(snippetsActions.getSnippetByIdFromServer(match.params.snippetId));
 		} else {
-			return store.dispatch(snippetsActions.getSnippetsFromServer([], false, ""));
+			return store.dispatch(snippetsActions.getSnippetsFromServer([], false, "", mySnippets));
 		}
 		
 	}
@@ -91,19 +103,17 @@ function mapStateToProps(state){
 		snippets:state.snippets,
 		currentSelected:state.currentSelected,
 		language: state.languageFilter,
-		filterTags: state.snippetTagFilter,
-		mySnippets: state.mySnippets
+		filterTags: state.snippetTagFilter
 	}
 }
 
 function mapDispatchToProps(dispatch, getState, ownProps){
 	return {
-		getSnippets: (tags,all,language)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language)),
-		getSnippetById: (id)=>dispatch(snippetsActions.getSnippetByIdFromServer(id)),
-		showMySnippets: (status)=>dispatch(snippetsActions.mySnippets(status))
+		getSnippets: (tags,all,language, author)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language, author)),
+		getSnippetById: (id)=>dispatch(snippetsActions.getSnippetByIdFromServer(id))
 	}
 
 
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Main)
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Main))

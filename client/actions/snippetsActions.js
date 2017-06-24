@@ -2,8 +2,6 @@ import {
 	ADDSNIPPETDATA, GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA,
 	ADDTAG ,
 	REMOVETAG,
-	MYSNIPPETS,
-	ALLSNIPPETS,
 	SETLANGUAGE 
 } from '../reducers/const'
 
@@ -11,14 +9,14 @@ import axios from 'axios';
 
 import config from '../../config';
 
-export const getAllSnippets = (data)=>(
+export const getAllSnippets = (data=[])=>(
 {
 	type: GETSNIPPETDATA,
 	data : data
 }
 );
 
-export const setAllSnippets = (data)=>(
+export const setAllSnippets = (data=[])=>(
 {
 	type: SETSNIPPETDATA,
 	data : data
@@ -39,13 +37,6 @@ export const createSnippet = (snippet)=>(
 }
 );
 
-export const mySnippets = (isMine)=>{
-	if(isMine){
-		return {type: MYSNIPPETS/*, data:true*/}
-	} else {
-		return {type: ALLSNIPPETS/*, data:false*/}
-	}
-}
 
 export const setLanguage = (language)=>({type:SETLANGUAGE ,data:language});
 export const addTag = (tag)=>({type:ADDTAG ,data:tag});
@@ -71,10 +62,10 @@ const API_URL = config.host+':'+config.port+'/graphql';
 
 const options = { headers: {'Content-Type': 'application/json'}};
 
-export const getSnippetsFromServer=(tags=[],all=false,language="")=> {
-//    console.log("getSnippetsFromServer", tags, all);
-    const query = `query findSnippets($tags:[String], $all:Boolean, $language:String){
-			CodeSnippets(tags:$tags,all:$all,language:$language){
+export const getSnippetsFromServer=(tags=[],all=false,language="", author="")=> {
+    console.log("getSnippetsFromServer", tags, all,language,"autor:",author);
+    const query = `query findSnippets($tags:[String], $all:Boolean, $language:String, $author:ID){
+			CodeSnippets(tags:$tags,all:$all,language:$language,author:$author){
 				_id,language,title,description,code,tags,links,author{email,name}
 			}
 		}`;
@@ -84,17 +75,19 @@ export const getSnippetsFromServer=(tags=[],all=false,language="")=> {
 		"variables":{
 			"tags":tags,
 			"all": all,
-			"language": language
+			"language": language,
+			"author": author
 		},
 		"operationName":"findSnippets"
 	};
 
+
     return function(dispatch, getState){
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
-	//	    console.log(response.data.data.CodeSnippets);
+		    console.log("snipetaction:: ",response.data.data);
 
-		    dispatch(setAllSnippets(response.data.data.CodeSnippets));
+		    return dispatch(setAllSnippets(response.data.data.CodeSnippets||[]));
 		  })
 		  .catch(function (error) {
 		    console.log(error);
@@ -127,7 +120,7 @@ export const getSnippetByIdFromServer=(snippetId)=> {
     	  .then(function (response) {
 	//	    console.log("current snippet by id",response.data);
 
-		    dispatch(setCurrentSnippet(response.data.data.CodeSnippet));
+		    return dispatch(setCurrentSnippet(response.data.data.CodeSnippet));
 		  })
 		  .catch(function (error) {
 		    console.log(error);
@@ -164,7 +157,7 @@ export const createSnippetAsync=({language="", title="", description="", code=""
     	  .then(function (response) {
 		    console.log("create snippet",response.data);
 
-		    dispatch(createSnippet(response.data.data.createSnippet));
+		    return dispatch(createSnippet(response.data.data.createSnippet));
 		  })
 		  .catch(function (error) {
 		    console.log(error);

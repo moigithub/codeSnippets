@@ -1,6 +1,9 @@
 import React from 'react';
+
 import { BrowserRouter,Switch, Route, Link } from 'react-router-dom'
 import axios from 'axios';
+
+import * as snippetsActions from '../actions/snippetsActions';
 
 class Header extends React.Component {
 	constructor(props){
@@ -28,8 +31,9 @@ class Header extends React.Component {
 		}
 	}
 
+
 	render(){
-	//	console.log(this.state);
+		console.log("navigation.js render: ",this.props);
 
 		return (
 		  <header>
@@ -44,13 +48,13 @@ class Header extends React.Component {
 			        <span className="icon-bar"></span>
 			      </button>
 			      
-			      <Link className="navbar-brand" to='/snippets'>CodeSnippets</Link>
+			      <Link className="navbar-brand" to='/snippets' onClick={()=>this.props.showMySnippets(false)}>CodeSnippets</Link>
 			    </div>
 
 			    {this.state.user &&
 			    	<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					      <ul className="nav navbar-nav">
-					        <li><Link to='/MySnippets'>My Snippets</Link></li>
+					        <li><Link to='/snippets?user=me'>My Snippets</Link></li>
 					        <li><Link to='/new'>Create Snippet</Link></li>
 					      </ul>
 					      <ul className="nav navbar-nav navbar-right">

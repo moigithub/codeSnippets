@@ -3,7 +3,6 @@ import {
   SETSNIPPETDATA, REMOVESNIPPETDATA,
   SETCURRENTSNIPPETDATA,
   ADDTAG, REMOVETAG,
-  MYSNIPPETS, ALLSNIPPETS,
   SETLANGUAGE
 } from '../reducers/const'
 
@@ -37,16 +36,6 @@ export const languageFilterReducer = (state = "", action)=>{
   switch(action.type){
     case SETLANGUAGE:
       return action.data;
-    default:
-      return state;
-  }
-}
-export const mySnippetsReducer = (state = false, action)=>{
-  switch(action.type){
-    case MYSNIPPETS:
-      return true;
-    case ALLSNIPPETS:
-      return false;
     default:
       return state;
   }

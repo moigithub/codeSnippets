@@ -24,10 +24,6 @@ const routes = [{
   exact: true
 }, 
 {
-  component: Main,
-  path: '/MySnippets'
-}, 
-{
   component: ContactForm,
   path: '/new'
 }

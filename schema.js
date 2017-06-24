@@ -157,9 +157,12 @@ const QueryType = new GraphQLObjectType({
 				},
 				language:{
 					type: GraphQLString
+				},
+				author:{
+					type: GraphQLID
 				}
 			},
-			resolve: function(parentValue, args){
+			resolve: function(parentValue, args, context){
 				return new Promise((resolve, reject)=>{
 //					console.log("codesnippetSSS", parentValue, args);
 
@@ -178,6 +181,16 @@ const QueryType = new GraphQLObjectType({
 						query.language=new RegExp(args.language,"gi");
 					}
 //console.log("schema snippet query",query)
+					console.log("query findSnippet resolve context: ",context.session);
+					console.log("args", args);
+					const userId = context.session.passport.user;
+
+					if(args.author){
+						query.postedBy = args.author;
+						if(args.author.toLowerCase()==="me") 
+							query.postedBy = userId;
+					}
+					console.log("query",query);
 					Snippet.find(query, function(err, snippets){
 						if(err) {
 							return reject(err);

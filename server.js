@@ -126,28 +126,29 @@ app.use('/graphql', schema);
 
 // universal routing and rendering
 //load data helper
-const loadBranchData = (store,location)=> {
+const loadBranchData = (store,location,query)=> {
   console.log("server.js: location ", location, location.pathname);
 
   const branch = matchRoutes(routes, location);
 
   console.log("server.js branch", branch);
   const promises = branch.map(({route, match})=>{
-  //invoke component loadData method
-  //which could be a promise
-/*  
-  console.log("----------------------");
-  console.log("loadBranchData server.js => route: ", route, "\nmatch: ",match);
-  console.log("----------------------");
-  console.log("server.js loadBranchData => route.component :\n", route.component);
-  console.log("----------------------");
-  console.log("server.js loadBranchData => route.component.wrappedComponent :\n", route.component.WrappedComponent);
-  console.log("----------------------");
-*/
-  const component = route.component;
-  return component.WrappedComponent && component.WrappedComponent.loadData  //if have loadData method
-    ? component.loadData({store,match})  //invoke
-    : Promise.resolve(null)
+    //invoke component loadData method
+    //which could be a promise
+    
+    console.log("----------------------");
+    console.log("loadBranchData server.js => route: ", route, "\nmatch: ",match);
+    console.log("----------------------");
+  /*  
+    console.log("server.js loadBranchData => route.component :\n", route.component);
+    console.log("----------------------");
+    console.log("server.js loadBranchData => route.component.wrappedComponent :\n", route.component.WrappedComponent);
+    console.log("----------------------");
+  */
+    const component = route.component;
+    return component.WrappedComponent && component.WrappedComponent.loadData  //if have loadData method
+      ? component.loadData({store,match,query})  //invoke
+      : Promise.resolve(null)
   });
 
   return Promise.all(promises);
@@ -160,10 +161,12 @@ app.get('*', (req,res)=>{
   const context = {};
   var html;
 
-  console.log("server \n\n\n\n*",req.params);
+  console.log("server \n\n\n\n*",req.params, '\n query: ',req.query);
 
-  loadBranchData(store,req.url).then(data=>{
+  loadBranchData(store, req.url, req.query).then(data=>{
     console.log("server.js: all data loaded",data)
+
+/*    
   });
 
   return store.dispatch(snippetsActions.getSnippetsFromServer())
@@ -175,6 +178,7 @@ app.get('*', (req,res)=>{
       }
     })
     .then(()=>{
+*/      
         html= renderToString(
           <Provider store={store}>
             <StaticRouter location={req.url} context={context}>
@@ -209,13 +213,12 @@ const seed=true;
 if (seed) {
   Snippet.find({}).remove(function(){
     User.find({}).remove(function() {
-      User.create(
-      { 
-      	email: 'test@test.com',
-        password: 'test',
-        name: 'test',
-        provider: 'local'
-      },function(err,u){
+      var newUser = new User();
+              newUser.email = 'test@test.com';
+              newUser.provider = 'local';
+              newUser.name= 'test@test.com'
+              newUser.password = newUser.generateHash('test');
+      newUser.save(function(err){
         //console.log(err, u);
 
         Snippet.create({
@@ -225,7 +228,7 @@ if (seed) {
           code: 'console.log("hello world")',
           tags : ['react','react router 4', 'redux'],
           links: ['google.com','mdn.io','devdocs.io'],
-          postedBy : u._id
+          postedBy : newUser._id
         });
 
         Snippet.create({
@@ -235,7 +238,7 @@ if (seed) {
           code: 'alert("hello world")',
           tags : ['apollo','react router 4', 'redux', 'relay', 'recompose', 'redux-observable'],
           links: ['google.com','mdn.io','devdocs.io'],
-          postedBy : u._id
+          postedBy : newUser._id
         });
 
         Snippet.create({
@@ -245,18 +248,19 @@ if (seed) {
           code: 'alert("hello world")',
           tags : ['lambda','router 4', 'meta code'],
           links: ['google.com','mdn.io','devdocs.io'],
-          postedBy : u._id
+          postedBy : newUser._id
         });
 
 
       });
 
-      User.create({
-      	email: 'Moi@test.com',
-        password: 'test',
-        name: 'Moi',
-        provider: 'local'
-      },function(err,u){
+
+      var newUser2 = new User();
+              newUser2.email = 'Moi@test.com';
+              newUser2.provider = 'local';
+              newUser2.name= 'Moi@test.com'
+              newUser2.password = newUser2.generateHash('test');
+      newUser2.save(function(err){  
         Snippet.create({
           language : 'javascript',
           title: 'mongoose connect & err handler',
@@ -264,18 +268,18 @@ if (seed) {
           code: 'console.log("hello world")',
           tags : ['react','react router 4', 'flux'],
           links: ['stackoverflow.com','google.com','mdn.io','devdocs.io'],
-          postedBy : u._id
+          postedBy : newUser2._id
         });
 
 
       });
 
-      User.create({
-      	email: 'booo@test.com',
-        password: 'test',
-        name: 'Boo',
-        provider: 'local'
-      },function(err,u){
+      var newUser3 = new User();
+              newUser3.email = 'boo@test.com';
+              newUser3.provider = 'local';
+              newUser3.name= 'boo@test.com'
+              newUser3.password = newUser3.generateHash('test');
+      newUser3.save(function(err){
         Snippet.create({
           language : 'javascript',
           title: 'redux thunk createStore & middleware',
@@ -283,7 +287,7 @@ if (seed) {
           code: 'console.log("hello world")',
           tags : ['react', 'flux'],
           links: ['stackoverflow.com','google.com','mdn.io','devdocs.io'],
-          postedBy : u._id
+          postedBy : newUser3._id
         });
 
 
@@ -294,7 +298,7 @@ if (seed) {
           code: 'alert("hello world")',
           tags : ['tesla','scoobydoo', 'meta code'],
           links: ['google.com','devdocs.io'],
-          postedBy : u._id
+          postedBy : newUser3._id
         });
 
       });
