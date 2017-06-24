@@ -79,13 +79,14 @@ console.log("mySnippets3", mySnippets);
 		const {match, location} = this.props;
 //console.log("main state", this.state);
 //console.log("main render", match.params)
+console.log("render main.js locatoin",location);
 		return (
 		<div className="container">
 			<div className="row">
 				<div className="col-xs-12 col-sm-4 leftbar">
 					<FilterForm />
 					<FilterLanguage />
-					<SnippetList snippetsList = {this.props.snippets} />
+					<SnippetList snippetsList = {this.props.snippets} userFilter = {location.search}/>
 
 				</div>
 

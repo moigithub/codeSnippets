@@ -4,8 +4,12 @@ import {  Link} from 'react-router-dom';
 const SnippetList = (props) => {
 	//console.log("snipets list ",props);
 	const snippets = props.snippetsList.map(snippet => {
+		var param="";
+		if(props.userFilter.trim()!==""){
+			param="?"+props.userFilter;
+		}
 		return (
-		    <Link to={`/snippets/${snippet._id}`}  
+		    <Link to={`/snippets/${snippet._id}${param}`}  
 		    	className="list-group-item" 
 		    	key={snippet._id} 
 		    	>
