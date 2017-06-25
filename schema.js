@@ -36,6 +36,9 @@ const CodeSnippetType= new GraphQLObjectType({
 		code: {
 			type: GraphQLString
 		},
+		isOwner: {
+			type: GraphQLBoolean
+		},
 		author: {
 			type: UserType,
 			resolve: function(parentValue, args){
@@ -135,12 +138,21 @@ const QueryType = new GraphQLObjectType({
 			args:{
 				snippetId: {type: new GraphQLNonNull(GraphQLString)}
 			},
-			resolve: function(parentValue, args){
+			resolve: function(parentValue, args, context){
 				return new Promise((resolve, reject)=>{
-					Snippet.findById(args.snippetId, function(err, snippet){
+					Snippet.findById(args.snippetId).lean().exec(function(err, snippet){
 						if(err) {
 							return reject(err);
 						}
+						var isOwner = false;
+						if(context.user && context.user._id) {
+//							console.log("\n\nschema.js CodeSnippet \nresolve:", snippet.postedBy, "\ncontext:",context.user._id);
+//							console.log("\n\nschema.js CodeSnippet \nresolve:", typeof snippet.postedBy, "\ncontext:",typeof (context.user._id));
+							isOwner = String(snippet.postedBy) === String(context.user._id);
+						}
+
+						snippet.isOwner = isOwner;
+						console.log("\n\nsnppet", snippet);
 						return resolve(snippet);
 					});
 				});
@@ -181,30 +193,30 @@ const QueryType = new GraphQLObjectType({
 						dbQuery.language=new RegExp(args.language,"gi");
 					}
 //console.log("schema snippet dbQuery",dbQuery)
-					console.log("dbQuery findSnippet resolve context: ",context);
-					console.log("args", args, typeof args);
+					//console.log("dbQuery findSnippet resolve context: ",context);
+					//console.log("args", args, typeof args);
 					var userId = "";
 					
-					if (context.session.passport && context.session.passport.user){ 
-						userId=context.session.passport.user;
+					if (context.user && context.user._id){ 
+						userId=context.user._id;
 					}
 
-					console.log("\n\nhere 0",dbQuery);
+					//console.log("\n\nhere 0",dbQuery);
 					if(args.author){ 
 						dbQuery.postedBy = args.author;
-						console.log("\n\nhere 1",dbQuery, userId);
+						//console.log("\n\nhere 1",dbQuery, userId);
 						if(args.author.toLowerCase()==="me" ){
 							if(userId) {
 								dbQuery.postedBy = userId;
 							} else {
 								delete dbQuery.postedBy;
 							}
-							console.log("\n\nhere 2",dbQuery);
+							//console.log("\n\nhere 2",dbQuery);
 						}
 					}
 
-					console.log("\n************\ndbQuery");
-					console.log(dbQuery);
+					//console.log("\n************\ndbQuery");
+					//console.log(dbQuery);
 
 					Snippet.find(dbQuery, function(err, snippets){
 						if(err) {
@@ -269,7 +281,12 @@ const mutationType = new GraphQLObjectType({
 				return new Promise((resolve, reject)=>{
 					// insert into db
 console.log("mutation createSnippet resolve context: ",context.session);
-					const userId = context.session.passport.user;
+// ONLY AUTHENTICATED USER CAN USE THE MUTATION
+if(!context.session.passport && !context.session.passport.user){
+	return reject(new Error("Only logged users allowed."));
+}
+
+					const userId = context.user._id;
 					const newSnippet = {
 						language: args.snippet.language,
 						title: args.snippet.title,

@@ -101,7 +101,7 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 //    console.log("getSnippetsFromServer", tags, all);
     const query = `query findSnippet($Id:String!){
 			CodeSnippet(snippetId:$Id){
-				_id,language,title,description,code,tags,links,author{email,name}
+				_id,language,title,description,code,tags,links,isOwner,author{_id,email,name}
 			}
 		}`;
 	let queryJSON = 

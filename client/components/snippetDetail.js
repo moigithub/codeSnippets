@@ -46,8 +46,8 @@ const SnippetDetail = (props) => {
 			<ul className="list-group">
 				{links}
 			</ul>
-			<button className="btn btn-primary">Edit</button>
-			<button className="btn btn-danger">Delete</button>
+			{props.isOwner && <button className="btn btn-primary">Edit</button> }
+			{props.isOwner && <button className="btn btn-danger">Delete</button> }
 			<button className="btn btn-default">Copy</button>
 		</div>
 	);

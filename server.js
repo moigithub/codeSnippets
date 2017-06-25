@@ -133,10 +133,11 @@ const root = {
 
 const expressGraphQL = require('express-graphql');
 
-app.use('/graphql', expressGraphQL(request=>{
+app.use('/graphql', expressGraphQL((request, response)=>{
+  console.log('\n\nGRAPHQL\nreq.user:',request.user,'\n\n\nsession:',request.session);
   return {
     schema,
-    context:{session : request.session},
+    context:{user : request.user || null},
     graphiql: true,
     rootValue : root
   }

@@ -37,9 +37,9 @@ class Main extends React.Component {
 			mySnippets = queryParams.get("user").toLowerCase();
 //			console.log("mySnippets1", mySnippets);
 		}
-		console.log("mySnippets2", mySnippets);
+		//console.log("mySnippets2", mySnippets);
 
-		console.log("main.js loca",this.props.location.search,"\nnext:",nextProp.location.search)
+		//console.log("main.js loca",this.props.location.search,"\nnext:",nextProp.location.search)
 
 		const id = nextProp.match.params.snippetId;
 		if((id && !this.props.currentSelected)||(id && this.props.currentSelected._id !== id)){
@@ -50,7 +50,7 @@ class Main extends React.Component {
 				.filter((n,i,a)=>a.indexOf(n)==a.lastIndexOf(n)).length>0)||
 			(this.props.location.search !== nextProp.location.search)
 			) {
-console.log("mySnippets3", mySnippets);
+//console.log("mySnippets3", mySnippets);
 			this.props.getSnippets(nextProp.filterTags, false, nextProp.language, mySnippets);			 
 		}
 	}
@@ -61,7 +61,7 @@ console.log("mySnippets3", mySnippets);
 
 		var mySnippets = "";
 		//let queryParams = new URLSearchParams(this.props.location.search);
-		console.log("node query param",query);
+		//console.log("node query param",query);
 		if(query.user){
 			mySnippets = query.user.toLowerCase();
 		}
@@ -83,6 +83,7 @@ console.log("mySnippets3", mySnippets);
 //console.log("main state", this.state);
 //console.log("main render", match.params)
 //console.log("render main.js locatoin",location);
+console.log("main.js render currentSelected", this.props);
 		return (
 		<div className="container">
 			<div className="row">
