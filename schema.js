@@ -166,32 +166,47 @@ const QueryType = new GraphQLObjectType({
 				return new Promise((resolve, reject)=>{
 //					console.log("codesnippetSSS", parentValue, args);
 
-					let query={};
+					var dbQuery={};
 
 
 					if(args.tags && args.tags.length>0){
 						if(args.all){
-							query.tags={$all: args.tags};
+							dbQuery.tags={$all: args.tags};
 						} else {
-							query.tags={$in: args.tags};
+							dbQuery.tags={$in: args.tags};
 						}
 					}
 
 					if(args.language && args.language.trim()!==""){
-						query.language=new RegExp(args.language,"gi");
+						dbQuery.language=new RegExp(args.language,"gi");
 					}
-//console.log("schema snippet query",query)
-					console.log("query findSnippet resolve context: ",context.session);
-					console.log("args", args);
-					const userId = context.session.passport.user;
+//console.log("schema snippet dbQuery",dbQuery)
+					console.log("dbQuery findSnippet resolve context: ",context);
+					console.log("args", args, typeof args);
+					var userId = "";
+					
+					if (context.session.passport && context.session.passport.user){ 
+						userId=context.session.passport.user;
+					}
 
-					if(args.author){
-						query.postedBy = args.author;
-						if(args.author.toLowerCase()==="me") 
-							query.postedBy = userId;
+					console.log("\n\nhere 0",dbQuery);
+					if(args.author){ 
+						dbQuery.postedBy = args.author;
+						console.log("\n\nhere 1",dbQuery, userId);
+						if(args.author.toLowerCase()==="me" ){
+							if(userId) {
+								dbQuery.postedBy = userId;
+							} else {
+								delete dbQuery.postedBy;
+							}
+							console.log("\n\nhere 2",dbQuery);
+						}
 					}
-					console.log("query",query);
-					Snippet.find(query, function(err, snippets){
+
+					console.log("\n************\ndbQuery");
+					console.log(dbQuery);
+
+					Snippet.find(dbQuery, function(err, snippets){
 						if(err) {
 							return reject(err);
 						}
@@ -288,7 +303,8 @@ var schema = new GraphQLSchema({
 	mutation: mutationType
 });
 
-
+export default schema;
+/*
 const root = {
 	authInfo: function(args, request){
 		console.log("authInfo",request);
@@ -298,6 +314,9 @@ const root = {
 
 export default expressGraphQL({
 	schema,
+//	context:{session : request.session},
 	graphiql: true,
 	rootValue : root
 })
+
+*/

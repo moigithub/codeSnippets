@@ -29,15 +29,17 @@ class Main extends React.Component {
 
 	componentWillReceiveProps(nextProp){
 		console.log("cwrp next",nextProp);
-		console.log("cwrp this",this.props);
+//		console.log("cwrp this",this.props);
 
 		var mySnippets = "";
 		let queryParams = new URLSearchParams(nextProp.location.search);
 		if(queryParams.has("user") ){
 			mySnippets = queryParams.get("user").toLowerCase();
-			console.log("mySnippets1", mySnippets);
+//			console.log("mySnippets1", mySnippets);
 		}
 		console.log("mySnippets2", mySnippets);
+
+		console.log("main.js loca",this.props.location.search,"\nnext:",nextProp.location.search)
 
 		const id = nextProp.match.params.snippetId;
 		if((id && !this.props.currentSelected)||(id && this.props.currentSelected._id !== id)){
@@ -55,7 +57,7 @@ console.log("mySnippets3", mySnippets);
 
 
 	static loadData=({store,match,query})=>{
-		console.log("main.js loadData match",match);
+//		console.log("main.js loadData match",match);
 
 		var mySnippets = "";
 		//let queryParams = new URLSearchParams(this.props.location.search);
@@ -67,6 +69,7 @@ console.log("mySnippets3", mySnippets);
 		if (match && match.params.snippetId) {
 			return store.dispatch(snippetsActions.getSnippetByIdFromServer(match.params.snippetId));
 		} else {
+//			console.log("loadData mySnippets",mySnippets);
 			return store.dispatch(snippetsActions.getSnippetsFromServer([], false, "", mySnippets));
 		}
 		
@@ -79,7 +82,7 @@ console.log("mySnippets3", mySnippets);
 		const {match, location} = this.props;
 //console.log("main state", this.state);
 //console.log("main render", match.params)
-console.log("render main.js locatoin",location);
+//console.log("render main.js locatoin",location);
 		return (
 		<div className="container">
 			<div className="row">

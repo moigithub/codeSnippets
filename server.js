@@ -121,25 +121,44 @@ app.get('/user', function(req,res){
 // to request data to server from client
 // send a POST request with application/json as content-type
 // {"query":"{Users{_id,email,displayName}}"}
-app.use('/graphql', schema);
+
+
+const root = {
+  authInfo: function(args, request){
+    console.log("authInfo",request);
+    return request.user;
+  }
+}
+
+
+const expressGraphQL = require('express-graphql');
+
+app.use('/graphql', expressGraphQL(request=>{
+  return {
+    schema,
+    context:{session : request.session},
+    graphiql: true,
+    rootValue : root
+  }
+}));
 
 
 // universal routing and rendering
 //load data helper
 const loadBranchData = (store,location,query)=> {
-  console.log("server.js: location ", location, location.pathname);
+//  console.log("server.js: location ", location);
 
   const branch = matchRoutes(routes, location);
 
-  console.log("server.js branch", branch);
+//  console.log("server.js branch", branch);
   const promises = branch.map(({route, match})=>{
     //invoke component loadData method
     //which could be a promise
     
-    console.log("----------------------");
+/*   console.log("----------------------");
     console.log("loadBranchData server.js => route: ", route, "\nmatch: ",match);
     console.log("----------------------");
-  /*  
+ 
     console.log("server.js loadBranchData => route.component :\n", route.component);
     console.log("----------------------");
     console.log("server.js loadBranchData => route.component.wrappedComponent :\n", route.component.WrappedComponent);
@@ -161,10 +180,10 @@ app.get('*', (req,res)=>{
   const context = {};
   var html;
 
-  console.log("server \n\n\n\n*",req.params, '\n query: ',req.query);
+ // console.log("server \n\n\n\n*",req.params, '\n query: ',req.query);
 
-  loadBranchData(store, req.url, req.query).then(data=>{
-    console.log("server.js: all data loaded",data)
+  loadBranchData(store, req.path, req.query).then(data=>{
+//    console.log("server.js: all data loaded",data)
 
 /*    
   });
@@ -189,7 +208,7 @@ app.get('*', (req,res)=>{
           </Provider>
           );
     
-    console.log("server.js:  static router context",context);
+  ///  console.log("server.js:  static router context",context);
         if (context.url) {
             // Somewhere a `<Redirect>` was rendered
   //          console.log("context ",context, context.url);
@@ -209,7 +228,7 @@ app.get('*', (req,res)=>{
 */
 
 //create some data on db
-const seed=true;
+const seed=false;
 if (seed) {
   Snippet.find({}).remove(function(){
     User.find({}).remove(function() {

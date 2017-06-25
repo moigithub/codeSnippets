@@ -6,7 +6,7 @@ const SnippetList = (props) => {
 	const snippets = props.snippetsList.map(snippet => {
 		var param="";
 		if(props.userFilter.trim()!==""){
-			param="?"+props.userFilter;
+			param=props.userFilter;
 		}
 		return (
 		    <Link to={`/snippets/${snippet._id}${param}`}  

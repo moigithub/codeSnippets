@@ -85,7 +85,7 @@ export const getSnippetsFromServer=(tags=[],all=false,language="", author="")=> 
     return function(dispatch, getState){
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
-		    console.log("snipetaction:: ",response.data.data);
+		    //console.log("snipetaction:: ",response.data.data);
 
 		    return dispatch(setAllSnippets(response.data.data.CodeSnippets||[]));
 		  })

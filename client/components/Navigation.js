@@ -22,7 +22,7 @@ class Header extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps){
-		console.log("navigation cwrp",nextProps, this.state)
+	//	console.log("navigation cwrp",nextProps, this.state)
 		if(nextProps.user !== this.state.user){
 			axios.get('/user').then(data=>{
 	//			console.log("navigation user",data.data);
@@ -33,7 +33,7 @@ class Header extends React.Component {
 
 
 	render(){
-		console.log("navigation.js render: ",this.props);
+	//	console.log("navigation.js render: ",this.props);
 
 		return (
 		  <header>
