@@ -96,7 +96,7 @@ console.log("main.js render currentSelected", this.props);
 
 				{!this.props.currentSelected ?
 					<div>
-						No snippet selected.
+						<div className="col-xs-12 col-sm-8">Select a code snippet</div>
 					</div>
 					:
 					<SnippetDetail {...this.props.currentSelected} deleteSnippet={this.props.deleteSnippet}/>
