@@ -94,8 +94,13 @@ console.log("main.js render currentSelected", this.props);
 
 				</div>
 
-
-				<SnippetDetail {...this.props.currentSelected}/>
+				{!this.props.currentSelected ?
+					<div>
+						No snippet selected.
+					</div>
+					:
+					<SnippetDetail {...this.props.currentSelected} deleteSnippet={this.props.deleteSnippet}/>
+				}
 			</div>
 		</div>		
 		);
@@ -115,7 +120,8 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch, getState, ownProps){
 	return {
 		getSnippets: (tags,all,language, author)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language, author)),
-		getSnippetById: (id)=>dispatch(snippetsActions.getSnippetByIdFromServer(id))
+		getSnippetById: (id)=>dispatch(snippetsActions.getSnippetByIdFromServer(id)),
+		deleteSnippet: (id)=>dispatch(snippetsActions.deleteSnippetById(id))
 	}
 
 

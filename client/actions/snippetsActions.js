@@ -1,5 +1,6 @@
 import {
-	ADDSNIPPETDATA, GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA,
+	ADDSNIPPETDATA, DELETESNIPPETDATA,
+	GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA,
 	ADDTAG ,
 	REMOVETAG,
 	SETLANGUAGE 
@@ -33,6 +34,13 @@ export const setCurrentSnippet = (snippet)=>(
 export const createSnippet = (snippet)=>(
 {
 	type: ADDSNIPPETDATA,
+	data : snippet
+}
+);
+
+export const deleteSnippet = (snippet)=>(
+{
+	type: DELETESNIPPETDATA,
 	data : snippet
 }
 );
@@ -164,3 +172,35 @@ export const createSnippetAsync=({language="", title="", description="", code=""
 		  });
     }
 }
+
+
+export const deleteSnippetById=(snippetId="")=> {
+//    console.log("getSnippetsFromServer", tags, all);
+    const query = `mutation delete($id:ID!){
+    	deleteSnippet(snippetId:$id){_id,title}
+    }`;
+	let queryJSON = 
+	{
+		"query":query,
+		"variables":{
+			"id":snippetId
+		},
+		"operationName":"delete"
+	};
+
+
+   // console.log("getSnippetByIdFromServer");
+    return function(dispatch, getState){
+    	return axios.post(API_URL, queryJSON)
+    	  .then(function (response) {
+		    console.log("delete snippet",response.data);
+
+		    dispatch(setCurrentSnippet(null));
+		    return dispatch(deleteSnippet(response.data.data.deleteSnippet._id));
+		  })
+		  .catch(function (error) {
+		    console.log(error);
+		  });
+    }
+}
+

@@ -47,7 +47,10 @@ const SnippetDetail = (props) => {
 				{links}
 			</ul>
 			{props.isOwner && <button className="btn btn-primary">Edit</button> }
-			{props.isOwner && <button className="btn btn-danger">Delete</button> }
+			{props.isOwner && 
+				<button className="btn btn-danger"
+					onClick={()=>props.deleteSnippet(props._id)}
+				>Delete</button> }
 			<button className="btn btn-default">Copy</button>
 		</div>
 	);

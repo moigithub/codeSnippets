@@ -1,6 +1,6 @@
 import {
   ADDSNIPPETDATA, GETSNIPPETDATA, 
-  SETSNIPPETDATA, REMOVESNIPPETDATA,
+  SETSNIPPETDATA, DELETESNIPPETDATA,
   SETCURRENTSNIPPETDATA,
   ADDTAG, REMOVETAG,
   SETLANGUAGE
@@ -13,8 +13,8 @@ export const snippetReducer = (state = [], action) => {
       return action.data;
     case ADDSNIPPETDATA:
       return [...state, action.data];
-    // case REMOVESNIPPETDATA:  
-    // return state.filter(snippet => snippet._id !== action.data);  //action.data es _id
+    case DELETESNIPPETDATA:  
+      return state.filter(snippet => snippet._id !== action.data);  //action.data es _id
     case GETSNIPPETDATA:
     default:
       return state;
