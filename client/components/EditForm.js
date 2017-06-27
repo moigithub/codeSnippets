@@ -9,25 +9,25 @@ import {createSnippetAsync} from '../actions/snippetsActions';
 
 function mapDispatchToProps(dispatch){
   return {
-    createSnippet : (snippet)=>dispatch(createSnippetAsync(snippet))
+    saveSnippet : (snippet)=>dispatch(createSnippetAsync(snippet))
   }
 }
 
 
-let CreateSnippetForm = withRouter(connect(
-  /*
+let EditForm = withRouter(connect(
+  
   state => ({
-    initialValues: state.account.data // pull initial values from account reducer
-  }),
+    initialValues: state.currentSelected // pull initial values from account reducer
+  })/*,
   { load: loadAccount } // bind account loading action creator
   */
-  null, mapDispatchToProps
+  , mapDispatchToProps
 )(BaseForm));
 
 
 
 const handleSubmit = (values,dispatch, props)=>{
-//  console.log("createForm: handleSubmit",values,dispatch,props);
+  console.log("editForm: handleSubmit",values,dispatch,props);
   const snippetObj={
     "language":values.language,
     "title":values.title,
@@ -37,11 +37,9 @@ const handleSubmit = (values,dispatch, props)=>{
     "tags":values.tags.split(","),
     "links":values.links
   };
-  var x=props.createSnippet(snippetObj);
-  console.log("handleSubmit x",x);
-  props.history.push('/snippets');
+
 };
 
-const form = ()=>(<CreateSnippetForm onSubmit={handleSubmit} title="New Snippet"/>);
+const form = ()=>(<EditForm onSubmit={handleSubmit} title="Edit Snippet"/>);
 
-export default form
+export default form;

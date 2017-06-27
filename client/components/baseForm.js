@@ -61,11 +61,11 @@ const renderLinks = ({ fields, meta: { error } }) => (
   postedBy 
 */
 let ContactForm = props => {
-  const { handleSubmit, load, pristine, reset, submitting } = props
+  const { handleSubmit, title, pristine, reset, submitting } = props
 //  console.log("createForm.js props",props);
   return (
     <div className="container">
-      <h1>New Snippet</h1>
+      <h1>{title}</h1>
       <form onSubmit={ handleSubmit } className="form-horizontal">
         <Field
           name="title"

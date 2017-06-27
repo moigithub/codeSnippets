@@ -3,8 +3,8 @@ import React from 'react';
 
 
 import Main from './components/Main';
-import ContactForm from './components/createForm';
-
+import CreateSnippetForm from './components/createForm';
+import EditSnippetForm from './components/editForm'
 
 /*
 const routes = (
@@ -24,8 +24,12 @@ const routes = [{
   exact: true
 }, 
 {
-  component: ContactForm,
+  component: CreateSnippetForm,
   path: '/new'
+}, 
+{
+  component: EditSnippetForm,
+  path: '/edit/:snippetId'
 }
 
 ]

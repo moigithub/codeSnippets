@@ -1,7 +1,7 @@
 import React from 'react';
 import Highlight from 'react-highlight';
 import CopyToClipboard from 'react-copy-to-clipboard';
-
+import { Link } from 'react-router-dom'
 
 const SnippetDetail=({ links, 
 			tags, 
@@ -9,7 +9,8 @@ const SnippetDetail=({ links,
 			description, 
 			language, code, 
 			isOwner, _id, 
-			deleteSnippet
+			deleteSnippet,
+			editSnippet
 		})=>{
 	//	console.log("details",props);
 		
@@ -52,7 +53,11 @@ const SnippetDetail=({ links,
 			<ul className="list-group">
 				{allLinks}
 			</ul>
-			{isOwner && <button className="btn btn-primary">Edit</button> }
+			{isOwner && 
+				<Link
+					className="btn btn-primary"
+					to={`/edit/${_id}`}
+				>Edit</Link> }
 			{isOwner && 
 				<button className="btn btn-danger"
 					onClick={()=>deleteSnippet(_id)}

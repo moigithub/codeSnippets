@@ -89,7 +89,9 @@ console.log("main.js render currentSelected", this.props);
 			if(Object.keys(this.props.currentSelected).length<1){
 				return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
 			}else {
-				return <SnippetDetail {...this.props.currentSelected} deleteSnippet={this.props.deleteSnippet}/>
+				return <SnippetDetail {...this.props.currentSelected} 
+							deleteSnippet={this.props.deleteSnippet}
+							/>
 			}
 		}
 		return (
