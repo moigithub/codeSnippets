@@ -84,6 +84,14 @@ class Main extends React.Component {
 //console.log("main render", match.params)
 //console.log("render main.js locatoin",location);
 console.log("main.js render currentSelected", this.props);
+
+		const showDetails = ()=>{
+			if(Object.keys(this.props.currentSelected).length<1){
+				return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
+			}else {
+				return <SnippetDetail {...this.props.currentSelected} deleteSnippet={this.props.deleteSnippet}/>
+			}
+		}
 		return (
 		<div className="container">
 			<div className="row">
@@ -94,13 +102,7 @@ console.log("main.js render currentSelected", this.props);
 
 				</div>
 
-				{!this.props.currentSelected ?
-					<div>
-						<div className="col-xs-12 col-sm-8">Select a code snippet</div>
-					</div>
-					:
-					<SnippetDetail {...this.props.currentSelected} deleteSnippet={this.props.deleteSnippet}/>
-				}
+				{ showDetails() }
 			</div>
 		</div>		
 		);
