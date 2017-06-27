@@ -229,7 +229,7 @@ app.get('*', (req,res)=>{
 */
 
 //create some data on db
-const seed=true;
+const seed=false;
 if (seed) {
   Snippet.find({}).remove(function(){
     User.find({}).remove(function() {
