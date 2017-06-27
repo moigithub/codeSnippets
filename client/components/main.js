@@ -27,17 +27,25 @@ class Main extends React.Component {
 	
 	}
 
+	getUserParam = (props)=>{
+		let queryParams = new URLSearchParams(props.location.search);
+		if(queryParams.has("user") ){
+			return queryParams.get("user").toLowerCase();
+		}
+		return "";
+	}
+
+	componentDidMount(){
+		console.log("main.js CDM",this.props);
+		var mySnippets = this.getUserParam(this.props);
+		this.props.getSnippets(this.props.filterTags, false, this.props.language, mySnippets);
+	}
+
 	componentWillReceiveProps(nextProp){
 		console.log("cwrp next",nextProp);
 //		console.log("cwrp this",this.props);
 
-		var mySnippets = "";
-		let queryParams = new URLSearchParams(nextProp.location.search);
-		if(queryParams.has("user") ){
-			mySnippets = queryParams.get("user").toLowerCase();
-//			console.log("mySnippets1", mySnippets);
-		}
-		//console.log("mySnippets2", mySnippets);
+		var mySnippets = this.getUserParam(nextProp);
 
 		//console.log("main.js loca",this.props.location.search,"\nnext:",nextProp.location.search)
 
