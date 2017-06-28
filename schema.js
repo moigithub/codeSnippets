@@ -315,7 +315,6 @@ const mutationType = new GraphQLObjectType({
 				snippetId:{
 					type: new GraphQLNonNull(GraphQLID)
 				}
-
 			},
 			resolve: (__, args, context)=>{
 				return new Promise((resolve, reject)=>{
@@ -335,6 +334,53 @@ const mutationType = new GraphQLObjectType({
 						}
 						snippet.remove();
 						return resolve(snippet);
+					});
+				});
+			}
+		}, //deleteSnippet
+		updateSnippet : {
+			type: CodeSnippetType,
+			args:{
+				snippetId:{
+					type: new GraphQLNonNull(GraphQLID)
+				},
+				snippet:{
+					type: new GraphQLNonNull(CodeSnippetInputType)
+				}
+
+			},
+			resolve: (__, args, context)=>{
+				return new Promise((resolve, reject)=>{
+					// insert into db
+					console.log("mutation updateSnippet resolve context: ",context.session);
+					// ONLY AUTHENTICATED USER CAN USE THE MUTATION
+					if(!context.user && !context.user._id){
+						return reject(new Error("Only logged users allowed."));
+					}
+
+					Snippet.findById(args.snippetId, (err, snippet)=>{
+						if(err) {
+							return reject(err);
+						}
+						if(!snippet){
+							return reject(null);
+						}
+
+						snippet.language     = args.snippet.language,
+						snippet.title        = args.snippet.title,
+						snippet.description  = args.snippet.description,
+						snippet.code         = args.snippet.code,
+						snippet.postedBy     = userId,
+						snippet.tags         = args.snippet.tags,
+						snippet.links        = args.snippet.links
+					
+						console.log("mutation updateSnippet ------> \n",snippet);
+						snippet.save( (err)=>{
+							if(err) {
+								return reject(err);
+							}
+							return resolve(snippet);
+						});
 					});
 				});
 			}
