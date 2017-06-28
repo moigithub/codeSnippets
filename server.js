@@ -134,7 +134,7 @@ const root = {
 const expressGraphQL = require('express-graphql');
 
 app.use('/graphql', expressGraphQL((request, response)=>{
-  console.log('\n\nGRAPHQL\nreq.user:',request.user,'\n\n\nsession:',request.session);
+  //console.log('\n\nGRAPHQL\nreq.user:',request.user,'\n\n\nsession:',request.session);
   return {
     schema,
     context:{user : request.user || null},

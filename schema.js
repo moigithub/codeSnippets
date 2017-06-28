@@ -319,7 +319,7 @@ const mutationType = new GraphQLObjectType({
 			resolve: (__, args, context)=>{
 				return new Promise((resolve, reject)=>{
 					// insert into db
-					console.log("mutation deleteSnippet resolve context: ",context.session);
+					console.log("mutation deleteSnippet resolve context: ",context);
 					// ONLY AUTHENTICATED USER CAN USE THE MUTATION
 					if(!context.user && !context.user._id){
 						return reject(new Error("Only logged users allowed."));
@@ -352,7 +352,7 @@ const mutationType = new GraphQLObjectType({
 			resolve: (__, args, context)=>{
 				return new Promise((resolve, reject)=>{
 					// insert into db
-					console.log("mutation updateSnippet resolve context: ",context.session);
+					console.log("mutation updateSnippet resolve context: ",context);
 					// ONLY AUTHENTICATED USER CAN USE THE MUTATION
 					if(!context.user && !context.user._id){
 						return reject(new Error("Only logged users allowed."));
@@ -366,13 +366,16 @@ const mutationType = new GraphQLObjectType({
 							return reject(null);
 						}
 
+/*
 						snippet.language     = args.snippet.language,
 						snippet.title        = args.snippet.title,
 						snippet.description  = args.snippet.description,
 						snippet.code         = args.snippet.code,
-						snippet.postedBy     = userId,
+						//snippet.postedBy     = userId,
 						snippet.tags         = args.snippet.tags,
 						snippet.links        = args.snippet.links
+*/
+						Object.assign( snippet, args.snippet);
 					
 						console.log("mutation updateSnippet ------> \n",snippet);
 						snippet.save( (err)=>{
