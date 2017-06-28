@@ -42,7 +42,7 @@ class Main extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProp){
-		console.log("cwrp next",nextProp);
+//		console.log("cwrp next",nextProp);
 //		console.log("cwrp this",this.props);
 
 		var mySnippets = this.getUserParam(nextProp);
@@ -91,7 +91,7 @@ class Main extends React.Component {
 //console.log("main state", this.state);
 //console.log("main render", match.params)
 //console.log("render main.js locatoin",location);
-console.log("main.js render currentSelected", this.props);
+//console.log("main.js render currentSelected", this.props);
 
 		const showDetails = ()=>{
 			if(Object.keys(this.props.currentSelected).length<1){

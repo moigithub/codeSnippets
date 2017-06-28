@@ -1,5 +1,5 @@
 import {
-	ADDSNIPPETDATA, DELETESNIPPETDATA,
+	ADDSNIPPETDATA, UPDATESNIPPETDATA, DELETESNIPPETDATA,
 	GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA,
 	ADDTAG ,
 	REMOVETAG,
@@ -34,6 +34,13 @@ export const setCurrentSnippet = (snippet)=>(
 export const createSnippet = (snippet)=>(
 {
 	type: ADDSNIPPETDATA,
+	data : snippet
+}
+);
+
+export const updateSnippet = (snippet)=>(
+{
+	type: UPDATESNIPPETDATA,
 	data : snippet
 }
 );
@@ -139,7 +146,7 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 export const createSnippetAsync=({language="", title="", description="", code="", postedBy="", tags=[], links=[]})=> {
 //    console.log("getSnippetsFromServer", tags, all);
     const query = `mutation add($s:SnippetInput!){
-    	createSnippet(snippet:$s){_id,language,title,description,code,tags,links,author{email,name}}
+    	createSnippet(snippet:$s){_id,language,title,description,code,tags,links,isOwner,author{email,name}}
     }`;
 	let queryJSON = 
 	{
@@ -166,6 +173,49 @@ export const createSnippetAsync=({language="", title="", description="", code=""
 		    console.log("create snippet",response.data);
 
 		    return dispatch(createSnippet(response.data.data.createSnippet));
+		  })
+		  .catch(function (error) {
+		    console.log(error);
+		  });
+    }
+}
+
+
+export const updateSnippetAsync=(id="",{language="", title="", description="", code="", postedBy="", tags=[], links=[]})=> {
+//    console.log("getSnippetsFromServer", tags, all);
+console.log("updateSnippetAsync", links);
+    const query = `mutation update($id:ID!,$s:SnippetInput!){
+    	updateSnippet(snippetId:$id, snippet:$s){_id,language,title,description,code,tags,links,isOwner,author{email,name}}
+    }`;
+
+
+	let queryJSON = 
+	{
+		"query":query,
+		"variables":{
+			"id":id,
+			"s":{
+				"language":language,
+				"title":title,
+				"description":description,
+				"code":code,
+				"postedBy":postedBy,
+				"tags":tags,
+				"links":links
+			}
+		},
+		"operationName":"update"
+	};
+
+
+   // console.log("getSnippetByIdFromServer");
+    return function(dispatch, getState){
+    	return axios.post(API_URL, queryJSON)
+    	  .then(function (response) {
+		    console.log("update snippet",response.data);
+
+		    dispatch(setCurrentSnippet(response.data.data.updateSnippet));
+		    return dispatch(updateSnippet(response.data.data.updateSnippet));
 		  })
 		  .catch(function (error) {
 		    console.log(error);

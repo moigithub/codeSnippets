@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 
 import BaseForm from './baseForm';
 
-import {createSnippetAsync, getSnippetByIdFromServer} from '../actions/snippetsActions';
+import {updateSnippetAsync, getSnippetByIdFromServer} from '../actions/snippetsActions';
 
 class EditForm extends React.Component {
 
@@ -37,7 +37,7 @@ class EditForm extends React.Component {
     }
   }
 
-  handleSubmit(values,dispatch, props){
+  handleSubmit=(values,dispatch, props)=>{
     console.log("editForm: handleSubmit",values,dispatch,props);
     const snippetObj={
       "language":values.language,
@@ -45,13 +45,14 @@ class EditForm extends React.Component {
       "description":values.description,
       "code":values.code,
       "postedBy":values.postedBy,
-      "tags":values.tags, //.split(","),
+      "tags":typeof(values.tags)==="string" ? values.tags.split(","): values.tags,
       "links":values.links
     };
 
     //saveSnippet(id)
     //o
-    //dispatch(saveSnippet(snippetObj))
+    props.saveSnippet(values._id,snippetObj);
+    props.history.push('/snippets');
   };
 
   render(){
@@ -65,21 +66,19 @@ class EditForm extends React.Component {
 
 function mapDispatchToProps(dispatch){
   return {
-    saveSnippet : (snippet)=>dispatch(createSnippetAsync(snippet)),
+    saveSnippet : (id,snippet)=>dispatch(updateSnippetAsync(id,snippet)),
     getSnippetById: (id)=>dispatch(getSnippetByIdFromServer(id)),
 
   }
 }
 
-
-EditForm = withRouter(connect(
-  
-  state => ({
+function mapStateToProps(state){
+  return {
     initialValues: state.currentSelected // pull initial values from account reducer
-    
-  })
-  , mapDispatchToProps
-)(EditForm));
+  }
+}
+
+EditForm = withRouter(connect( mapStateToProps, mapDispatchToProps )(EditForm));
 
 
 export default EditForm;

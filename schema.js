@@ -21,7 +21,7 @@ const CodeSnippetType= new GraphQLObjectType({
 	description: 'Code Snippet',
 	fields:()=>( {
 		_id: {
-			type: GraphQLString
+			type: GraphQLID
 		},
 		language: {
 			type: GraphQLString,	
@@ -37,7 +37,15 @@ const CodeSnippetType= new GraphQLObjectType({
 			type: GraphQLString
 		},
 		isOwner: {
-			type: GraphQLBoolean
+			type: GraphQLBoolean,
+			resolve: function(parentValue, args, context){
+				//console.log("CodeSnippetType args", args,"\n\ncontext",context,"\n\nparentValue",parentValue);
+				var isOwner = false;
+				if(context.user && context.user._id) {
+					isOwner = String(parentValue.postedBy) === String(context.user._id);
+				}
+				return isOwner
+			}
 		},
 		author: {
 			type: UserType,
@@ -147,14 +155,7 @@ const QueryType = new GraphQLObjectType({
 						if(!snippet){
 							return reject(null)
 						}
-						var isOwner = false;
-						if(context.user && context.user._id) {
-//							console.log("\n\nschema.js CodeSnippet \nresolve:", snippet.postedBy, "\ncontext:",context.user._id);
-//							console.log("\n\nschema.js CodeSnippet \nresolve:", typeof snippet.postedBy, "\ncontext:",typeof (context.user._id));
-							isOwner = String(snippet.postedBy) === String(context.user._id);
-						}
 
-						snippet.isOwner = isOwner;
 						console.log("\n\nsnppet", snippet);
 						return resolve(snippet);
 					});
@@ -285,7 +286,7 @@ const mutationType = new GraphQLObjectType({
 					// insert into db
 					// console.log("mutation createSnippet resolve context: ",context.session);
 					// ONLY AUTHENTICATED USER CAN USE THE MUTATION
-					if(!context.user && !context.user._id){
+					if(!context.user || !context.user._id){
 						return reject(new Error("Only logged users allowed."));
 					}
 
@@ -299,7 +300,7 @@ const mutationType = new GraphQLObjectType({
 						tags: args.snippet.tags,
 						links: args.snippet.links
 					};
-					console.log("mutation createSnippet ------> \n", newSnippet);
+					//console.log("mutation createSnippet ------> \n", newSnippet);
 					Snippet.create(newSnippet, (err, snippet)=>{
 						if(err) {
 							return reject(err);
@@ -319,9 +320,9 @@ const mutationType = new GraphQLObjectType({
 			resolve: (__, args, context)=>{
 				return new Promise((resolve, reject)=>{
 					// insert into db
-					console.log("mutation deleteSnippet resolve context: ",context);
+					//console.log("mutation deleteSnippet resolve context: ",context, "\nargs",args);
 					// ONLY AUTHENTICATED USER CAN USE THE MUTATION
-					if(!context.user && !context.user._id){
+					if(!context.user || !context.user._id){
 						return reject(new Error("Only logged users allowed."));
 					}
 
@@ -352,7 +353,7 @@ const mutationType = new GraphQLObjectType({
 			resolve: (__, args, context)=>{
 				return new Promise((resolve, reject)=>{
 					// insert into db
-					console.log("mutation updateSnippet resolve context: ",context);
+					console.log("mutation updateSnippet resolve context: ",context, "\nargs",args);
 					// ONLY AUTHENTICATED USER CAN USE THE MUTATION
 					if(!context.user && !context.user._id){
 						return reject(new Error("Only logged users allowed."));
@@ -366,16 +367,16 @@ const mutationType = new GraphQLObjectType({
 							return reject(null);
 						}
 
-/*
-						snippet.language     = args.snippet.language,
-						snippet.title        = args.snippet.title,
-						snippet.description  = args.snippet.description,
-						snippet.code         = args.snippet.code,
-						//snippet.postedBy     = userId,
-						snippet.tags         = args.snippet.tags,
-						snippet.links        = args.snippet.links
-*/
-						Object.assign( snippet, args.snippet);
+
+						if( args.snippet.language ) { snippet.language = args.snippet.language; }
+						if( args.snippet.title ) { snippet.title = args.snippet.title; }
+						if( args.snippet.description ) { snippet.description = args.snippet.description; }
+						if( args.snippet.code ) { snippet.code = args.snippet.code; }
+						if( args.snippet.postedBy ) { snippet.postedBy = args.snippet.postedBy; }
+						if( args.snippet.tags.length ) { snippet.tags = args.snippet.tags.filter(l=>l.trim()!==""); }
+						if( args.snippet.links.length ) { snippet.links = args.snippet.links.filter(l=>l.trim()!==""); }
+
+						
 					
 						console.log("mutation updateSnippet ------> \n",snippet);
 						snippet.save( (err)=>{
