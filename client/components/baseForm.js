@@ -174,6 +174,7 @@ const warn = values => {
 
 ContactForm = reduxForm({
   form: 'contact', // a unique identifier for this form
+  enableReinitialize: true,
   validate, // <--- validation function given to redux-form
   warn // <--- warning function given to redux-form
 })(ContactForm)

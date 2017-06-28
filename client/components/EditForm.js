@@ -22,7 +22,8 @@ class EditForm extends React.Component {
     var mySnippets = "";
 
     const id = nextProp.match.params.snippetId;
-    if((id && !this.props.currentSelected)||(id && this.props.currentSelected._id !== id)){
+    if(   (id && !this.props.initialValues)
+        ||(id && this.props.initialValues._id !== id)){
       this.props.getSnippetById(id)
     }
   }
@@ -44,7 +45,7 @@ class EditForm extends React.Component {
       "description":values.description,
       "code":values.code,
       "postedBy":values.postedBy,
-      "tags":values.tags.split(","),
+      "tags":values.tags, //.split(","),
       "links":values.links
     };
 
@@ -55,13 +56,11 @@ class EditForm extends React.Component {
 
   render(){
     return (
-      <BaseForm onSubmit={this.handleSubmit} title="Edit Snippet"/>    
+      <BaseForm {...this.props} onSubmit={this.handleSubmit} title="Edit Snippet"/>    
     );
   }
 
 }
-
-
 
 
 function mapDispatchToProps(dispatch){
@@ -76,13 +75,11 @@ function mapDispatchToProps(dispatch){
 EditForm = withRouter(connect(
   
   state => ({
-    initialValues: state.currentSelected, // pull initial values from account reducer
-    currentSelected:state.currentSelected,
+    initialValues: state.currentSelected // pull initial values from account reducer
+    
   })
   , mapDispatchToProps
 )(EditForm));
-
-
 
 
 export default EditForm;
