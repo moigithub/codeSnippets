@@ -60,7 +60,7 @@ const renderLinks = ({ fields, meta: { error } }) => (
   links: [String],
   postedBy 
 */
-let ContactForm = props => {
+let BaseForm = props => {
   const { handleSubmit, title, pristine, reset, submitting } = props
 //  console.log("createForm.js props",props);
   return (
@@ -172,12 +172,12 @@ const warn = values => {
   return warnings
 }
 
-ContactForm = reduxForm({
+BaseForm = reduxForm({
   form: 'contact', // a unique identifier for this form
   enableReinitialize: true,
   validate, // <--- validation function given to redux-form
   warn // <--- warning function given to redux-form
-})(ContactForm)
+})(BaseForm)
 
 
-export default ContactForm;
+export default BaseForm;

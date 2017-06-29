@@ -109,9 +109,7 @@ class Main extends React.Component {
 					<FilterForm />
 					<FilterLanguage />
 					<SnippetList snippetsList = {this.props.snippets} userFilter = {location.search}/>
-
 				</div>
-
 				{ showDetails() }
 			</div>
 		</div>		
@@ -135,8 +133,6 @@ function mapDispatchToProps(dispatch, getState, ownProps){
 		getSnippetById: (id)=>dispatch(snippetsActions.getSnippetByIdFromServer(id)),
 		deleteSnippet: (id)=>dispatch(snippetsActions.deleteSnippetById(id))
 	}
-
-
 }
 
 export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Main))
