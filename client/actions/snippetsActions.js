@@ -3,7 +3,7 @@ import {
 	GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA,
 	ADDTAG ,
 	REMOVETAG,
-	SETLANGUAGE 
+	SETLANGUAGE, SETERROR
 } from '../reducers/const'
 
 import axios from 'axios';
@@ -54,6 +54,7 @@ export const deleteSnippet = (snippet)=>(
 
 
 export const setLanguage = (language)=>({type:SETLANGUAGE ,data:language});
+export const setError = (error)=>({type:SETERROR ,data:error});
 export const addTag = (tag)=>({type:ADDTAG ,data:tag});
 export const removeTag = (tag)=>({type:REMOVETAG ,data:tag});
 
@@ -98,6 +99,7 @@ export const getSnippetsFromServer=(tags=[],all=false,language="", author="")=> 
 
 
     return function(dispatch, getState){
+		dispatch(setError([]));
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 		    //console.log("snipetaction:: ",response.data.data);
@@ -105,7 +107,8 @@ export const getSnippetsFromServer=(tags=[],all=false,language="", author="")=> 
 		    return dispatch(setAllSnippets(response.data.data.CodeSnippets||[]));
 		  })
 		  .catch(function (error) {
-		    console.log(error);
+		    console.error("getSnippetsFromServer Error",error);
+		    return new Error("Couldnt get data from server.")
 		  });
     }
 }
@@ -129,16 +132,24 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 	};
 
 
+
    // console.log("getSnippetByIdFromServer");
     return function(dispatch, getState){
+		dispatch(setError([]));
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
-	//	    console.log("current snippet by id",response.data);
+		    console.log("current snippet by id",response.data);
+		    if(response.data.errors && response.data.errors.length){
+		    	return dispatch(setError(response.data.errors));
+		    	//return new Error("Couldnt get data from server.")
+
+		    }
 
 		    return dispatch(setCurrentSnippet(response.data.data.CodeSnippet));
 		  })
 		  .catch(function (error) {
-		    console.log(error);
+		    console.error("getSnippetByIdFromServer Error",error);
+		    return new Error("Couldnt get data from server.")
 		  });
     }
 }
@@ -165,9 +176,9 @@ export const createSnippetAsync=({language="", title="", description="", code=""
 		"operationName":"add"
 	};
 
-
    // console.log("getSnippetByIdFromServer");
     return function(dispatch, getState){
+		dispatch(setError([]));
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 		    console.log("create snippet",response.data);
@@ -175,7 +186,8 @@ export const createSnippetAsync=({language="", title="", description="", code=""
 		    return dispatch(createSnippet(response.data.data.createSnippet));
 		  })
 		  .catch(function (error) {
-		    console.log(error);
+		    console.error("createSnippetAsync Error",error);
+		    return new Error("Couldnt get data from server.")
 		  });
     }
 }
@@ -207,9 +219,9 @@ console.log("updateSnippetAsync", links);
 		"operationName":"update"
 	};
 
-
    // console.log("getSnippetByIdFromServer");
     return function(dispatch, getState){
+		dispatch(setError([]));
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 		    console.log("update snippet",response.data);
@@ -218,7 +230,8 @@ console.log("updateSnippetAsync", links);
 		    return dispatch(updateSnippet(response.data.data.updateSnippet));
 		  })
 		  .catch(function (error) {
-		    console.log(error);
+		    console.error("updateSnippetAsync Error",error);
+		    return new Error("Couldnt get data from server.")
 		  });
     }
 }
@@ -238,9 +251,9 @@ export const deleteSnippetById=(snippetId="")=> {
 		"operationName":"delete"
 	};
 
-
    // console.log("getSnippetByIdFromServer");
     return function(dispatch, getState){
+		dispatch(setError([]));
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 		    console.log("delete snippet",response.data);
@@ -249,7 +262,8 @@ export const deleteSnippetById=(snippetId="")=> {
 		    return dispatch(deleteSnippet(response.data.data.deleteSnippet._id));
 		  })
 		  .catch(function (error) {
-		    console.log(error);
+		    console.error("deleteSnippetById Error",error);
+		    return new Error("Couldnt get data from server.")
 		  });
     }
 }

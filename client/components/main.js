@@ -41,13 +41,21 @@ class Main extends React.Component {
 		this.props.getSnippets(this.props.filterTags, false, this.props.language, mySnippets);
 	}
 
-	componentWillReceiveProps(nextProp){
-//		console.log("cwrp next",nextProp);
-//		console.log("cwrp this",this.props);
+	componentWillMount(){
+		console.log("compWillMount", this.props);
+	}
 
+
+	componentWillReceiveProps(nextProp){
+		console.log("cwrp next",nextProp);
+		console.log("cwrp this",this.props);
+/*
 		var mySnippets = this.getUserParam(nextProp);
 
 		//console.log("main.js loca",this.props.location.search,"\nnext:",nextProp.location.search)
+
+		// do nothing if err
+		if(this.props.errors.length) return;
 
 		const id = nextProp.match.params.snippetId;
 		if((id && !this.props.currentSelected)||(id && this.props.currentSelected._id !== id)){
@@ -61,11 +69,12 @@ class Main extends React.Component {
 //console.log("mySnippets3", mySnippets);
 			this.props.getSnippets(nextProp.filterTags, false, nextProp.language, mySnippets);			 
 		}
+*/		
 	}
 
 
 	static loadData=({store,match,query})=>{
-//		console.log("main.js loadData match",match);
+		console.log("main.js loadData match",match,"\nquery",query);
 
 		var mySnippets = "";
 		//let queryParams = new URLSearchParams(this.props.location.search);
@@ -110,6 +119,9 @@ class Main extends React.Component {
 					<FilterLanguage />
 					<SnippetList snippetsList = {this.props.snippets} userFilter = {location.search}/>
 				</div>
+				<div className="col-xs-12 col-sm-8">
+				{this.props.errors.map((error,i) => <div className="alert alert-danger" key={`error${i}`} role="alert">{JSON.stringify(error.message)}</div>)}
+				</div>
 				{ showDetails() }
 			</div>
 		</div>		
@@ -123,7 +135,8 @@ function mapStateToProps(state){
 		snippets:state.snippets,
 		currentSelected:state.currentSelected,
 		language: state.languageFilter,
-		filterTags: state.snippetTagFilter
+		filterTags: state.snippetTagFilter,
+		errors : state.errors
 	}
 }
 

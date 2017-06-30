@@ -139,7 +139,13 @@ app.use('/graphql', expressGraphQL((request, response)=>{
     schema,
     context:{user : request.user || null},
     graphiql: true,
-    rootValue : root
+    rootValue : root,
+    formatError: error => ({
+      message: error.message,
+      locations: error.locations,
+      stack: error.stack,
+      path: error.path
+    })
   }
 }));
 
@@ -186,39 +192,27 @@ app.get('*', (req,res)=>{
   loadBranchData(store, req.path, req.query).then(data=>{
 //    console.log("server.js: all data loaded",data)
 
-/*    
-  });
-
-  return store.dispatch(snippetsActions.getSnippetsFromServer())
-    .then( ()=>{
-      const snippetId = req.params.id;
-      if(snippetId){
-//        console.log("snippetId", snippetId);
-        return store.dispatch(snippetsActions.getSnippetByIdFromServer(snippetId))
-      }
-    })
-    .then(()=>{
-*/      
-        html= renderToString(
-          <Provider store={store}>
-            <StaticRouter location={req.url} context={context}>
-              <AppLayout user={req.user|| null }>
-                {renderRoutes(routes)}
-              </AppLayout>
-            </StaticRouter>
-          </Provider>
-          );
+    let currentState = store.getState();
+    html = renderToString(
+      <Provider store={store}>
+        <StaticRouter location={req.url} context={context}>
+          <AppLayout user={req.user|| null }>
+            {renderRoutes(routes)}
+          </AppLayout>
+        </StaticRouter>
+      </Provider>
+      );
     
   ///  console.log("server.js:  static router context",context);
-        if (context.url) {
-            // Somewhere a `<Redirect>` was rendered
-  //          console.log("context ",context, context.url);
-            res.redirect(301, context.url)
-        } else {
-  //        console.log("ssr");
-            res.render('index', { html , user: req.user});
-        }
-    });
+      if (context.url) {
+          // Somewhere a `<Redirect>` was rendered
+//          console.log("context ",context, context.url);
+          res.redirect(301, context.url)
+      } else {
+//        console.log("ssr");
+          res.render('index', { html , user: req.user, state:currentState});
+      }
+  });   
 });
 
 /*

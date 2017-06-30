@@ -16,7 +16,8 @@ import * as snippetsActions from './actions/snippetsActions';
 
 import configureStore from './configureStore';
 
-let store = configureStore();
+//console.log("\n\n\n\nstate",window.__STATE__);
+let store = configureStore(window.__STATE__);
 // fetch data from server
 store.dispatch(snippetsActions.getSnippetsFromServer()); 
 //console.log("store2",store.getState());

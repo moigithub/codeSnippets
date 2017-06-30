@@ -11,3 +11,5 @@ export const ADDTAG = "ADDTAG";
 export const REMOVETAG ="REMOVETAG";
 
 export const SETLANGUAGE = "SETLANGUAGE";
+
+export const SETERROR = "SETERROR";

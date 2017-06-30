@@ -7,7 +7,8 @@ import {
 	snippetReducer, 
 	currentSnippetReducer, 
 	snippetTagFilterReducer,
-	languageFilterReducer
+	languageFilterReducer,
+	errorsReducer
 } from "./reducers/SnippetReducer";
 
 
@@ -35,7 +36,8 @@ export default function configureStore(initialState){
 				snippets          :snippetReducer, 
 				currentSelected   :currentSnippetReducer,
 				snippetTagFilter  :snippetTagFilterReducer,
-				languageFilter    :languageFilterReducer
+				languageFilter    :languageFilterReducer,
+				errors            :errorsReducer
 			}
 		),
 		initialState

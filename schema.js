@@ -1,4 +1,5 @@
 const expressGraphQL = require('express-graphql');
+
 import {
 	GraphQLSchema, 
 	GraphQLObjectType, 
@@ -11,6 +12,7 @@ import {
 	GraphQLNonNull
 } from 'graphql';
 
+import ValidationError from './ValidationError';
 import mongoose from 'mongoose';
 import User from './models/User.js';
 import Snippet from './models/Snippet.js';
@@ -148,14 +150,22 @@ const QueryType = new GraphQLObjectType({
 			},
 			resolve: function(parentValue, args, context){
 				return new Promise((resolve, reject)=>{
+					if(!mongoose.Types.ObjectId.isValid(args.snippetId)){
+						console.log("\n\nvalidation snippetid");
+						//return reject(new ValidationError(["Invalid Snippet ID"]));
+						return reject(new Error("Invalid Snippet ID"));
+					}
 					Snippet.findById(args.snippetId).lean().exec(function(err, snippet){
 						if(err) {
+							console.log("error codenippet by id",err)
 							return reject(err);
 						}
+						/*
 						if(!snippet){
-							return reject(null)
+							console.log("error codenippet by id !snippet",err)
+							return resolve([]);
 						}
-
+						*/
 						console.log("\n\nsnppet", snippet);
 						return resolve(snippet);
 					});

@@ -3,21 +3,21 @@ import Highlight from 'react-highlight';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom'
 
-const SnippetDetail=({ links, 
-			tags, 
-			author, title, 
-			description, 
-			language, code, 
-			isOwner, _id, 
-			deleteSnippet,
-			editSnippet
+const SnippetDetail=({ links=[], 
+			tags=[], 
+			author="", title="", 
+			description="", 
+			language="", code="", 
+			isOwner=false, _id="", 
+			deleteSnippet=()=>{},
+			editSnippet=()=>{}
 		})=>{
 	//	console.log("details",props);
 		
 	const allLinks = links && links.length>0?links.map((l,i)=>{
 		return (
 				<li className="list-group-item" key={'link'+i}>
-					<a href="#">{l}</a>
+					<a href={l} target="_blank">{l}</a>
 				</li>
 			) 
 	}): null;
