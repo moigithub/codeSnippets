@@ -23,8 +23,25 @@ class Main extends React.Component {
 
  	}
 */
-	state={
-	
+	state={	}
+
+	static loadData=({store,match,query})=>{
+//		console.log("main.js loadData match",match,"\nquery",query);
+		var promises=[];
+		var mySnippets = "";
+		if(query.user){
+			mySnippets = query.user.toLowerCase();
+		}
+//		console.log("loadData mySnippets",mySnippets);
+		var p1=store.dispatch(snippetsActions.getSnippetsFromServer([], false, "", mySnippets));
+
+
+		if (match && match.params.snippetId) {
+			var p2= store.dispatch(snippetsActions.getSnippetByIdFromServer(match.params.snippetId));
+			console.log("main.js loaddata,\n\ndispatch result", p2);
+		} 
+
+		return Promise.all([p1,p2]);
 	}
 
 	getUserParam = (props)=>{
@@ -99,25 +116,6 @@ class Main extends React.Component {
 	}
 
 
-	static loadData=({store,match,query})=>{
-//		console.log("main.js loadData match",match,"\nquery",query);
-
-		var mySnippets = "";
-		//let queryParams = new URLSearchParams(this.props.location.search);
-		//console.log("node query param",query);
-		if(query.user){
-			mySnippets = query.user.toLowerCase();
-		}
-
-		if (match && match.params.snippetId) {
-			let result= store.dispatch(snippetsActions.getSnippetByIdFromServer(match.params.snippetId));
-//			console.log("main.js loaddata,\n\ndispatch result", result);
-		} else {
-//			console.log("loadData mySnippets",mySnippets);
-			return store.dispatch(snippetsActions.getSnippetsFromServer([], false, "", mySnippets));
-		}
-		
-	}
 
 
 	render(){
