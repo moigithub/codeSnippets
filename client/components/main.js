@@ -39,35 +39,61 @@ class Main extends React.Component {
 		console.log("main.js CDM",this.props);
 		var mySnippets = this.getUserParam(this.props);
 		this.props.getSnippets(this.props.filterTags, false, this.props.language, mySnippets);
-	}
 
+		const id = this.props.match.params.snippetId;
+		if (id ) {
+			console.log("didmount getting data for next id",id);
+			this.props.getSnippetById(id);
+		}		
+	}
+/*
 	componentWillMount(){
-		console.log("compWillMount", this.props);
+		console.log("compWillMount", this.props.currentSelected, this.props.match);
+		const id = this.props.match.params.snippetId;
+		if((id && !this.props.currentSelected)||(id && this.props.currentSelected._id !== id)){
+			console.log("willmount is diff!!");
+			console.log("willmount getting data for next id",id);
+			this.props.getSnippetById(id);
+			
+		}
 	}
 
-
+	shouldComponentUpdate(nextProps, nextState){
+		console.log("shuld component update", this.props.errors);
+		//return true;
+		return !this.props.errors.length;
+	}
+*/
 	componentWillReceiveProps(nextProp){
 		console.log("cwrp next",nextProp);
 		console.log("cwrp this",this.props);
-/*
+
 		var mySnippets = this.getUserParam(nextProp);
 
 		//console.log("main.js loca",this.props.location.search,"\nnext:",nextProp.location.search)
 
-		// do nothing if err
-		if(this.props.errors.length) return;
+		// if no errors
+//		if(!this.props.errors.length) {
 
-		const id = nextProp.match.params.snippetId;
-		if((id && !this.props.currentSelected)||(id && this.props.currentSelected._id !== id)){
-			this.props.getSnippetById(id)
-		} else if(
-			(this.props.language !==nextProp.language)||
-			([...this.props.filterTags,...nextProp.filterTags]
-				.filter((n,i,a)=>a.indexOf(n)==a.lastIndexOf(n)).length>0)||
-			(this.props.location.search !== nextProp.location.search)
-			) {
-//console.log("mySnippets3", mySnippets);
-			this.props.getSnippets(nextProp.filterTags, false, nextProp.language, mySnippets);			 
+			const id = nextProp.match.params.snippetId;
+			console.log("next id",id,"\ncurSelected id", this.props.match.params.snippetId);
+
+			if (id && id !== this.props.match.params.snippetId) {
+				console.log("is diff!!");
+					console.log("getting data for next id",id);
+					this.props.getSnippetById(id);
+			} else if(
+				(this.props.language !==nextProp.language)||
+				([...this.props.filterTags,...nextProp.filterTags]
+					.filter((n,i,a)=>a.indexOf(n)==a.lastIndexOf(n)).length>0)||
+				(this.props.location.search !== nextProp.location.search)
+				) {
+	console.log("main.js CWRP elseif getSnippets");
+				this.props.getSnippets(nextProp.filterTags, false, nextProp.language, mySnippets);			 
+			}
+/*			
+		} else {
+			this.props.clearErrors();
 		}
 */		
 	}
@@ -84,7 +110,8 @@ class Main extends React.Component {
 		}
 
 		if (match && match.params.snippetId) {
-			return store.dispatch(snippetsActions.getSnippetByIdFromServer(match.params.snippetId));
+			let result= store.dispatch(snippetsActions.getSnippetByIdFromServer(match.params.snippetId));
+			console.log("main.js loaddata,\n\ndispatch result", result);
 		} else {
 //			console.log("loadData mySnippets",mySnippets);
 			return store.dispatch(snippetsActions.getSnippetsFromServer([], false, "", mySnippets));
@@ -94,7 +121,7 @@ class Main extends React.Component {
 
 
 	render(){
-//		console.log("main render props",this.props);
+		console.log("main render props",this.props);
 		//console.log("actions",snippetsActions);
 		const {match, location} = this.props;
 //console.log("main state", this.state);
@@ -103,7 +130,7 @@ class Main extends React.Component {
 //console.log("main.js render currentSelected", this.props);
 
 		const showDetails = ()=>{
-			if(Object.keys(this.props.currentSelected).length<1){
+			if(!this.props.currentSelected || Object.keys(this.props.currentSelected).length<1){
 				return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
 			}else {
 				return <SnippetDetail {...this.props.currentSelected} 
@@ -144,7 +171,8 @@ function mapDispatchToProps(dispatch, getState, ownProps){
 	return {
 		getSnippets: (tags,all,language, author)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language, author)),
 		getSnippetById: (id)=>dispatch(snippetsActions.getSnippetByIdFromServer(id)),
-		deleteSnippet: (id)=>dispatch(snippetsActions.deleteSnippetById(id))
+		deleteSnippet: (id)=>dispatch(snippetsActions.deleteSnippetById(id)),
+		clearErrors: ()=>dispatch(snippetsActions.setError([]))
 	}
 }
 

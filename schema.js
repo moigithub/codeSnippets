@@ -160,12 +160,12 @@ const QueryType = new GraphQLObjectType({
 							console.log("error codenippet by id",err)
 							return reject(err);
 						}
-						/*
+						
 						if(!snippet){
 							console.log("error codenippet by id !snippet",err)
-							return resolve([]);
+							return reject(new Error("No snippet found."));
 						}
-						*/
+						
 						console.log("\n\nsnppet", snippet);
 						return resolve(snippet);
 					});

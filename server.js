@@ -140,12 +140,14 @@ app.use('/graphql', expressGraphQL((request, response)=>{
     context:{user : request.user || null},
     graphiql: true,
     rootValue : root,
+    /*
     formatError: error => ({
       message: error.message,
       locations: error.locations,
       stack: error.stack,
       path: error.path
     })
+*/
   }
 }));
 
@@ -223,7 +225,7 @@ app.get('*', (req,res)=>{
 */
 
 //create some data on db
-const seed=true;
+const seed=false;
 if (seed) {
   Snippet.find({}).remove(function(){
     User.find({}).remove(function() {

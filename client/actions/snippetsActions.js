@@ -99,7 +99,11 @@ export const getSnippetsFromServer=(tags=[],all=false,language="", author="")=> 
 
 
     return function(dispatch, getState){
-		dispatch(setError([]));
+		
+		if(getState().errors.length){
+			dispatch(setError([]));
+		}
+
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 		    //console.log("snipetaction:: ",response.data.data);
@@ -133,9 +137,13 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 
 
 
-   // console.log("getSnippetByIdFromServer");
+    console.log("getSnippetByIdFromServer",snippetId);
     return function(dispatch, getState){
-		dispatch(setError([]));
+
+		if(getState().errors.length){
+			dispatch(setError([]));
+		}
+		
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 		    console.log("current snippet by id",response.data);
