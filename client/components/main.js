@@ -36,13 +36,13 @@ class Main extends React.Component {
 	}
 
 	componentDidMount(){
-		console.log("main.js CDM",this.props);
+//		console.log("main.js CDM",this.props);
 		var mySnippets = this.getUserParam(this.props);
 		this.props.getSnippets(this.props.filterTags, false, this.props.language, mySnippets);
 
 		const id = this.props.match.params.snippetId;
 		if (id ) {
-			console.log("didmount getting data for next id",id);
+//			console.log("didmount getting data for next id",id);
 			this.props.getSnippetById(id);
 		}		
 	}
@@ -65,8 +65,8 @@ class Main extends React.Component {
 	}
 */
 	componentWillReceiveProps(nextProp){
-		console.log("cwrp next",nextProp);
-		console.log("cwrp this",this.props);
+//		console.log("cwrp next",nextProp);
+//		console.log("cwrp this",this.props);
 
 		var mySnippets = this.getUserParam(nextProp);
 
@@ -76,10 +76,10 @@ class Main extends React.Component {
 //		if(!this.props.errors.length) {
 
 			const id = nextProp.match.params.snippetId;
-			console.log("next id",id,"\ncurSelected id", this.props.match.params.snippetId);
+//			console.log("next id",id,"\ncurSelected id", this.props.match.params.snippetId);
 
 			if (id && id !== this.props.match.params.snippetId) {
-				console.log("is diff!!");
+//				console.log("is diff!!");
 					console.log("getting data for next id",id);
 					this.props.getSnippetById(id);
 			} else if(
@@ -88,7 +88,7 @@ class Main extends React.Component {
 					.filter((n,i,a)=>a.indexOf(n)==a.lastIndexOf(n)).length>0)||
 				(this.props.location.search !== nextProp.location.search)
 				) {
-	console.log("main.js CWRP elseif getSnippets");
+//	console.log("main.js CWRP elseif getSnippets");
 				this.props.getSnippets(nextProp.filterTags, false, nextProp.language, mySnippets);			 
 			}
 /*			
@@ -100,7 +100,7 @@ class Main extends React.Component {
 
 
 	static loadData=({store,match,query})=>{
-		console.log("main.js loadData match",match,"\nquery",query);
+//		console.log("main.js loadData match",match,"\nquery",query);
 
 		var mySnippets = "";
 		//let queryParams = new URLSearchParams(this.props.location.search);
@@ -111,7 +111,7 @@ class Main extends React.Component {
 
 		if (match && match.params.snippetId) {
 			let result= store.dispatch(snippetsActions.getSnippetByIdFromServer(match.params.snippetId));
-			console.log("main.js loaddata,\n\ndispatch result", result);
+//			console.log("main.js loaddata,\n\ndispatch result", result);
 		} else {
 //			console.log("loadData mySnippets",mySnippets);
 			return store.dispatch(snippetsActions.getSnippetsFromServer([], false, "", mySnippets));
@@ -121,7 +121,7 @@ class Main extends React.Component {
 
 
 	render(){
-		console.log("main render props",this.props);
+//		console.log("main render props",this.props);
 		//console.log("actions",snippetsActions);
 		const {match, location} = this.props;
 //console.log("main state", this.state);

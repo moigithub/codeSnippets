@@ -79,7 +79,7 @@ const API_URL = config.host+':'+config.port+'/graphql';
 const options = { headers: {'Content-Type': 'application/json'}};
 
 export const getSnippetsFromServer=(tags=[],all=false,language="", author="")=> {
-    console.log("getSnippetsFromServer", tags, all,language,"autor:",author);
+//    console.log("getSnippetsFromServer", tags, all,language,"autor:",author);
     const query = `query findSnippets($tags:[String], $all:Boolean, $language:String, $author:ID){
 			CodeSnippets(tags:$tags,all:$all,language:$language,author:$author){
 				_id,language,title,description,code,tags,links,author{email,name}
@@ -111,7 +111,7 @@ export const getSnippetsFromServer=(tags=[],all=false,language="", author="")=> 
 		    return dispatch(setAllSnippets(response.data.data.CodeSnippets||[]));
 		  })
 		  .catch(function (error) {
-		    console.error("getSnippetsFromServer Error",error);
+	//	    console.error("getSnippetsFromServer Error",error);
 		    return new Error("Couldnt get data from server.")
 		  });
     }
@@ -137,7 +137,7 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 
 
 
-    console.log("getSnippetByIdFromServer",snippetId);
+    //console.log("getSnippetByIdFromServer",snippetId);
     return function(dispatch, getState){
 
 		if(getState().errors.length){
@@ -146,7 +146,7 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 		
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
-		    console.log("current snippet by id",response.data);
+	//	    console.log("current snippet by id",response.data);
 		    if(response.data.errors && response.data.errors.length){
 		    	return dispatch(setError(response.data.errors));
 		    	//return new Error("Couldnt get data from server.")
@@ -156,7 +156,7 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 		    return dispatch(setCurrentSnippet(response.data.data.CodeSnippet));
 		  })
 		  .catch(function (error) {
-		    console.error("getSnippetByIdFromServer Error",error);
+	//	    console.error("getSnippetByIdFromServer Error",error);
 		    return new Error("Couldnt get data from server.")
 		  });
     }
@@ -189,12 +189,12 @@ export const createSnippetAsync=({language="", title="", description="", code=""
 		dispatch(setError([]));
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
-		    console.log("create snippet",response.data);
+	//	    console.log("create snippet",response.data);
 
 		    return dispatch(createSnippet(response.data.data.createSnippet));
 		  })
 		  .catch(function (error) {
-		    console.error("createSnippetAsync Error",error);
+	//	    console.error("createSnippetAsync Error",error);
 		    return new Error("Couldnt get data from server.")
 		  });
     }
@@ -203,7 +203,7 @@ export const createSnippetAsync=({language="", title="", description="", code=""
 
 export const updateSnippetAsync=(id="",{language="", title="", description="", code="", postedBy="", tags=[], links=[]})=> {
 //    console.log("getSnippetsFromServer", tags, all);
-console.log("updateSnippetAsync", links);
+//console.log("updateSnippetAsync", links);
     const query = `mutation update($id:ID!,$s:SnippetInput!){
     	updateSnippet(snippetId:$id, snippet:$s){_id,language,title,description,code,tags,links,isOwner,author{email,name}}
     }`;
@@ -232,13 +232,13 @@ console.log("updateSnippetAsync", links);
 		dispatch(setError([]));
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
-		    console.log("update snippet",response.data);
+	//	    console.log("update snippet",response.data);
 
 		    dispatch(setCurrentSnippet(response.data.data.updateSnippet));
 		    return dispatch(updateSnippet(response.data.data.updateSnippet));
 		  })
 		  .catch(function (error) {
-		    console.error("updateSnippetAsync Error",error);
+	//	    console.error("updateSnippetAsync Error",error);
 		    return new Error("Couldnt get data from server.")
 		  });
     }
@@ -264,13 +264,13 @@ export const deleteSnippetById=(snippetId="")=> {
 		dispatch(setError([]));
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
-		    console.log("delete snippet",response.data);
+	//	    console.log("delete snippet",response.data);
 
 		    dispatch(setCurrentSnippet(null));
 		    return dispatch(deleteSnippet(response.data.data.deleteSnippet._id));
 		  })
 		  .catch(function (error) {
-		    console.error("deleteSnippetById Error",error);
+	//	    console.error("deleteSnippetById Error",error);
 		    return new Error("Couldnt get data from server.")
 		  });
     }

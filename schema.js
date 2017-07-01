@@ -151,22 +151,22 @@ const QueryType = new GraphQLObjectType({
 			resolve: function(parentValue, args, context){
 				return new Promise((resolve, reject)=>{
 					if(!mongoose.Types.ObjectId.isValid(args.snippetId)){
-						console.log("\n\nvalidation snippetid");
+				//		console.log("\n\nvalidation snippetid");
 						//return reject(new ValidationError(["Invalid Snippet ID"]));
 						return reject(new Error("Invalid Snippet ID"));
 					}
 					Snippet.findById(args.snippetId).lean().exec(function(err, snippet){
 						if(err) {
-							console.log("error codenippet by id",err)
+				//			console.log("error codenippet by id",err)
 							return reject(err);
 						}
 						
 						if(!snippet){
-							console.log("error codenippet by id !snippet",err)
+				//			console.log("error codenippet by id !snippet",err)
 							return reject(new Error("No snippet found."));
 						}
 						
-						console.log("\n\nsnppet", snippet);
+				//		console.log("\n\nsnppet", snippet);
 						return resolve(snippet);
 					});
 				});
@@ -363,7 +363,7 @@ const mutationType = new GraphQLObjectType({
 			resolve: (__, args, context)=>{
 				return new Promise((resolve, reject)=>{
 					// insert into db
-					console.log("mutation updateSnippet resolve context: ",context, "\nargs",args);
+				//	console.log("mutation updateSnippet resolve context: ",context, "\nargs",args);
 					// ONLY AUTHENTICATED USER CAN USE THE MUTATION
 					if(!context.user && !context.user._id){
 						return reject(new Error("Only logged users allowed."));
@@ -388,7 +388,7 @@ const mutationType = new GraphQLObjectType({
 
 						
 					
-						console.log("mutation updateSnippet ------> \n",snippet);
+				//		console.log("mutation updateSnippet ------> \n",snippet);
 						snippet.save( (err)=>{
 							if(err) {
 								return reject(err);
