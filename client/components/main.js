@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {withRouter} from "react-router-dom";
-
+import queryString from 'query-string';
 
 import SnippetDetail from './snippetDetail';
 import SnippetList from './SnippetList';
@@ -12,9 +13,10 @@ import * as snippetsActions from '../actions/snippetsActions';
 
 
 class Main extends React.Component {
- 	/*
+ /*	
  	constructor(){
  		super();
+// 		console.log("main.js constructor", this.props);
 
  	//	this.setSnippetSelected = this.setSnippetSelected.bind(this);
  	//	this.addTag = this.addTag.bind(this);
@@ -23,10 +25,11 @@ class Main extends React.Component {
 
  	}
 */
+
 	state={	}
 
 	static loadData=({store,match,query})=>{
-//		console.log("main.js loadData match",match,"\nquery",query);
+		console.log("main.js loadData match",match,"\nquery",query);
 		var promises=[];
 		var mySnippets = "";
 		if(query.user){
@@ -38,42 +41,41 @@ class Main extends React.Component {
 
 		if (match && match.params.snippetId) {
 			var p2= store.dispatch(snippetsActions.getSnippetByIdFromServer(match.params.snippetId));
-			console.log("main.js loaddata,\n\ndispatch result", p2);
+		//	console.log("main.js loaddata,\n\ndispatch result", p2);
 		} 
 
 		return Promise.all([p1,p2]);
 	}
 
-	getUserParam = (props)=>{
-		let queryParams = new URLSearchParams(props.location.search);
-		if(queryParams.has("user") ){
-			return queryParams.get("user").toLowerCase();
+	getUserParam = (location)=>{
+		//let queryParams = new URLSearchParams(props.location.search);
+		const queryParams = queryString.parse(location.search);
+		//if(queryParams.has("user") ){
+		if(queryParams.user){
+			return queryParams.user.toLowerCase();
 		}
 		return "";
 	}
 
 	componentDidMount(){
-//		console.log("main.js CDM",this.props);
-		var mySnippets = this.getUserParam(this.props);
+
+		console.log("main.js CDM",this);
+		Main.loadData({
+			store:this.context.store,
+			match:this.props.match, 
+			query:queryString.parse(this.props.location.search)});
+		/*
+		var mySnippets = this.getUserParam(this.props.location);
 		this.props.getSnippets(this.props.filterTags, false, this.props.language, mySnippets);
 
 		const id = this.props.match.params.snippetId;
 		if (id ) {
-//			console.log("didmount getting data for next id",id);
+			console.log("didmount getting data for next id",id);
 			this.props.getSnippetById(id);
-		}		
+		}
+		*/
 	}
 /*
-	componentWillMount(){
-		console.log("compWillMount", this.props.currentSelected, this.props.match);
-		const id = this.props.match.params.snippetId;
-		if((id && !this.props.currentSelected)||(id && this.props.currentSelected._id !== id)){
-			console.log("willmount is diff!!");
-			console.log("willmount getting data for next id",id);
-			this.props.getSnippetById(id);
-			
-		}
-	}
 
 	shouldComponentUpdate(nextProps, nextState){
 		console.log("shuld component update", this.props.errors);
@@ -85,7 +87,7 @@ class Main extends React.Component {
 //		console.log("cwrp next",nextProp);
 //		console.log("cwrp this",this.props);
 
-		var mySnippets = this.getUserParam(nextProp);
+		var mySnippets = this.getUserParam(nextProp.location);
 
 		//console.log("main.js loca",this.props.location.search,"\nnext:",nextProp.location.search)
 
@@ -115,20 +117,34 @@ class Main extends React.Component {
 */		
 	}
 
-
-
-
 	render(){
-//		console.log("main render props",this.props);
+	//	console.log("main render props",this);
 		//console.log("actions",snippetsActions);
 		const {match, location} = this.props;
 //console.log("main state", this.state);
 //console.log("main render", match.params)
 //console.log("render main.js locatoin",location);
 //console.log("main.js render currentSelected", this.props);
+		const showErrors = ()=>{
+			if(this.props.errors.length>0){
+				return (<div className="col-xs-12 col-sm-8">
+					{this.props.errors.map((error,i) => (
+						<div className="alert alert-danger" 
+							 key={`error${i}`} 
+							 role="alert">
+							 {error.message}
+							 </div>
+						)
+					)}
+				</div>);
+			} else {
+				return null;
+			}
+		}
 
 		const showDetails = ()=>{
-			if(!this.props.currentSelected || Object.keys(this.props.currentSelected).length<1){
+		//	console.log("shwdetails main.js props", this.props);
+			if(!this.props.currentSelected._id){
 				return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
 			}else {
 				return <SnippetDetail {...this.props.currentSelected} 
@@ -136,23 +152,25 @@ class Main extends React.Component {
 							/>
 			}
 		}
+
 		return (
-		<div className="container">
-			<div className="row">
-				<div className="col-xs-12 col-sm-4 leftbar">
-					<FilterForm />
-					<FilterLanguage />
-					<SnippetList snippetsList = {this.props.snippets} userFilter = {location.search}/>
+			<div className="container">
+				<div className="row">
+					<div className="col-xs-12 col-sm-4 leftbar">
+						<FilterForm />
+						<FilterLanguage />
+						<SnippetList snippetsList = {this.props.snippets} userFilter = {location.search}/>
+					</div>
+					{ showErrors() }
+					{ showDetails() }
 				</div>
-				<div className="col-xs-12 col-sm-8">
-				{this.props.errors.map((error,i) => <div className="alert alert-danger" key={`error${i}`} role="alert">{JSON.stringify(error.message)}</div>)}
-				</div>
-				{ showDetails() }
-			</div>
-		</div>		
+			</div>		
 		);
 	}
 }
+
+Main.contextTypes = { store: PropTypes.object };
+
 
 function mapStateToProps(state){
 	//console.log("mapStateToProps",state);

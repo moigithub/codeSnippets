@@ -35,6 +35,7 @@ import Snippet from './models/Snippet.js';
 import routes from './client/routes';
 import AppLayout from './client/components/AppLayout';
 
+
 var app = express();
 app.set('view engine','ejs')
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
@@ -192,7 +193,7 @@ app.get('*', (req,res)=>{
  // console.log("server \n\n\n\n*",req.params, '\n query: ',req.query);
 
   loadBranchData(store, req.path, req.query).then(data=>{
-//    console.log("server.js: all data loaded",data)
+    console.log("server.js: all data loaded",data)
 
     let currentState = store.getState();
     html = renderToString(

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BrowserRouter,Switch, Route, Link } from 'react-router-dom'
-import axios from 'axios';
+import getUser from './userService'
 
 import * as snippetsActions from '../actions/snippetsActions';
 
@@ -15,18 +15,18 @@ class Header extends React.Component {
 
 	componentDidMount(){
 	//	console.log("navigation: getting user data");
-		axios.get('/user').then(data=>{
-	//		console.log("navigation user",data.data);
-			this.setState({user:data.data.user});
+		getUser().then(data=>{
+			console.log("navigation getuser", data);
+			this.setState({user:data});
 		});
 	}
 
 	componentWillReceiveProps(nextProps){
 	//	console.log("navigation cwrp",nextProps, this.state)
 		if(nextProps.user !== this.state.user){
-			axios.get('/user').then(data=>{
-	//			console.log("navigation user",data.data);
-				this.setState({user:data.data.user});
+			getUser().then(data=>{
+				console.log("navigation getuser", data);
+				this.setState({user:data});
 			});
 		}
 	}

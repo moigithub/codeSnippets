@@ -16,19 +16,26 @@ import * as snippetsActions from './actions/snippetsActions';
 
 import configureStore from './configureStore';
 
+import getUser from './components/userService';
+
 //console.log("\n\n\n\nstate",window.__STATE__);
 let store = configureStore(window.__STATE__);
 // fetch data from server
-store.dispatch(snippetsActions.getSnippetsFromServer()); 
+//store.dispatch(snippetsActions.getSnippetsFromServer()); 
 //console.log("store2",store.getState());
 
-ReactDOM.render(<Provider store={store}>
-					<BrowserRouter>
-						<AppLayout>
-							{renderRoutes(routes)}
-						</AppLayout>
-					</BrowserRouter>
-				</Provider>
-				, document.getElementById("app"));
+const user = null; // get user from store?? service? global variable?
+
+getUser().then(user=>{
+
+	ReactDOM.render(<Provider store={store}>
+						<BrowserRouter>
+							<AppLayout user={ user || null }>
+								{renderRoutes(routes)}
+							</AppLayout>
+						</BrowserRouter>
+					</Provider>
+					, document.getElementById("app"));
 
 
+});
