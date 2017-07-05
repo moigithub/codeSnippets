@@ -15,9 +15,10 @@ const SnippetDetail=({ links=[],
 	//	console.log("details",props);
 		
 	const allLinks = links && links.length>0?links.map((l,i)=>{
+		let link = /:\/\//.test(l) ? l : "http://"+l;
 		return (
 				<li className="list-group-item" key={'link'+i}>
-					<a href={l} target="_blank">{l}</a>
+					<a href={link} target="_blank">{l}</a>
 				</li>
 			) 
 	}): null;
