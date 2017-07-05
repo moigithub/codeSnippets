@@ -1,6 +1,8 @@
 //import {Strategy as LocalStrategy} from 'passport-local';
 var LocalStrategy   = require('passport-local').Strategy;
 
+import sanitizer from 'sanitizer';
+
 import User from './models/User';
 
 export default function(passport){
@@ -26,6 +28,9 @@ console.log("configuring paspport");
     	function(req, email, password, done){
 
     		process.nextTick(function(){
+                email= sanitizer.sanitize(email);
+                password = sanitizer.sanitize(password);
+                
     			User.findOne({'email': email, 'provider': 'local'}, function(err, user){
     				if(err) return done(err);
 
@@ -61,6 +66,8 @@ console.log("configuring paspport");
 	},
 		function(req, email, password, done){
 			//console.log('local-login', email, password);
+            email= sanitizer.sanitize(email);
+            password = sanitizer.sanitize(password);
 
 			User.findOne({'email': email, 'provider':'local'}, function(err, user){
 				if (err) return done(err);

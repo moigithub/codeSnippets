@@ -1,5 +1,7 @@
 const expressGraphQL = require('express-graphql');
 
+import sanitizer from 'sanitizer';
+
 import {
 	GraphQLSchema, 
 	GraphQLObjectType, 
@@ -118,7 +120,7 @@ const QueryType = new GraphQLObjectType({
 			resolve: function(parentValue, args){
 			//	console.log(parentValue, args);
 				return new Promise((resolve, reject)=>{
-					User.findById(args.userId , function(err, user){
+					User.findById(sanitizer.sanitize(args.userId) , function(err, user){
 //					User.find({_id: args.userId} , function(err, user){
 						//console.log(err, user);
 						if(err) {
@@ -149,13 +151,14 @@ const QueryType = new GraphQLObjectType({
 				snippetId: {type: new GraphQLNonNull(GraphQLString)}
 			},
 			resolve: function(parentValue, args, context){
+				const sID = sanitizer.sanitize(args.snippetId);
 				return new Promise((resolve, reject)=>{
-					if(!mongoose.Types.ObjectId.isValid(args.snippetId)){
+					if(!mongoose.Types.ObjectId.isValid(sID)){
 				//		console.log("\n\nvalidation snippetid");
 						//return reject(new ValidationError(["Invalid Snippet ID"]));
 						return reject(new Error("Invalid Snippet ID"));
 					}
-					Snippet.findById(args.snippetId).lean().exec(function(err, snippet){
+					Snippet.findById(sID).lean().exec(function(err, snippet){
 						if(err) {
 				//			console.log("error codenippet by id",err)
 							return reject(err);
@@ -189,22 +192,27 @@ const QueryType = new GraphQLObjectType({
 				}
 			},
 			resolve: function(parentValue, args, context){
+				const tags = args.tags.map(tag=>sanitizer.sanitize(tag)),
+				      all = sanitizer.sanitize(args.all),  //// es un booolean tal vez no necesita sanitize??
+				      language = sanitizer.sanitize(args.language),
+				      author = sanitizer.sanitize(args.author);
+
 				return new Promise((resolve, reject)=>{
 //					console.log("codesnippetSSS", parentValue, args);
 
 					var dbQuery={};
 
 
-					if(args.tags && args.tags.length>0){
-						if(args.all){
-							dbQuery.tags={$all: args.tags};
+					if(tags && tags.length>0){
+						if(all){
+							dbQuery.tags={$all: tags};
 						} else {
-							dbQuery.tags={$in: args.tags};
+							dbQuery.tags={$in: tags};
 						}
 					}
 
-					if(args.language && args.language.trim()!==""){
-						dbQuery.language=new RegExp(args.language,"gi");
+					if(language && language.trim()!==""){
+						dbQuery.language=new RegExp(language,"gi");
 					}
 //console.log("schema snippet dbQuery",dbQuery)
 					//console.log("dbQuery findSnippet resolve context: ",context);
@@ -216,10 +224,10 @@ const QueryType = new GraphQLObjectType({
 					}
 
 					//console.log("\n\nhere 0",dbQuery);
-					if(args.author){ 
-						dbQuery.postedBy = args.author;
+					if(author){ 
+						dbQuery.postedBy = author;
 						//console.log("\n\nhere 1",dbQuery, userId);
-						if(args.author.toLowerCase()==="me" ){
+						if(author.toLowerCase()==="me" ){
 							if(userId) {
 								dbQuery.postedBy = userId;
 							} else {
@@ -302,13 +310,13 @@ const mutationType = new GraphQLObjectType({
 
 					const userId = context.user._id;
 					const newSnippet = {
-						language: args.snippet.language,
-						title: args.snippet.title,
-						description: args.snippet.description,
-						code: args.snippet.code,
-						postedBy: userId,
-						tags: args.snippet.tags,
-						links: args.snippet.links
+						language: sanitizer.sanitize(args.snippet.language),
+						title: sanitizer.sanitize(args.snippet.title),
+						description: sanitizer.sanitize(args.snippet.description),
+						code: sanitizer.sanitize(args.snippet.code),
+						postedBy: userId,  /// context userID ..sanitize??
+						tags: args.snippet.tags.map(tag=>sanitizer.sanitize(tag)),
+						links: args.snippet.links.map(link=>sanitizer.sanitize(link))
 					};
 					//console.log("mutation createSnippet ------> \n", newSnippet);
 					Snippet.create(newSnippet, (err, snippet)=>{
@@ -328,6 +336,8 @@ const mutationType = new GraphQLObjectType({
 				}
 			},
 			resolve: (__, args, context)=>{
+				const snippetId = sanitizer.sanitize(args.snippetId);
+
 				return new Promise((resolve, reject)=>{
 					// insert into db
 					//console.log("mutation deleteSnippet resolve context: ",context, "\nargs",args);
@@ -336,7 +346,7 @@ const mutationType = new GraphQLObjectType({
 						return reject(new Error("Only logged users allowed."));
 					}
 
-					Snippet.findById(args.snippetId, (err, snippet)=>{
+					Snippet.findById(snippetId, (err, snippet)=>{
 						if(err) {
 							return reject(err);
 						}
@@ -361,6 +371,18 @@ const mutationType = new GraphQLObjectType({
 
 			},
 			resolve: (__, args, context)=>{
+				const snippetId = sanitizer.sanitize(args.snippetId),
+					  language = sanitizer.sanitize(args.snippet.language),
+					  title = sanitizer.sanitize(args.snippet.title),
+					  description = sanitizer.sanitize(args.snippet.description),
+					  code = sanitizer.sanitize(args.snippet.code),
+					  postedBy = sanitizer.sanitize(args.snippet.postedBy),
+					  tags = args.snippet.tags.filter(l=>l.trim()!=="")
+											.map(tag=>sanitizer.sanitize(tag)),
+					  links = args.snippet.links.filter(l=>l.trim()!=="")
+											.map(link=>sanitizer.sanitize(link));
+
+
 				return new Promise((resolve, reject)=>{
 					// insert into db
 				//	console.log("mutation updateSnippet resolve context: ",context, "\nargs",args);
@@ -369,7 +391,7 @@ const mutationType = new GraphQLObjectType({
 						return reject(new Error("Only logged users allowed."));
 					}
 
-					Snippet.findById(args.snippetId, (err, snippet)=>{
+					Snippet.findById(snippetId, (err, snippet)=>{
 						if(err) {
 							return reject(err);
 						}
@@ -377,16 +399,13 @@ const mutationType = new GraphQLObjectType({
 							return reject(null);
 						}
 
-
-						if( args.snippet.language ) { snippet.language = args.snippet.language; }
-						if( args.snippet.title ) { snippet.title = args.snippet.title; }
-						if( args.snippet.description ) { snippet.description = args.snippet.description; }
-						if( args.snippet.code ) { snippet.code = args.snippet.code; }
-						if( args.snippet.postedBy ) { snippet.postedBy = args.snippet.postedBy; }
-						if( args.snippet.tags.length ) { snippet.tags = args.snippet.tags.filter(l=>l.trim()!==""); }
-						if( args.snippet.links.length ) { snippet.links = args.snippet.links.filter(l=>l.trim()!==""); }
-
-						
+						if( args.snippet.language ) { snippet.language = language; }
+						if( args.snippet.title ) { snippet.title = title; }
+						if( args.snippet.description ) { snippet.description = description; }
+						if( args.snippet.code ) { snippet.code = code; }
+						if( args.snippet.postedBy ) { snippet.postedBy = postedBy; }
+						if( args.snippet.tags.length ) { snippet.tags = tags; }
+						if( args.snippet.links.length ) { snippet.links = links; }
 					
 				//		console.log("mutation updateSnippet ------> \n",snippet);
 						snippet.save( (err)=>{
