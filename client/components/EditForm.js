@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 
 import BaseForm from './baseForm';
 
-import {updateSnippetAsync, getSnippetByIdFromServer} from '../actions/snippetsActions';
+import {updateSnippetAsync, getSnippetByIdFromServer, API_URL} from '../actions/snippetsActions';
 
 class EditForm extends React.Component {
 
@@ -57,7 +57,7 @@ class EditForm extends React.Component {
 
   render(){
     return (
-      <BaseForm {...this.props} onSubmit={this.handleSubmit} title="Edit Snippet"/>    
+      <BaseForm {...this.props} onSubmit={this.handleSubmit} title="Edit Snippet" apiURL = {API_URL} method="POST"/>    
     );
   }
 

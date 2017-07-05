@@ -61,12 +61,12 @@ const renderLinks = ({ fields, meta: { error } }) => (
   postedBy 
 */
 let BaseForm = props => {
-  const { handleSubmit, title, pristine, reset, submitting } = props
+  const { handleSubmit, title, pristine, reset, submitting, apiURL } = props
 //  console.log("createForm.js props",props);
   return (
     <div className="container">
       <h1>{title}</h1>
-      <form onSubmit={ handleSubmit } className="form-horizontal">
+      <form onSubmit={ handleSubmit } className="form-horizontal" action={apiURL} method="POST">
         <Field
           name="title"
           clase="form-group"

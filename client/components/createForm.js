@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 
 import BaseForm from './baseForm';
 
-import {createSnippetAsync} from '../actions/snippetsActions';
+import {createSnippetAsync, API_URL} from '../actions/snippetsActions';
 
 function mapDispatchToProps(dispatch){
   return {
@@ -42,6 +42,6 @@ const handleSubmit = (values,dispatch, props)=>{
   props.history.push('/snippets');
 };
 
-const form = ()=>(<CreateSnippetForm onSubmit={handleSubmit} title="New Snippet"/>);
+const form = ()=>(<CreateSnippetForm onSubmit={handleSubmit} title="New Snippet" apiURL={API_URL}/>);
 
 export default form
