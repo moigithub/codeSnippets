@@ -10,10 +10,17 @@ var config = {
 		rules: [
 			{
 				test: /\.jsx?$/,
-				loader: 'babel-loader',
-				query: {
-	              presets: ['es2015', 'react', 'stage-0']
-	            },
+				use:{
+					loader: 'babel-loader',
+					options: {
+		              presets: ['env','es2015', 'react', 'stage-0'],
+					  plugins: [
+					  'transform-runtime',
+					    "add-module-exports"
+					  ]
+		            }
+	        	},
+
 			}
 		]
 

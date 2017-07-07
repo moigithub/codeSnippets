@@ -4,6 +4,8 @@
   "main": "server.js",
   "dependencies": {
     "axios": "^0.16.1",
+    "babel-polyfill": "^6.23.0",
+    "babel-runtime": "^6.23.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.2",
     "connect-flash": "^0.1.1",
@@ -39,9 +41,14 @@
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-node6": "^11.0.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.24.1",
     "nodemon": "^1.11.0",
     "webpack": "^2.6.1"
   },
@@ -49,8 +56,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec babel-node server.js --ignore public/",
     "build": "webpack -wd",
-    "dev": "NODE_ENV=development babel-node server.js",
-    "prod": "NODE_ENV=production webpack -p node server.js"
+    "dev": "NODE_ENV=development && babel-node server.js",
+    "prod": "NODE_ENV=production && webpack -p && node server.js"
   },
   "author": "",
   "license": "ISC",
