@@ -13,14 +13,10 @@ var config = {
 				use:{
 					loader: 'babel-loader',
 					options: {
-		              presets: ['env','es2015', 'react', 'stage-0'],
-					  plugins: [
-					  'transform-runtime',
-					    "add-module-exports"
-					  ]
+		              presets: ['es2015', 'react', 'stage-0'],
 		            }
 	        	},
-
+				exclude: /node_modules/
 			}
 		]
 

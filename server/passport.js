@@ -3,7 +3,7 @@ var LocalStrategy   = require('passport-local').Strategy;
 
 import sanitizer from 'sanitizer';
 
-import User from './models/User';
+import User from '../models/User';
 
 export default function(passport){
 console.log("configuring paspport");

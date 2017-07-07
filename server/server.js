@@ -18,7 +18,7 @@ var flash    = require('connect-flash');
 
 import path from 'path';
 
-import config from './config';
+import config from '../config';
 
 import schema from './schema';
 
@@ -43,10 +43,8 @@ import AppLayout from '../client/components/AppLayout';
 
 
 var app = express();
-//app.set('views', path.join(__dirname,'../public'))
 app.set('view engine','ejs')
-
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')))
 
 
 mongoose.Promise = global.Promise;

@@ -16,8 +16,8 @@ import {
 
 import ValidationError from './ValidationError';
 import mongoose from 'mongoose';
-import User from './models/User.js';
-import Snippet from './models/Snippet.js';
+import User from '../models/User.js';
+import Snippet from '../models/Snippet.js';
 
 
 const CodeSnippetType= new GraphQLObjectType({
