@@ -1,3 +1,5 @@
+'use strict';
+
 const expressGraphQL = require('express-graphql');
 
 import sanitizer from 'sanitizer';
@@ -337,7 +339,7 @@ const mutationType = new GraphQLObjectType({
 			},
 			resolve: (__, args, context)=>{
 				const snippetId = sanitizer.sanitize(args.snippetId);
-
+console.log("deleting....");
 				return new Promise((resolve, reject)=>{
 					// insert into db
 					//console.log("mutation deleteSnippet resolve context: ",context, "\nargs",args);
@@ -354,6 +356,7 @@ const mutationType = new GraphQLObjectType({
 							return reject(null);
 						}
 						snippet.remove();
+console.log("deleted.");
 						return resolve(snippet);
 					});
 				});

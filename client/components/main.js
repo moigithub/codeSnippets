@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
@@ -59,11 +61,12 @@ class Main extends React.Component {
 
 	componentDidMount(){
 
-		console.log("main.js CDM",this);
+		console.log("main.js CDM");
 		Main.loadData({
 			store:this.context.store,
 			match:this.props.match, 
-			query:queryString.parse(this.props.location.search)});
+			query:queryString.parse(this.props.location.search)
+		});
 		/*
 		var mySnippets = this.getUserParam(this.props.location);
 		this.props.getSnippets(this.props.filterTags, false, this.props.language, mySnippets);
@@ -75,50 +78,45 @@ class Main extends React.Component {
 		}
 		*/
 	}
-/*
 
-	shouldComponentUpdate(nextProps, nextState){
-		console.log("shuld component update", this.props.errors);
-		//return true;
-		return !this.props.errors.length;
-	}
-*/
 	componentWillReceiveProps(nextProp){
-//		console.log("cwrp next",nextProp);
-//		console.log("cwrp this",this.props);
+		console.log("cwrp next",nextProp);
+		console.log("main.js cwrp",this.props);
 
 		var mySnippets = this.getUserParam(nextProp.location);
 
 		//console.log("main.js loca",this.props.location.search,"\nnext:",nextProp.location.search)
 
-		// if no errors
-//		if(!this.props.errors.length) {
-
-			const id = nextProp.match.params.snippetId;
+		const id = nextProp.match.params.snippetId;
 //			console.log("next id",id,"\ncurSelected id", this.props.match.params.snippetId);
 
-			if (id && id !== this.props.match.params.snippetId) {
+		if (id && id !== this.props.match.params.snippetId) {
 //				console.log("is diff!!");
-					console.log("getting data for next id",id);
-					this.props.getSnippetById(id);
-			} else if(
-				(this.props.language !==nextProp.language)||
-				([...this.props.filterTags,...nextProp.filterTags]
-					.filter((n,i,a)=>a.indexOf(n)==a.lastIndexOf(n)).length>0)||
-				(this.props.location.search !== nextProp.location.search)
-				) {
-//	console.log("main.js CWRP elseif getSnippets");
-				this.props.getSnippets(nextProp.filterTags, false, nextProp.language, mySnippets);			 
-			}
-/*			
-		} else {
-			this.props.clearErrors();
+				console.log("getting data for next id",id);
+				this.props.getSnippetById(id);
+		} else if(
+			(this.props.language !==nextProp.language)||
+			([...this.props.filterTags,...nextProp.filterTags]
+				.filter((n,i,a)=>a.indexOf(n)==a.lastIndexOf(n)).length>0)||
+			(this.props.location.search !== nextProp.location.search)||
+			(this.props.location.pathname !== nextProp.location.pathname)
+			) {
+console.log("main.js CWRP elseif getSnippets");
+			this.props.getSnippets(nextProp.filterTags, false, nextProp.language, mySnippets);			 
 		}
-*/		
+	}
+
+	deleteSnippet = (snippetId)=>{
+		console.log("main.js delete snippets props", this.props);
+		let x=this.props.deleteSnippet(snippetId);
+		console.log("deleteSnippet", x);
+		x.then(d=>{console.log("x then",d)});
+		
+		this.props.history.push('/snippets'+this.props.location.search);
 	}
 
 	render(){
-	//	console.log("main render props",this);
+		console.log("main render props", this.props);
 		//console.log("actions",snippetsActions);
 		const {match, location} = this.props;
 //console.log("main state", this.state);
@@ -148,7 +146,7 @@ class Main extends React.Component {
 				return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
 			}else {
 				return <SnippetDetail {...this.props.currentSelected} 
-							deleteSnippet={this.props.deleteSnippet}
+							deleteSnippet={this.deleteSnippet}
 							/>
 			}
 		}
@@ -171,7 +169,6 @@ class Main extends React.Component {
 
 Main.contextTypes = { store: PropTypes.object };
 
-
 function mapStateToProps(state){
 	//console.log("mapStateToProps",state);
 	return {
@@ -187,8 +184,8 @@ function mapDispatchToProps(dispatch, getState, ownProps){
 	return {
 		getSnippets: (tags,all,language, author)=>dispatch(snippetsActions.getSnippetsFromServer(tags,all,language, author)),
 		getSnippetById: (id)=>dispatch(snippetsActions.getSnippetByIdFromServer(id)),
-		deleteSnippet: (id)=>dispatch(snippetsActions.deleteSnippetById(id)),
-		clearErrors: ()=>dispatch(snippetsActions.setError([]))
+		deleteSnippet: (id)=>dispatch(snippetsActions.deleteSnippetById(id))
+	//	clearErrors: ()=>dispatch(snippetsActions.setError([]))
 	}
 }
 

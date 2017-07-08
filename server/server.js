@@ -48,7 +48,9 @@ app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')))
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/snippets');
+mongoose.connect('mongodb://localhost/snippets', {
+  useMongoClient: true,
+});
 mongoose.connection.on('error', function(err){
   console.error("error connecting to the DB "+ err);
   process.exit(-1);

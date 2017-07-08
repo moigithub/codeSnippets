@@ -107,6 +107,10 @@ export const getSnippetsFromServer=(tags=[],all=false,language="", author="")=> 
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 		    //console.log("snipetaction:: ",response.data.data);
+		    if(response.data.errors && response.data.errors.length){
+		    	return dispatch(setError(response.data.errors));
+		    }
+
 
 		    return dispatch(setAllSnippets(response.data.data.CodeSnippets||[]));
 		  })
@@ -141,6 +145,7 @@ export const getSnippetByIdFromServer=(snippetId)=> {
     return function(dispatch, getState){
 
 		if(getState().errors.length){
+			console.log("1");
 			dispatch(setError([]));
 		}
 		
@@ -148,6 +153,7 @@ export const getSnippetByIdFromServer=(snippetId)=> {
     	  .then(function (response) {
 	//	    console.log("current snippet by id",response.data);
 		    if(response.data.errors && response.data.errors.length){
+		    	console.log("2");
 		    	return dispatch(setError(response.data.errors));
 		    	//return new Error("Couldnt get data from server.")
 
@@ -186,10 +192,17 @@ export const createSnippetAsync=({language="", title="", description="", code=""
 
    // console.log("getSnippetByIdFromServer");
     return function(dispatch, getState){
-		dispatch(setError([]));
+		if(getState().errors.length){
+			dispatch(setError([]));
+		}
+
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 	//	    console.log("create snippet",response.data);
+		    if(response.data.errors && response.data.errors.length){
+		    	return dispatch(setError(response.data.errors));
+		    }
+
 
 		    return dispatch(createSnippet(response.data.data.createSnippet));
 		  })
@@ -229,10 +242,16 @@ export const updateSnippetAsync=(id="",{language="", title="", description="", c
 
    // console.log("getSnippetByIdFromServer");
     return function(dispatch, getState){
-		dispatch(setError([]));
+		if(getState().errors.length){
+			dispatch(setError([]));
+		}
+	
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
 	//	    console.log("update snippet",response.data);
+		    if(response.data.errors && response.data.errors.length){
+		    	return dispatch(setError(response.data.errors));
+		    }
 
 		    dispatch(setCurrentSnippet(response.data.data.updateSnippet));
 		    return dispatch(updateSnippet(response.data.data.updateSnippet));
@@ -261,10 +280,17 @@ export const deleteSnippetById=(snippetId="")=> {
 
    // console.log("getSnippetByIdFromServer");
     return function(dispatch, getState){
-		dispatch(setError([]));
+		if(getState().errors.length){
+			dispatch(setError([]));
+		}
+
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
-	//	    console.log("delete snippet",response.data);
+		    console.log("delete snippet",response.data);
+		    if(response.data.errors && response.data.errors.length){
+		    	return dispatch(setError(response.data.errors));
+		    }
+
 
 		    dispatch(setCurrentSnippet(null));
 		    return dispatch(deleteSnippet(response.data.data.deleteSnippet._id));

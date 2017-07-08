@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 
 import { BrowserRouter,Switch, Route, Link } from 'react-router-dom'
@@ -16,7 +18,7 @@ class Header extends React.Component {
 	componentDidMount(){
 	//	console.log("navigation: getting user data");
 		getUser().then(data=>{
-			console.log("navigation getuser", data);
+//			console.log("navigation getuser", data);
 			this.setState({user:data});
 		});
 	}

@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 import Highlight from 'react-highlight';
 import CopyToClipboard from 'react-copy-to-clipboard';

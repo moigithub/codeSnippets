@@ -1,3 +1,5 @@
+'use strict';
+
 export const GETSNIPPETDATA = "GETSNIPPETDATA";
 export const SETSNIPPETDATA = "SETSNIPPETDATA";
 
