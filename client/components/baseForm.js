@@ -24,6 +24,31 @@ const renderField = ({
   </div>
 )
 
+const renderSelectField = ({
+  input,
+  label,
+  clase,
+  options,
+  meta: { touched, error, warning },
+  children,
+  ...rest
+}) => (
+  <div className={clase}>
+    <label className="col-sm-2 control-label">{label}</label>
+    <div className="col-sm-10">
+      <select {...rest} className="form-control">
+        <option>All</option>
+        {options.map(option=>{
+          return (<option value={option}>{option}</option>)
+        })}
+      </select>
+      {touched &&
+        ((error && <p className="help-block pull-right">{error}</p>) ||
+          (warning && <p className="help-block pull-right">{warning}</p>))}
+    </div>
+  </div>  
+)
+
 const renderLinks = ({ fields, meta: { error } }) => (
   <ul>
     <li>
@@ -48,7 +73,7 @@ const renderLinks = ({ fields, meta: { error } }) => (
         </span>
       </li>
     ))}
-    {error && <li className="error help-block pull-right">{error}</li>}
+    {error && <li className="error help-block pull-right label label-danger">{error}</li>}
   </ul>
 );
 
@@ -87,16 +112,12 @@ let BaseForm = props => {
           className="form-control"/>
         
         
-        <div className="form-group">
-          <label className="col-sm-2 control-label">Language</label>
-          <div className="col-sm-10">
-            <Field name="language" component="select" className="form-control">
-              <option value="">All</option>
-              <option value="Javascript">Javascript</option>
-              <option value="Ruby">Ruby</option>
-            </Field>
-          </div>
-        </div>
+        <Field name="language"
+          clase="form-group"
+          component={renderSelectField}
+          label="Language"
+          options={["Javascript","Ruby"]}
+        />
 
         <Field name="code" 
           type="textarea" 
@@ -159,6 +180,9 @@ const validate = values => {
   }
   if (!values.language) {
     errors.language = 'Required'
+  }
+  if (!values.tags) {
+    errors.tags = 'Required'
   }
   
   return errors

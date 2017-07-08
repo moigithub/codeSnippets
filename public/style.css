@@ -53,3 +53,8 @@
 #searchForm span.glyphicon{
   line-height: inherit;
 }
+
+
+.error{
+  color: red;
+}
