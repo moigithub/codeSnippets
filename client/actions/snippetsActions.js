@@ -112,7 +112,7 @@ export const getSnippetsFromServer=(tags=[],all=false,language="", author="")=> 
 		    }
 
 
-		    return dispatch(setAllSnippets(response.data.data.CodeSnippets||[]));
+		    dispatch(setAllSnippets(response.data.data.CodeSnippets||[]));
 		  })
 		  .catch(function (error) {
 	//	    console.error("getSnippetsFromServer Error",error);
@@ -159,7 +159,7 @@ export const getSnippetByIdFromServer=(snippetId)=> {
 
 		    }
 
-		    return dispatch(setCurrentSnippet(response.data.data.CodeSnippet));
+		    dispatch(setCurrentSnippet(response.data.data.CodeSnippet));
 		  })
 		  .catch(function (error) {
 	//	    console.error("getSnippetByIdFromServer Error",error);
@@ -204,7 +204,7 @@ export const createSnippetAsync=({language="", title="", description="", code=""
 		    }
 
 
-		    return dispatch(createSnippet(response.data.data.createSnippet));
+		    dispatch(createSnippet(response.data.data.createSnippet));
 		  })
 		  .catch(function (error) {
 	//	    console.error("createSnippetAsync Error",error);
@@ -254,7 +254,7 @@ export const updateSnippetAsync=(id="",{language="", title="", description="", c
 		    }
 
 		    dispatch(setCurrentSnippet(response.data.data.updateSnippet));
-		    return dispatch(updateSnippet(response.data.data.updateSnippet));
+		    dispatch(updateSnippet(response.data.data.updateSnippet));
 		  })
 		  .catch(function (error) {
 	//	    console.error("updateSnippetAsync Error",error);
@@ -278,7 +278,9 @@ export const deleteSnippetById=(snippetId="")=> {
 		"operationName":"delete"
 	};
 
-   // console.log("getSnippetByIdFromServer");
+    //console.log("async action deleteSnippetById", snippetId);
+
+
     return function(dispatch, getState){
 		if(getState().errors.length){
 			dispatch(setError([]));
@@ -286,14 +288,15 @@ export const deleteSnippetById=(snippetId="")=> {
 
     	return axios.post(API_URL, queryJSON)
     	  .then(function (response) {
-		    console.log("delete snippet",response.data);
+		    //console.log("delete snippet",response.data);
 		    if(response.data.errors && response.data.errors.length){
 		    	return dispatch(setError(response.data.errors));
 		    }
 
-
-		    dispatch(setCurrentSnippet(null));
-		    return dispatch(deleteSnippet(response.data.data.deleteSnippet._id));
+            ///NO return cause bad behavior when error
+		    dispatch(deleteSnippet(response.data.data.deleteSnippet._id));
+		    dispatch(setCurrentSnippet({})); 
+		    
 		  })
 		  .catch(function (error) {
 	//	    console.error("deleteSnippetById Error",error);

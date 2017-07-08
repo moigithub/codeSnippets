@@ -31,7 +31,7 @@ class Main extends React.Component {
 	state={	}
 
 	static loadData=({store,match,query})=>{
-		console.log("main.js loadData match",match,"\nquery",query);
+	//	console.log("main.js loadData match",match,"\nquery",query);
 		var promises=[];
 		var mySnippets = "";
 		if(query.user){
@@ -61,7 +61,7 @@ class Main extends React.Component {
 
 	componentDidMount(){
 
-		console.log("main.js CDM");
+	//	console.log("main.js CDM");
 		Main.loadData({
 			store:this.context.store,
 			match:this.props.match, 
@@ -80,8 +80,8 @@ class Main extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProp){
-		console.log("cwrp next",nextProp);
-		console.log("main.js cwrp",this.props);
+		//console.log("cwrp next",nextProp);
+		//console.log("main.js cwrp",this.props);
 
 		var mySnippets = this.getUserParam(nextProp.location);
 
@@ -92,7 +92,7 @@ class Main extends React.Component {
 
 		if (id && id !== this.props.match.params.snippetId) {
 //				console.log("is diff!!");
-				console.log("getting data for next id",id);
+//				console.log("getting data for next id",id);
 				this.props.getSnippetById(id);
 		} else if(
 			(this.props.language !==nextProp.language)||
@@ -101,22 +101,19 @@ class Main extends React.Component {
 			(this.props.location.search !== nextProp.location.search)||
 			(this.props.location.pathname !== nextProp.location.pathname)
 			) {
-console.log("main.js CWRP elseif getSnippets");
+//console.log("main.js CWRP elseif getSnippets");
 			this.props.getSnippets(nextProp.filterTags, false, nextProp.language, mySnippets);			 
 		}
 	}
 
 	deleteSnippet = (snippetId)=>{
-		console.log("main.js delete snippets props", this.props);
-		let x=this.props.deleteSnippet(snippetId);
-		console.log("deleteSnippet", x);
-		x.then(d=>{console.log("x then",d)});
-
+		//console.log("main.js delete snippets props", this.props);
+		this.props.deleteSnippet(snippetId);
 		this.props.history.push('/snippets'+this.props.location.search);
 	}
 
 	render(){
-		console.log("main render props", this.props);
+		//console.log("main render props", this.props);
 		//console.log("actions",snippetsActions);
 		const {match, location} = this.props;
 //console.log("main state", this.state);
@@ -142,12 +139,12 @@ console.log("main.js CWRP elseif getSnippets");
 
 		const showDetails = ()=>{
 		//	console.log("shwdetails main.js props", this.props);
-			if(!this.props.currentSelected._id){
-				return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
-			}else {
+			if(this.props.currentSelected && this.props.currentSelected._id){
 				return <SnippetDetail {...this.props.currentSelected} 
-							deleteSnippet={this.props.deleteSnippet}
+							deleteSnippet={(id)=>this.deleteSnippet(id)}
 							/>
+			}else {
+				return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
 			}
 		}
 

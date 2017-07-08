@@ -27,7 +27,7 @@ class Header extends React.Component {
 	//	console.log("navigation cwrp",nextProps, this.state)
 		if(nextProps.user !== this.state.user){
 			getUser().then(data=>{
-				console.log("navigation getuser", data);
+	//			console.log("navigation getuser", data);
 				this.setState({user:data});
 			});
 		}

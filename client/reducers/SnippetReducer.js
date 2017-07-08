@@ -6,10 +6,10 @@ import {
   SETCURRENTSNIPPETDATA,
   ADDTAG, REMOVETAG,
   SETLANGUAGE,SETERROR
-} from '../reducers/const'
+} from './const'
 
 export const snippetReducer = (state = [], action) => {
-	console.log("snipet reducer", state, action);
+	///console.log("snipet reducer", state, action);
   switch (action.type) {
     case SETSNIPPETDATA:
       return action.data;
