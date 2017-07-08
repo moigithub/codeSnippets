@@ -18,8 +18,8 @@ const renderField = ({
       {type==="textarea" && <textarea {...input} {...rest} placeholder={label} type={type} className="form-control"/>}
       {type!=="textarea" && <input {...input} {...rest} placeholder={label} type={type}  className="form-control"/>}
       {touched &&
-        ((error && <p className="help-block pull-right">{error}</p>) ||
-          (warning && <p className="help-block pull-right">{warning}</p>))}
+        ((error && <p className="error help-block pull-right">{error}</p>) ||
+          (warning && <p className="warning help-block pull-right">{warning}</p>))}
     </div>      
   </div>
 )
@@ -38,13 +38,13 @@ const renderSelectField = ({
     <div className="col-sm-10">
       <select {...rest} className="form-control">
         <option>All</option>
-        {options.map(option=>{
-          return (<option value={option}>{option}</option>)
+        {options.map((option,index)=>{
+          return (<option key={`option${index}`} value={option}>{option}</option>)
         })}
       </select>
       {touched &&
-        ((error && <p className="help-block pull-right">{error}</p>) ||
-          (warning && <p className="help-block pull-right">{warning}</p>))}
+        ((error && <p className="error help-block pull-right">{error}</p>) ||
+          (warning && <p className="warning help-block pull-right">{warning}</p>))}
     </div>
   </div>  
 )
