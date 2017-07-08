@@ -111,7 +111,7 @@ console.log("main.js CWRP elseif getSnippets");
 		let x=this.props.deleteSnippet(snippetId);
 		console.log("deleteSnippet", x);
 		x.then(d=>{console.log("x then",d)});
-		
+
 		this.props.history.push('/snippets'+this.props.location.search);
 	}
 
@@ -146,7 +146,7 @@ console.log("main.js CWRP elseif getSnippets");
 				return <div className="col-xs-12 col-sm-8">Select a code snippet</div>
 			}else {
 				return <SnippetDetail {...this.props.currentSelected} 
-							deleteSnippet={this.deleteSnippet}
+							deleteSnippet={this.props.deleteSnippet}
 							/>
 			}
 		}
