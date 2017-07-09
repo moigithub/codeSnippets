@@ -128,12 +128,13 @@ var serverConfig = {
 	    new webpack.DefinePlugin({
 	      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
 	    }),
+	    /*
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'common',
 			filename: 'common.js',
 			minChunks: 3,
 	    }),
-	    
+	    */
 	    new webpack.optimize.OccurrenceOrderPlugin(),
 	    new webpack.optimize.UglifyJsPlugin({ // NO usar webpack -p (-p option add uglify, tons seria duplicado)
 	      compress: { warnings: false },
