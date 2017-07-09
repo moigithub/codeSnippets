@@ -2,5 +2,5 @@
 /node_modules
 /public/bundle.js
 *.log
-/prod
+/dist
 pserver.js

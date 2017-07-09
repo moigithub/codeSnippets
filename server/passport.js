@@ -1,7 +1,7 @@
 'use strict';
 
-//import {Strategy as LocalStrategy} from 'passport-local';
-var LocalStrategy   = require('passport-local').Strategy;
+import {Strategy as LocalStrategy} from 'passport-local';
+//var LocalStrategy   = require('passport-local').Strategy;
 
 import sanitizer from 'sanitizer';
 
