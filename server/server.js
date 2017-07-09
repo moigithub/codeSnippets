@@ -54,7 +54,7 @@ app.use(compression());
 
 app.set('view engine','ejs')
 console.log("__dirname:: ",__dirname);
-app.use(favicon(path.join(__dirname, 'watpublic', 'favicon.ico')))
+app.use(favicon(path.join( __dirname,'../public', 'favicon.ico')))
 
 
 mongoose.Promise = global.Promise;
