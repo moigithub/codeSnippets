@@ -1,6 +1,4 @@
 todo:
 
-empty tags
-handleSubmit.js?8d63:38 Uncaught TypeError: Cannot read property 'split' of undefined
-    at handleSubmit 
-
+webpack server config for production
+deploy to heroku

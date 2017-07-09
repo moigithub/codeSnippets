@@ -1,7 +1,8 @@
 'use strict'
 
-if (process.env.NODE_ENV === 'development')
-  require("babel-register")();
+if (process.env.NODE_ENV === 'development'){
+  //require("babel-register")();
+}
 
 //require('babel-polyfill')
 import mongoose from 'mongoose';
@@ -36,15 +37,24 @@ import { match, matchPath, RouterContext } from 'react-router';
 import { StaticRouter } from 'react-router';
 import { renderToString } from 'react-dom/server';
 
+import compression from 'compression';
+import helmet from 'helmet';
+
 import User from '../models/User.js';
 import Snippet from '../models/Snippet.js';
 import routes from '../client/routes';
 import AppLayout from '../client/components/AppLayout';
+import passportConfig from './passport';
+
 
 
 var app = express();
+app.use(helmet());
+app.use(compression());
+
 app.set('view engine','ejs')
-app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')))
+console.log("__dirname:: ",__dirname);
+app.use(favicon(path.join(__dirname, 'watpublic', 'favicon.ico')))
 
 
 mongoose.Promise = global.Promise;
@@ -72,8 +82,9 @@ app.use(session({
 	resave: false,
 	saveUninitialized: true,
     store: new mongoStore({mongooseConnection: mongoose.connection})
-
 }));
+
+
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
@@ -84,7 +95,6 @@ app.use(passport.session()); // persistent login sessions
 /* **************  */
 /*  auth           */
 /* **************  */
-import passportConfig from './passport';
 passportConfig(passport);
 
 app.get('/login', function(req, res) {
