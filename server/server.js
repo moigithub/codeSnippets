@@ -23,9 +23,6 @@ import config from '../config';
 
 import schema from './schema';
 
-//import apiSnippets from './api/apiSnippets';
-
-
 import React from 'react';
 import { Provider } from "react-redux";
 //import App from './client/components/App';
