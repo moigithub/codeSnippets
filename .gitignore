@@ -1,6 +1,3 @@
 /data
 /node_modules
-/public/bundle.js
 *.log
-/dist
-pserver.js
