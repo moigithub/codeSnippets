@@ -30,9 +30,10 @@ const renderSelectField = ({
   clase,
   options,
   meta: { touched, error, warning },
-  children,
   ...rest
-}) => (
+}) => {
+  console.log(input,"input-rest ",rest)
+  return(
   <div className={clase}>
     <label className="col-sm-2 control-label">{label}</label>
     <div className="col-sm-10">
@@ -47,7 +48,7 @@ const renderSelectField = ({
           (warning && <p className="warning help-block pull-right">{warning}</p>))}
     </div>
   </div>  
-)
+)}
 
 const renderLinks = ({ fields, meta: { error } }) => (
   <ul>
