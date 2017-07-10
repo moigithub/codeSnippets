@@ -36,7 +36,7 @@ const renderSelectField = ({
   <div className={clase}>
     <label className="col-sm-2 control-label">{label}</label>
     <div className="col-sm-10">
-      <select {...rest} className="form-control">
+      <select {...input} {...rest} className="form-control">
         <option>All</option>
         {options.map((option,index)=>{
           return (<option key={`option${index}`} value={option}>{option}</option>)
