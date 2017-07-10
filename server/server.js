@@ -155,7 +155,7 @@ app.use('/graphql', expressGraphQL((request, response)=>{
   return {
     schema,
     context:{user : request.user || null},
-    graphiql: true,
+    graphiql: process.env.NODE_ENV === 'development',
     rootValue : root,
     /*
     formatError: error => ({

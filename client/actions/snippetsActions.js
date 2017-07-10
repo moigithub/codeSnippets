@@ -73,7 +73,8 @@ export const removeTag = (tag)=>({type:REMOVETAG ,data:tag});
 //{"query":"query findSnippets($tags:[String], $all:Boolean){CodeSnippets(tags:$tags,all:$all){_id,language,title,description,code,tags,links,author{email,displayName}}}",
 //"variables":{"tags":["react","react router 4"],"all":true},"operationName":"findSnippets"}
 
-export const API_URL = config.host+':'+config.port+'/graphql';
+//export const API_URL = config.host+':'+config.port+'/graphql';
+export const API_URL = '/graphql';
 //console.log("apiurl", API_URL);
 
 const options = { headers: {'Content-Type': 'application/json'}};
