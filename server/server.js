@@ -1,9 +1,9 @@
 'use strict'
-console.log(process.env.DB);
-//if (process.env.NODE_ENV !== 'production'){
+console.log(process.env.DB,"\n",process.env.NODE_ENV);
+if (process.env.NODE_ENV !== 'production'){
   console.log("loading babel-register");
   require("babel-register")();
-//}
+}
 
 //require('babel-polyfill')
 import mongoose from 'mongoose';
