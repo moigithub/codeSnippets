@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports= {
-	host : 'http://localhost',
+	host : process.env.HOST || '//localhost',
 	port: process.env.PORT || 3000,
 	db: process.env.DB || 'mongodb://localhost/snippets'
 }
