@@ -1,8 +1,9 @@
 'use strict'
-
-if (process.env.NODE_ENV === 'development'){
-  //require("babel-register")();
-}
+console.log(process.env.DB);
+//if (process.env.NODE_ENV !== 'production'){
+  console.log("loading babel-register");
+  require("babel-register")();
+//}
 
 //require('babel-polyfill')
 import mongoose from 'mongoose';
@@ -53,7 +54,7 @@ app.set('view engine','ejs')
 console.log("__dirname:: ",__dirname);
 app.use(favicon(path.join( __dirname,'../public', 'favicon.ico')))
 
-
+console.log("db", config.db,"\n process");
 mongoose.Promise = global.Promise;
 mongoose.connect(config.db, {
   useMongoClient: true,

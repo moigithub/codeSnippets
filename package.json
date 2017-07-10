@@ -57,11 +57,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dstart": "nodemon --exec babel-node server/server.js --ignore public/",
+    "dev": "set NODE_ENV=development&& nodemon --exec babel-node server/server.js --ignore public/",
     "build": "webpack -wd",
-    "dev": "NODE_ENV=development && babel-node server/server.js",
-    "prod": "NODE_ENV=production && webpack && node dist/server.js",
-    "start": "NODE_ENV=production & node dist/server.js"
+    "prod": "set NODE_ENV=production&& webpack && node dist/server.js",
+    "start": "NODE_ENV=production& node dist/server.js"
   },
   "author": "",
   "license": "ISC",
