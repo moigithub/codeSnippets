@@ -1,6 +1,6 @@
 'use strict'
 console.log(process.env.DB,"\n",process.env.NODE_ENV);
-if (process.env.NODE_ENV !== 'production'){
+if (process.env.NODE_ENV === 'development'){
   console.log("loading babel-register");
   require("babel-register")();
 }
