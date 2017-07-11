@@ -315,7 +315,7 @@ const mutationType = new GraphQLObjectType({
 						language: sanitizer.sanitize(args.snippet.language),
 						title: sanitizer.sanitize(args.snippet.title),
 						description: sanitizer.sanitize(args.snippet.description),
-						code: sanitizer.sanitize(args.snippet.code),
+						code: args.snippet.code, // no sanitize
 						postedBy: userId,  /// context userID ..sanitize??
 						tags: args.snippet.tags.map(tag=>sanitizer.sanitize(tag)),
 						links: args.snippet.links.map(link=>sanitizer.sanitize(link))
@@ -378,7 +378,7 @@ const mutationType = new GraphQLObjectType({
 					  language = sanitizer.sanitize(args.snippet.language),
 					  title = sanitizer.sanitize(args.snippet.title),
 					  description = sanitizer.sanitize(args.snippet.description),
-					  code = sanitizer.sanitize(args.snippet.code),
+					  code = args.snippet.code, // no sanitize
 					  postedBy = sanitizer.sanitize(args.snippet.postedBy),
 					  tags = args.snippet.tags.filter(l=>l.trim()!=="")
 											.map(tag=>sanitizer.sanitize(tag)),

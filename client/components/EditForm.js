@@ -18,7 +18,7 @@ class EditForm extends React.Component {
   }
 
   componentWillReceiveProps(nextProp){
-    console.log("editForm.js cwrp next",nextProp);
+//    console.log("editForm.js cwrp next",nextProp);
 //    console.log("cwrp this",this.props);
 
     var mySnippets = "";
