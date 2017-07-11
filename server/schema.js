@@ -339,7 +339,7 @@ const mutationType = new GraphQLObjectType({
 			},
 			resolve: (__, args, context)=>{
 				const snippetId = sanitizer.sanitize(args.snippetId);
-console.log("deleting....");
+//console.log("deleting....");
 				return new Promise((resolve, reject)=>{
 					// insert into db
 					//console.log("mutation deleteSnippet resolve context: ",context, "\nargs",args);
@@ -356,7 +356,7 @@ console.log("deleting....");
 							return reject(null);
 						}
 						snippet.remove();
-console.log("deleted.");
+//console.log("deleted.");
 						return resolve(snippet);
 					});
 				});
