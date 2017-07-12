@@ -1,4 +1,7 @@
 todo:
 
-webpack server config for production
-deploy to heroku
+admin panel
+promote/demote users
+admin can delete any users snippets
+
+password recovery/change
