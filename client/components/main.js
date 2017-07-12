@@ -69,7 +69,7 @@ class Main extends React.Component {
 		});
 		/*
 		var mySnippets = this.getUserParam(this.props.location);
-		this.props.getSnippets(this.props.filterTags, false, this.props.language, mySnippets);
+		this.props.getSnippets(this.props.filterTags, this.props.tagAndOr, this.props.language, mySnippets);
 
 		const id = this.props.match.params.snippetId;
 		if (id ) {
@@ -99,10 +99,11 @@ class Main extends React.Component {
 			([...this.props.filterTags,...nextProp.filterTags]
 				.filter((n,i,a)=>a.indexOf(n)==a.lastIndexOf(n)).length>0)||
 			(this.props.location.search !== nextProp.location.search)||
+			(this.props.tagAndOr !== nextProp.tagAndOr)||
 			(this.props.location.pathname !== nextProp.location.pathname)
 			) {
-//console.log("main.js CWRP elseif getSnippets");
-			this.props.getSnippets(nextProp.filterTags, false, nextProp.language, mySnippets);			 
+//console.log("main.js CWRP elseif getSnippets", nextProp);
+			this.props.getSnippets(nextProp.filterTags, nextProp.tagAndOr, nextProp.language, mySnippets);			 
 		}
 	}
 
@@ -173,6 +174,7 @@ function mapStateToProps(state){
 		currentSelected:state.currentSelected,
 		language: state.languageFilter,
 		filterTags: state.snippetTagFilter,
+		tagAndOr: state.tagAndOrFilter,
 		errors : state.errors
 	}
 }

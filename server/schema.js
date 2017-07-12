@@ -200,7 +200,7 @@ const QueryType = new GraphQLObjectType({
 				      author = sanitizer.sanitize(args.author);
 
 				return new Promise((resolve, reject)=>{
-//					console.log("codesnippetSSS", parentValue, args);
+					console.log("codesnippetS query", parentValue, args);
 
 					var dbQuery={};
 

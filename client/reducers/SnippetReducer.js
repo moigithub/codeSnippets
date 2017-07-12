@@ -4,12 +4,12 @@ import {
   ADDSNIPPETDATA, GETSNIPPETDATA, 
   SETSNIPPETDATA, UPDATESNIPPETDATA, DELETESNIPPETDATA,
   SETCURRENTSNIPPETDATA,
-  ADDTAG, REMOVETAG,
+  ADDTAG, REMOVETAG, SETTAGANDOR,
   SETLANGUAGE,SETERROR
 } from './const'
 
 export const snippetReducer = (state = [], action) => {
-	///console.log("snipet reducer", state, action);
+	//console.log("snipet reducer", state, action);
   switch (action.type) {
     case SETSNIPPETDATA:
       return action.data;
@@ -32,6 +32,15 @@ export const snippetTagFilterReducer = (state=[], action)=>{
       return [...state.filter(tag=>tag!==action.data), action.data];
     case REMOVETAG:
       return state.filter(tag => tag !== action.data)  //action.data es tag 
+    default:
+      return state;
+  }
+}
+
+export const tagAndOrFilterReducer = (state=false, action)=>{
+  switch(action.type){
+    case SETTAGANDOR:
+      return action.data;
     default:
       return state;
   }

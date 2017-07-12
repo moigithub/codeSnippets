@@ -4,7 +4,9 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import TagList from './TagList';
-import {addTag, removeTag} from '../actions/snippetsActions';
+import TagAndOrFilter from './TagAndOrFilter';
+
+import {addTag, removeTag, setTagAndOrFilter} from '../actions/snippetsActions';
 
 class FilterForm extends React.Component {
 
@@ -49,6 +51,9 @@ class FilterForm extends React.Component {
 				    </div>
 				</form>
 
+				{tagList.length &&
+					<TagAndOrFilter setTag={this.props.setTagAndOr} selectedOption={this.props.tagAndOr}/>
+				}
 				<TagList tagList={tagList} removeTag = {removeTag}/>
 			</div>
 		);
@@ -60,14 +65,16 @@ class FilterForm extends React.Component {
 
 function mapStateToProps(state){
 	return {
-		tagList: state.snippetTagFilter
+		tagList: state.snippetTagFilter,
+		tagAndOr: state.tagAndOrFilter
 	}
 }
 
 function mapDispatchToProps(dispatch){
 	return {
 		addTag: (tag)=>dispatch(addTag(tag)),
-		removeTag: (tag)=>dispatch(removeTag(tag))
+		removeTag: (tag)=>dispatch(removeTag(tag)),
+		setTagAndOr: (status)=>dispatch(setTagAndOrFilter(status))
 	}
 }
 

@@ -1,8 +1,10 @@
+'use strict';
+
 import {
 	ADDSNIPPETDATA, UPDATESNIPPETDATA, DELETESNIPPETDATA,
 	GETSNIPPETDATA, SETSNIPPETDATA, SETCURRENTSNIPPETDATA,
 	ADDTAG ,
-	REMOVETAG,
+	REMOVETAG, SETTAGANDOR,
 	SETLANGUAGE, SETERROR
 } from '../reducers/const'
 
@@ -57,7 +59,7 @@ export const setLanguage = (language)=>({type:SETLANGUAGE ,data:language});
 export const setError = (error)=>({type:SETERROR ,data:error});
 export const addTag = (tag)=>({type:ADDTAG ,data:tag});
 export const removeTag = (tag)=>({type:REMOVETAG ,data:tag});
-
+export const setTagAndOrFilter = (value)=>({type:SETTAGANDOR, data:value});
 
 ///////////////////////////////////////////////////////////////////////////////
 /// async actions

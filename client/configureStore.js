@@ -9,6 +9,7 @@ import {
 	snippetReducer, 
 	currentSnippetReducer, 
 	snippetTagFilterReducer,
+	tagAndOrFilterReducer,
 	languageFilterReducer,
 	errorsReducer
 } from "./reducers/SnippetReducer";
@@ -34,12 +35,13 @@ export default function configureStore(initialState){
 	return createStoreWithMiddleware(
 		combineReducers(
 			{
-				form              :formReducer,
-				snippets          :snippetReducer, 
-				currentSelected   :currentSnippetReducer,
-				snippetTagFilter  :snippetTagFilterReducer,
-				languageFilter    :languageFilterReducer,
-				errors            :errorsReducer
+				form                  : formReducer,
+				snippets              : snippetReducer, 
+				currentSelected       : currentSnippetReducer,
+				snippetTagFilter      : snippetTagFilterReducer,
+				tagAndOrFilter        : tagAndOrFilterReducer,
+				languageFilter        : languageFilterReducer,
+				errors                : errorsReducer
 			}
 		),
 		initialState
