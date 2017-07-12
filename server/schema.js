@@ -206,10 +206,11 @@ const QueryType = new GraphQLObjectType({
 
 
 					if(tags && tags.length>0){
+						let regex = tags.map(tag=>new RegExp(tag,"gi"));
 						if(all){
-							dbQuery.tags={$all: tags};
+							dbQuery.tags={$all: regex};
 						} else {
-							dbQuery.tags={$in: tags};
+							dbQuery.tags={$in: regex};
 						}
 					}
 
