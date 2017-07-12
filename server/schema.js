@@ -317,10 +317,10 @@ const mutationType = new GraphQLObjectType({
 						description: sanitizer.sanitize(args.snippet.description),
 						code: args.snippet.code, // no sanitize
 						postedBy: userId,  /// context userID ..sanitize??
-						tags = args.snippet.tags.filter(l=>l.trim()!=="")
+						tags : args.snippet.tags.filter(l=>l.trim()!=="")
 											.map(tag=>sanitizer.sanitize(tag.trim())),
-						links = args.snippet.links.filter(l=>l.trim()!=="")
-											.map(link=>sanitizer.sanitize(link));
+						links : args.snippet.links.filter(l=>l.trim()!=="")
+											.map(link=>sanitizer.sanitize(link))
 					};
 					//console.log("mutation createSnippet ------> \n", newSnippet);
 					Snippet.create(newSnippet, (err, snippet)=>{
