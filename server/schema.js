@@ -317,8 +317,10 @@ const mutationType = new GraphQLObjectType({
 						description: sanitizer.sanitize(args.snippet.description),
 						code: args.snippet.code, // no sanitize
 						postedBy: userId,  /// context userID ..sanitize??
-						tags: args.snippet.tags.map(tag=>sanitizer.sanitize(tag)),
-						links: args.snippet.links.map(link=>sanitizer.sanitize(link))
+						tags = args.snippet.tags.filter(l=>l.trim()!=="")
+											.map(tag=>sanitizer.sanitize(tag.trim())),
+						links = args.snippet.links.filter(l=>l.trim()!=="")
+											.map(link=>sanitizer.sanitize(link));
 					};
 					//console.log("mutation createSnippet ------> \n", newSnippet);
 					Snippet.create(newSnippet, (err, snippet)=>{
@@ -381,7 +383,7 @@ const mutationType = new GraphQLObjectType({
 					  code = args.snippet.code, // no sanitize
 					  postedBy = sanitizer.sanitize(args.snippet.postedBy),
 					  tags = args.snippet.tags.filter(l=>l.trim()!=="")
-											.map(tag=>sanitizer.sanitize(tag)),
+											.map(tag=>sanitizer.sanitize(tag.trim())),
 					  links = args.snippet.links.filter(l=>l.trim()!=="")
 											.map(link=>sanitizer.sanitize(link));
 
