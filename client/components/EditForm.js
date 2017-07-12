@@ -12,13 +12,13 @@ import {updateSnippetAsync, getSnippetByIdFromServer, API_URL} from '../actions/
 class EditForm extends React.Component {
 
   componentDidMount(){
-    console.log("editForm.js CDM",this.props);
+  //  console.log("editForm.js CDM",this.props);
     const id = this.props.match.params.snippetId;
     this.props.getSnippetById(id)
   }
 
   componentWillReceiveProps(nextProp){
-    console.log("editForm.js cwrp next",nextProp);
+//    console.log("editForm.js cwrp next",nextProp);
 //    console.log("cwrp this",this.props);
 
     var mySnippets = "";
@@ -32,7 +32,7 @@ class EditForm extends React.Component {
 
 
   static loadData=({store,match,query})=>{
-    console.log("editForm.js loadData match",match);
+  //  console.log("editForm.js loadData match",match);
 
     if (match && match.params.snippetId) {
       return store.dispatch(getSnippetByIdFromServer(match.params.snippetId));
@@ -40,7 +40,7 @@ class EditForm extends React.Component {
   }
 
   handleSubmit=(values,dispatch, props)=>{
-    console.log("editForm: handleSubmit",values,dispatch,props);
+  //  console.log("editForm: handleSubmit",values,dispatch,props);
     const snippetObj={
       "language":values.language,
       "title":values.title,

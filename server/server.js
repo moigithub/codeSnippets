@@ -51,10 +51,10 @@ app.use(helmet());
 app.use(compression());
 
 app.set('view engine','ejs')
-console.log("__dirname:: ",__dirname);
+//console.log("__dirname:: ",__dirname);
 app.use(favicon(path.join( __dirname,'../public', 'favicon.ico')))
 
-console.log("db", config.db,"\n process");
+//console.log("db", config.db,"\n process");
 mongoose.Promise = global.Promise;
 mongoose.connect(config.db, {
   useMongoClient: true,
@@ -142,7 +142,7 @@ app.get('/user', function(req,res){
 
 const root = {
   authInfo: function(args, request){
-    console.log("authInfo",request);
+    //console.log("authInfo",request);
     return request.user;
   }
 }
@@ -209,7 +209,7 @@ app.get('*', (req,res)=>{
  // console.log("server \n\n\n\n*",req.params, '\n query: ',req.query);
 
   loadBranchData(store, req.path, req.query).then(data=>{
-    console.log("server.js: all data loaded",data)
+    //console.log("server.js: all data loaded",data)
 
     let currentState = store.getState();
     html = renderToString(

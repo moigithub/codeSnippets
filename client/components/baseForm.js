@@ -32,7 +32,7 @@ const renderSelectField = ({
   meta: { touched, error, warning },
   ...rest
 }) => {
-  console.log(input,"input-rest ",rest)
+ // console.log(input,"input-rest ",rest)
   return(
   <div className={clase}>
     <label className="col-sm-2 control-label">{label}</label>

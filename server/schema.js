@@ -315,7 +315,7 @@ const mutationType = new GraphQLObjectType({
 						language: sanitizer.sanitize(args.snippet.language),
 						title: sanitizer.sanitize(args.snippet.title),
 						description: sanitizer.sanitize(args.snippet.description),
-						code: sanitizer.sanitize(args.snippet.code),
+						code: args.snippet.code, // no sanitize
 						postedBy: userId,  /// context userID ..sanitize??
 						tags: args.snippet.tags.map(tag=>sanitizer.sanitize(tag)),
 						links: args.snippet.links.map(link=>sanitizer.sanitize(link))
@@ -339,7 +339,7 @@ const mutationType = new GraphQLObjectType({
 			},
 			resolve: (__, args, context)=>{
 				const snippetId = sanitizer.sanitize(args.snippetId);
-console.log("deleting....");
+//console.log("deleting....");
 				return new Promise((resolve, reject)=>{
 					// insert into db
 					//console.log("mutation deleteSnippet resolve context: ",context, "\nargs",args);
@@ -356,7 +356,7 @@ console.log("deleting....");
 							return reject(null);
 						}
 						snippet.remove();
-console.log("deleted.");
+//console.log("deleted.");
 						return resolve(snippet);
 					});
 				});
@@ -378,7 +378,7 @@ console.log("deleted.");
 					  language = sanitizer.sanitize(args.snippet.language),
 					  title = sanitizer.sanitize(args.snippet.title),
 					  description = sanitizer.sanitize(args.snippet.description),
-					  code = sanitizer.sanitize(args.snippet.code),
+					  code = args.snippet.code, // no sanitize
 					  postedBy = sanitizer.sanitize(args.snippet.postedBy),
 					  tags = args.snippet.tags.filter(l=>l.trim()!=="")
 											.map(tag=>sanitizer.sanitize(tag)),

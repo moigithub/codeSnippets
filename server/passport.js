@@ -8,7 +8,7 @@ import sanitizer from 'sanitizer';
 import User from '../models/User';
 
 export default function(passport){
-console.log("configuring paspport");
+//console.log("configuring paspport");
 	// used to serialize the user for the session
     passport.serializeUser(function(user, done) {
         done(null, user._id);
