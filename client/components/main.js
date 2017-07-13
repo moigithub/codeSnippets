@@ -38,7 +38,14 @@ class Main extends React.Component {
 			mySnippets = query.user.toLowerCase();
 		}
 //		console.log("loadData mySnippets",mySnippets);
-		var p1=store.dispatch(snippetsActions.getSnippetsFromServer([], false, "", mySnippets));
+//console.log("main loadData store",store.getState());
+		let {
+				snippetTagFilter: filterTags, 
+				tagAndOrFilter: tagAndOr,
+				languageFilter :language
+		    } = store.getState();
+
+		var p1=store.dispatch(snippetsActions.getSnippetsFromServer(filterTags, tagAndOr, language, mySnippets));
 
 
 		if (match && match.params.snippetId) {
