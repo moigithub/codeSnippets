@@ -78,6 +78,11 @@ export default function(passport){
 					return done(null, false, req.flash('loginMessage', 'No user found.'))
 				}
 
+                if (!user.validPassword(password)){
+                    return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); 
+                }
+
+
     //            console.log('login ', user)
 
 				return done(null, user);;
