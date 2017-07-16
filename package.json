@@ -62,6 +62,9 @@
     "prod": "set NODE_ENV=production&& webpack && node dist/server.js",
     "start": "NODE_ENV=production& node dist/server.js"
   },
+   "engines": {
+    "node": "6.11.1"
+  },
   "author": "",
   "license": "ISC",
   "description": ""
