@@ -43,8 +43,23 @@ import Snippet from '../models/Snippet.js';
 import routes from '../client/routes';
 import AppLayout from '../client/components/AppLayout';
 import passportConfig from './passport';
+import dataloader from './dataloaders'
 
+/**/
+mongoose.set('debug', true);
+let logCount = 0;
+mongoose.set('debug', function(coll, method, query, doc, options) {
+    let set = {
+        coll: coll,
+        method: method,
+        query: query,
+        doc: doc,
+        options: options
+    };
 
+    console.info( `MONGO DB REQUEST ${++logCount}: ${JSON.stringify(set)} `);
+});
+/**/
 
 var app = express();
 app.use(helmet());
@@ -149,12 +164,19 @@ const root = {
 
 
 const expressGraphQL = require('express-graphql');
+import buildDataloaders from './dataloaders';
 
 app.use('/graphql', expressGraphQL((request, response)=>{
   //console.log('\n\nGRAPHQL\nreq.user:',request.user,'\n\n\nsession:',request.session);
   return {
     schema,
-    context:{user : request.user || null},
+    context:{
+      user : request.user || null,
+      dataloaders: { 
+        userLoader: buildDataloaders.UserDataLoader({User}),
+        snippetLoader: buildDataloaders.SnippetDataLoader({Snippet}),
+      }
+    },
     graphiql: process.env.NODE_ENV === 'development',
     rootValue : root,
     /*

@@ -55,9 +55,24 @@ const CodeSnippetType= new GraphQLObjectType({
 		},
 		author: {
 			type: UserType,
-			resolve: function(parentValue, args){
-		//		console.log("snippet params ",parentValue, args);
+			resolve: async function(parentValue, args, context){
+				console.log("snippet params ",parentValue, args);
+				let test= await context.dataloaders.userLoader.Loader.load(parentValue.postedBy);
+				console.log("codeSnippet dataloader author", test);
+				return test 
+/*
 				return new Promise((resolve, reject)=>{
+
+
+					user: async ({userId}, data, {mongo: {Users}}) => {
+					    return await Users.findOne({_id: userId});
+					},
+					user: async ({userId}, data, {dataloaders: {userLoader}}) => {
+					    return await userLoader.load(userId);
+					},
+
+
+
 					User.findById(parentValue.postedBy, function(err, user){
 		//				console.log("snippet author",err,user)
 						if(err) {
@@ -65,7 +80,9 @@ const CodeSnippetType= new GraphQLObjectType({
 						}
 						return resolve(user);
 					});
+					
 				});
+*/
 			}
 		},
 		tags: {
@@ -92,8 +109,9 @@ const UserType = new GraphQLObjectType({
 		},
 		snippets:{
 			type:  new GraphQLList(CodeSnippetType),
-			resolve: function(parentValue, args){
+			resolve: async function(parentValue, args,context){
 				//console.log("user params",parentValue, args);
+				
 				return new Promise((resolve, reject)=>{
 					Snippet.find({postedBy: parentValue._id}, function(err, snippet){
 						//console.log("snipets", err, snippet);
@@ -119,8 +137,11 @@ const QueryType = new GraphQLObjectType({
 			args: {
 				userId: {type:  new GraphQLNonNull(GraphQLString)}
 			},
-			resolve: function(parentValue, args){
+			resolve: async function(parentValue, args, context){
 			//	console.log(parentValue, args);
+				return await context.dataloaders.userLoader.Loader.load(sanitizer.sanitize(args.userId));
+
+/*
 				return new Promise((resolve, reject)=>{
 					User.findById(sanitizer.sanitize(args.userId) , function(err, user){
 //					User.find({_id: args.userId} , function(err, user){
@@ -131,6 +152,7 @@ const QueryType = new GraphQLObjectType({
 						return resolve(user);
 					});
 				});
+*/
 			}
 		},
 		Users: {
@@ -152,14 +174,17 @@ const QueryType = new GraphQLObjectType({
 			args:{
 				snippetId: {type: new GraphQLNonNull(GraphQLString)}
 			},
-			resolve: function(parentValue, args, context){
+			resolve: async function(parentValue, args, context){
 				const sID = sanitizer.sanitize(args.snippetId);
+				if(!mongoose.Types.ObjectId.isValid(sID)){
+			//		console.log("\n\nvalidation snippetid");
+					//return reject(new ValidationError(["Invalid Snippet ID"]));
+					return Promise.reject(new Error("Invalid Snippet ID"));
+				}
+
+				return await context.dataloaders.snippetLoader.Loader.load(sID);
+/*
 				return new Promise((resolve, reject)=>{
-					if(!mongoose.Types.ObjectId.isValid(sID)){
-				//		console.log("\n\nvalidation snippetid");
-						//return reject(new ValidationError(["Invalid Snippet ID"]));
-						return reject(new Error("Invalid Snippet ID"));
-					}
 					Snippet.findById(sID).lean().exec(function(err, snippet){
 						if(err) {
 				//			console.log("error codenippet by id",err)
@@ -175,6 +200,7 @@ const QueryType = new GraphQLObjectType({
 						return resolve(snippet);
 					});
 				});
+*/					
 			}
 		},
 		CodeSnippets:{
@@ -194,10 +220,10 @@ const QueryType = new GraphQLObjectType({
 				}
 			},
 			resolve: function(parentValue, args, context){
-				const tags = args.tags.map(tag=>sanitizer.sanitize(tag)),
-				      all = sanitizer.sanitize(args.all),  //// es un booolean tal vez no necesita sanitize??
-				      language = sanitizer.sanitize(args.language),
-				      author = sanitizer.sanitize(args.author);
+				const tags = args.tags ? args.tags.map(tag=>sanitizer.sanitize(tag)): null,
+				      all = args.all ? sanitizer.sanitize(args.all): null,  //// es un booolean tal vez no necesita sanitize??
+				      language = args.language ? sanitizer.sanitize(args.language): null,
+				      author = args.author ? sanitizer.sanitize(args.author): null;
 
 				return new Promise((resolve, reject)=>{
 					console.log("codesnippetS query", parentValue, args);
@@ -240,8 +266,7 @@ const QueryType = new GraphQLObjectType({
 						}
 					}
 
-					//console.log("\n************\ndbQuery");
-					//console.log(dbQuery);
+					console.log("\n************\ndbQuery",dbQuery);
 
 					Snippet.find(dbQuery, function(err, snippets){
 						if(err) {
