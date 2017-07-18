@@ -5,7 +5,7 @@ if (process.env.NODE_ENV === 'development'){
   require("babel-register")();
 }
 
-//require('babel-polyfill'); 
+require('babel-polyfill'); 
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
