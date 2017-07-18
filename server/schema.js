@@ -56,9 +56,9 @@ const CodeSnippetType= new GraphQLObjectType({
 		author: {
 			type: UserType,
 			resolve: async function(parentValue, args, context){
-				console.log("snippet params ",parentValue, args);
+				//console.log("snippet params ",parentValue, args);
 				let test= await context.dataloaders.userLoader.Loader.load(parentValue.postedBy);
-				console.log("codeSnippet dataloader author", test);
+				//console.log("codeSnippet dataloader author", test);
 				return test 
 /*
 				return new Promise((resolve, reject)=>{
@@ -226,7 +226,7 @@ const QueryType = new GraphQLObjectType({
 				      author = args.author ? sanitizer.sanitize(args.author): null;
 
 				return new Promise((resolve, reject)=>{
-					console.log("codesnippetS query", parentValue, args);
+				//	console.log("codesnippetS query", parentValue, args);
 
 					var dbQuery={};
 
@@ -266,7 +266,7 @@ const QueryType = new GraphQLObjectType({
 						}
 					}
 
-					console.log("\n************\ndbQuery",dbQuery);
+				//	console.log("\n************\ndbQuery",dbQuery);
 
 					Snippet.find(dbQuery, function(err, snippets){
 						if(err) {
