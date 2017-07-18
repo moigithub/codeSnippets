@@ -19,6 +19,7 @@
     "express-session": "^1.15.3",
     "graphql": "^0.10.1",
     "helmet": "^3.6.1",
+    "hpp": "^0.2.2",
     "mongoose": "^4.10.8",
     "morgan": "^1.8.2",
     "passport": "^0.3.2",

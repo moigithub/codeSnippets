@@ -37,6 +37,7 @@ import { renderToString } from 'react-dom/server';
 
 import compression from 'compression';
 import helmet from 'helmet';
+import hpp from 'hpp'; //http param pollution ?a=1&a=2&a=3 attack
 
 import User from '../models/User.js';
 import Snippet from '../models/Snippet.js';
@@ -64,6 +65,8 @@ mongoose.set('debug', function(coll, method, query, doc, options) {
 var app = express();
 app.use(helmet());
 app.use(compression());
+app.use(hpp());
+
 
 app.set('view engine','ejs')
 //console.log("__dirname:: ",__dirname);
