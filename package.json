@@ -61,7 +61,7 @@
     "dev": "set NODE_ENV=development&& nodemon --exec babel-node server/server.js --ignore public/",
     "build": "webpack -wd",
     "prod": "set NODE_ENV=production&& webpack && node dist/server.js",
-    "start": "NODE_ENV=production& node dist/server.js"
+    "start": "NODE_ENV=production&& node dist/server.js"
   },
   "engines": {
     "node": "6.11.1"
