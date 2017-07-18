@@ -45,7 +45,7 @@ import AppLayout from '../client/components/AppLayout';
 import passportConfig from './passport';
 import dataloader from './dataloaders'
 
-/**/
+/*
 mongoose.set('debug', true);
 let logCount = 0;
 mongoose.set('debug', function(coll, method, query, doc, options) {
@@ -59,7 +59,7 @@ mongoose.set('debug', function(coll, method, query, doc, options) {
 
     console.info( `MONGO DB REQUEST ${++logCount}: ${JSON.stringify(set)} `);
 });
-/**/
+*/
 
 var app = express();
 app.use(helmet());
