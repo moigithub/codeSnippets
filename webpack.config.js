@@ -5,7 +5,7 @@ const ExtractTextPlugin=require('extract-text-webpack-plugin');
 var clientConfig = {
 //	context: path.resolve(__dirname, './'),
 	target: 'web',
-	entry: './client/index.js',
+	entry: ['babel-polyfill','./client/index.js'],
 	output: {
 		path:path.resolve(__dirname, './public'),
 //		libraryTarget: 'commonjs',
@@ -23,8 +23,7 @@ var clientConfig = {
 				use:{
 					loader: 'babel-loader',
 					options: {
-		              presets: ['es2015', 'react', 'stage-0'],
-		              plugins:['transform-runtime']
+		              presets: ['es2015', 'react', 'stage-0']
 		            }
 	        	},
 				exclude: /node_modules/
@@ -77,7 +76,7 @@ var serverConfig = {
   //   is resolved relative to this directory
 
   	target: 'node',
-	entry: './server/server.js',
+	entry: ['babel-polyfill','./server/server.js'],
 	output: {
 		path:path.resolve(__dirname, './dist'),
 		 // we want the output to use simple require calls for imports as
