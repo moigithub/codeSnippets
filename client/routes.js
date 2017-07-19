@@ -23,7 +23,8 @@ const routes = (
 const routes = [{
   component: Main,
   path: '/snippets/:snippetId?',
-  exact: true
+  exact: true,
+//  boo : ()=>{console.log("boo function")}
 }, 
 {
   component: CreateSnippetForm,

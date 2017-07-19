@@ -206,8 +206,12 @@ const loadBranchData = (store,location,query)=> {
     //invoke component loadData method
     //which could be a promise
     
-/*   console.log("----------------------");
+/*    
+   console.log("----------------------");
     console.log("loadBranchData server.js => route: ", route, "\nmatch: ",match);
+    if(route.boo){
+      route.boo();
+    }
     console.log("----------------------");
  
     console.log("server.js loadBranchData => route.component :\n", route.component);
