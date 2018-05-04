@@ -62,3 +62,8 @@
 .warning{
   color: orange;
 }
+
+.snippets-list {
+    max-height: 70vh;
+    overflow-x: auto;
+}

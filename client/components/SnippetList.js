@@ -22,7 +22,7 @@ const SnippetList = (props) => {
 	});
 
 	return (
-		<div className="list-group">
+		<div className="list-group snippets-list">
 			{snippets}
 		</div>
 	);
